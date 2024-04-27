@@ -57,8 +57,10 @@ public class App extends PApplet {
     public void setup() {
         frameRate(FPS);
 		//See PApplet javadoc:
-		//loadJSONObject(configPath)
-		//loadImage(this.getClass().getResource(filename).getPath().toLowerCase(Locale.ROOT).replace("%20", " "));
+		
+        loadJSONObject(configPath);
+
+		// loadImage(this.getClass().getResource(filename).getPath().toLowerCase(Locale.ROOT).replace("%20", " "));
     }
 
     /**
