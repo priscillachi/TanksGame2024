@@ -1,9 +1,12 @@
 package Tanks;
 
 import org.checkerframework.checker.units.qual.A;
-import processing.core.*;
-import processing.data.*;
-import processing.event.*;
+import processing.core.PApplet;
+import processing.core.PImage;
+import processing.data.JSONArray;
+import processing.data.JSONObject;
+import processing.event.KeyEvent;
+import processing.event.MouseEvent;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -46,16 +49,12 @@ public class App extends PApplet {
         size(WIDTH, HEIGHT);
     }
 
-    PShape s;
-
     /**
      * Load all resources such as images. Initialise the elements such as the player and map elements.
      */
 	@Override
     public void setup() {
         frameRate(FPS);
-
-        s = createShape(RECT, 0, 0, 20, 20);
 		//See PApplet javadoc:
 		//loadJSONObject(configPath)
 		//loadImage(this.getClass().getResource(filename).getPath().toLowerCase(Locale.ROOT).replace("%20", " "));
@@ -89,34 +88,11 @@ public class App extends PApplet {
 
     }
 
-    int dx = 5;
-    int dy = 10;
-
-    int rx = 0;
-    int ry = 0;
-
-    int ay = 1;
-
-    int counter = 8;
-    int current_counter = 0;
-
     /**
      * Draw all elements in the game by current frame.
      */
 	@Override
     public void draw() {
-
-        if (current_counter % counter == 0) {
-            dy -= ay;
-        }
-        current_counter++;
-
-        // Draw projectile using constant velocity and gravity
-        rx += dx;
-        ry += dy;
-
-        shape(s, rx, ry);
-
         
 
         //----------------------------------
