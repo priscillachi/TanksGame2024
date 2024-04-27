@@ -25,6 +25,7 @@ dependencies {
     // This dependency is used by the application.
     implementation 'com.google.guava:guava:28.0-jre'
     implementation 'org.processing:core:3.3.7'
+    implementation 'org.json:json:20210307'
     // implementation 'org.reflections:reflections:0.10.2'
 
     // Use JUnit Jupiter API for testing.
