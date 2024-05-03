@@ -4,6 +4,7 @@ import org.checkerframework.checker.units.qual.A;
 import org.json.JSONTokener;
 import processing.core.PApplet;
 import processing.core.PImage;
+import processing.core.PShape;
 import processing.data.JSONArray;
 import processing.data.JSONObject;
 import processing.event.KeyEvent;
@@ -35,12 +36,23 @@ public class App extends PApplet {
     public String configPath;
 
     public static Random random = new Random();
+
+    public JSONObject jsonData;
+    public JSONArray levelsData;
+    public JSONObject playersData;
+
+    public Level level1 = new Level(this, 1);
+    public Level level2 = new Level(this, 2);
+    public Level level3 = new Level(this, 3);
+
+    public Level currentLevel;
 	
 	// Feel free to add any additional methods or attributes you want. Please put classes in different files.
 
     public App() {
         this.configPath = "config.json";
     }
+
 
     /**
      * Initialise the setting of the window size.
@@ -58,9 +70,21 @@ public class App extends PApplet {
         frameRate(FPS);
 		//See PApplet javadoc:
 		
-        loadJSONObject(configPath);
+        jsonData = loadJSONObject(configPath);
+        levelsData = jsonData.getJSONArray("levels");
+        playersData = jsonData.getJSONObject("player_colours");
 
-		// loadImage(this.getClass().getResource(filename).getPath().toLowerCase(Locale.ROOT).replace("%20", " "));
+        this.currentLevel = level1;
+
+        this.currentLevel.getBackgroundTerrain().setTerrainMatrix();
+        this.currentLevel.getBackgroundTerrain().calculateMovingAverage();
+        this.currentLevel.getBackgroundTerrain().setForegroundColour();
+        this.currentLevel.setPlayers();
+        this.currentLevel.sortPlayers();
+        this.currentLevel.setTrees();
+        this.currentLevel.setTurn(this.currentLevel.getPlayersObj().get(0));
+        
+
     }
 
     /**
@@ -68,6 +92,17 @@ public class App extends PApplet {
      */
 	@Override
     public void keyPressed(KeyEvent event){
+        if (key==CODED) {
+            if (keyCode == UP) {
+                this.currentLevel.getTurn().getTank().rotateTurretLeft();
+            } else if (keyCode == DOWN) {
+                this.currentLevel.getTurn().getTank().rotateTurretRight();
+            } else if (keyCode == LEFT) {
+                this.currentLevel.getTurn().getTank().moveTankLeft();
+            } else if (keyCode == RIGHT) {
+                this.currentLevel.getTurn().getTank().moveTankRight();
+            }
+        }
         
     }
 
@@ -97,6 +132,24 @@ public class App extends PApplet {
 	@Override
     public void draw() {
         
+        this.currentLevel.setBackground();
+        this.currentLevel.getBackgroundTerrain().setTerrain();
+
+        for (int i=0; i<this.currentLevel.getTrees().size(); i++) {
+            this.currentLevel.getTrees().get(i).drawTree();
+        }
+
+        for (int i=0; i<this.currentLevel.getPlayersObj().size(); i++) {
+            this.currentLevel.getPlayersObj().get(i).getTank().drawTank();
+            this.currentLevel.getPlayersObj().get(i).getTank().drawTurret();
+        }
+
+        this.currentLevel.getTurn().getHealthPower().drawHealthBar();
+        this.currentLevel.getTurn().getHealthPower().displayHealthPowerText();
+        this.currentLevel.getTurn().displayPlayerText();
+        this.currentLevel.displayFuelParachute();
+        this.currentLevel.displayWind();
+        this.currentLevel.displayScoreboard();
 
         //----------------------------------
         //display HUD:
