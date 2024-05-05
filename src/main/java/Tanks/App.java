@@ -5,6 +5,7 @@ import org.json.JSONTokener;
 import processing.core.PApplet;
 import processing.core.PImage;
 import processing.core.PShape;
+import processing.core.PVector;
 import processing.data.JSONArray;
 import processing.data.JSONObject;
 import processing.event.KeyEvent;
@@ -16,6 +17,8 @@ import java.awt.image.BufferedImage;
 
 import java.io.*;
 import java.util.*;
+import java.lang.Math;
+
 
 public class App extends PApplet {
 
@@ -110,14 +113,14 @@ public class App extends PApplet {
      * Receive key released signal from the keyboard.
      */
 	@Override
-    public void keyReleased(){
-        
+    public void keyReleased() {
+
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
         //TODO - powerups, like repair and extra fuel and teleport
-
+    
 
     }
 
@@ -140,9 +143,19 @@ public class App extends PApplet {
         }
 
         for (int i=0; i<this.currentLevel.getPlayersObj().size(); i++) {
-            this.currentLevel.getPlayersObj().get(i).getTank().drawTank();
             this.currentLevel.getPlayersObj().get(i).getTank().drawTurret();
+            this.currentLevel.getPlayersObj().get(i).getTank().drawTank();
+            
         }
+
+        //pushMatrix();
+        //if (this.currentLevel.getTurn().getTank().getRotateTurret()==true); {
+            //translate(this.currentLevel.getTurn().getTank().getTurretWidth()/2, this.currentLevel.getTurn().getTank().getTankHeight());
+            //rotate(this.currentLevel.getTurn().getTank().getAngle());
+        //}
+        //this.currentLevel.getTurn().getTank().drawTurret();
+        //popMatrix();
+        //this.currentLevel.getTurn().getTank().setRotateTurret(false);
 
         this.currentLevel.getTurn().getHealthPower().drawHealthBar();
         this.currentLevel.getTurn().getHealthPower().displayHealthPowerText();
