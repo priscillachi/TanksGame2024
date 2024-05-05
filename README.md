@@ -1,1 +1,2 @@
 # TanksGame2024
+This is an Object Orientated Programming assignment I completed using Java and the Processing library, along with Gradle as the build automation tool to create a Tanks Game app. The assignment specifications has been included in this repository. All work are my own. Students are to use their own discretion in the way they complete the assignment and the classes and methods they use. 
