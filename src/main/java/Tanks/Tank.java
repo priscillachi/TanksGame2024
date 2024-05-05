@@ -5,6 +5,7 @@ import org.json.JSONTokener;
 import processing.core.PApplet;
 import processing.core.PImage;
 import processing.core.PShape;
+import processing.core.PVector;
 import processing.data.JSONArray;
 import processing.data.JSONObject;
 import processing.event.KeyEvent;
@@ -16,6 +17,7 @@ import java.awt.image.BufferedImage;
 
 import java.io.*;
 import java.util.*;
+import java.lang.Math;
 
 
 public class Tank {
@@ -30,9 +32,12 @@ public class Tank {
     private float[] movingAverages;
     private Player player;
     private PShape tank;
-    private PShape turret;
+    //private PVector turretV1;
+    //private PVector turretV2;
+    //private PShape turret;
     private float angle;
     private int speed;
+    private boolean rotateTurret=false;
 
     public Tank(float xCoordinate, float yCoordinate, int[] colourScheme, App app, Level levelObj, Player player) {
         this.colourScheme = colourScheme;
@@ -46,6 +51,18 @@ public class Tank {
         this.player = player;
         this.angle=0;
         this.speed = 2;
+    }
+
+    public int getTankWidth() {
+        return this.tankWidth;
+    }
+
+    public int getTankHeight() {
+        return this.tankHeight;
+    }
+
+    public int getTurretWidth() {
+        return this.turretWidth;
     }
     
     public void groundTank() { // handling the logic for where to ground the tanks
@@ -72,19 +89,36 @@ public class Tank {
         app.fill(0);
         app.stroke(0);
         app.strokeWeight(1);
-        this.turret = app.createShape(app.RECT, this.xCoordinate+(tankWidth/2)-(turretWidth/2), this.yCoordinate-this.tankHeight, this.turretWidth, this.tankHeight);
-        app.shape(this.turret);
-        this.turret.rotate(this.angle);
+        //app.rotate(this.angle);
+        //this.turret = app.createShape(app.RECT, this.xCoordinate+(tankWidth/2)-(turretWidth/2), this.yCoordinate-this.tankHeight, this.turretWidth, this.tankHeight);
+        //app.shape(this.turret);
+        //this.turret.rotate(this.angle);
+        app.pushMatrix();
+        app.translate(this.xCoordinate+(this.tankWidth/2)-(this.turretWidth/2), this.yCoordinate-this.tankHeight);
+        app.rotate(this.angle);
+        app.rect(0, 0, this.turretWidth, this.tankHeight);
+        app.popMatrix();
+
     }
 
     public void rotateTurretLeft() { // up arrow
-        this.angle = (float)0.1;
-        this.turret.rotate(this.angle);
+        if (this.angle <= (float)(-Math.PI/2)) {
+            ;
+        } else {
+            this.angle -= (float)0.1;
+        }
+        
+        //this.turret.rotate(this.angle);
     }
 
     public void rotateTurretRight() { // down arrow
-        this.angle = (float)-0.1;
-        this.turret.rotate(this.angle);
+        if (this.angle >= (float)Math.PI/2) {
+            ;
+        } else {
+            this.angle += (float)0.1;
+        }
+        
+        //this.turret.rotate(this.angle);
     }
 
     public void moveTankLeft() { // left arrow
@@ -112,11 +146,19 @@ public class Tank {
         return this.tank;
     }
 
-    public PShape getTurret() {
-        return this.turret;
-    }
+    //public PShape getTurret() {
+        //return this.turret;
+    //}
 
     public float getAngle() {
         return this.angle;
+    }
+
+    public boolean getRotateTurret() {
+        return this.rotateTurret;
+    }
+
+    public void setRotateTurret(boolean value) {
+        this.rotateTurret = value;
     }
 }
