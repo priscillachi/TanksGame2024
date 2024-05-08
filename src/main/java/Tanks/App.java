@@ -105,6 +105,12 @@ public class App extends PApplet {
             } else if (keyCode == RIGHT) {
                 this.currentLevel.getTurn().getTank().moveTankRight();
             }
+        } else {
+            if (key == 'w' || key == 'W') {
+                this.currentLevel.getTurn().getHealthPower().powerIncrease();
+            } else if (key == 's' || key == 'S') {
+                this.currentLevel.getTurn().getHealthPower().powerDecrease();
+            }
         }
         
     }
