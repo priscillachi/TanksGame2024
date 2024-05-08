@@ -25,7 +25,7 @@ public class HealthPower {
     private Level level;
     private App app;
     private int health;
-    private int power;
+    private float power;
     private int barWidth;
     private int barHeight;
     private int[] colourScheme;
@@ -78,7 +78,7 @@ public class HealthPower {
         app.fill(0);
         app.text("Health:", xCoordinate-(this.barWidth/2)+14, yCoordinate+this.barHeight-5); // word health next to bar
         app.text("Power:", xCoordinate-(this.barWidth/2)+14, yCoordinate+this.barHeight+22); // word power next to bar
-        app.text(this.power, xCoordinate, yCoordinate+this.barHeight+22); // power number next to bar
+        app.text((int)this.power, xCoordinate, yCoordinate+this.barHeight+22); // power number next to bar
         app.text(this.health, xCoordinate + this.barWidth + 10, yCoordinate+this.barHeight-5);
     }
 
@@ -96,12 +96,26 @@ public class HealthPower {
         return this.health;
     }
 
-    public void updatePower(int power) {
-        this.power = power;
-        this.powerLength = ((float)this.power/(float)100) * (float)this.barWidth;
+    public void updatePower(float power) {
+        if (power <= this.health) {
+            this.power = power;
+            this.powerLength = ((float)this.power/(float)100) * (float)this.barWidth;
+        }
     }
 
-    public int getPower() {
+    public void powerIncrease() {
+        if (this.power <= this.health) {
+            this.updatePower(this.power+(float)1.2);
+        }
+    }
+
+    public void powerDecrease() {
+        if (this.power >= 0) {
+            this.updatePower(this.power-(float)1.2);
+        }
+    }
+
+    public float getPower() {
         return this.power;
     }
 }
