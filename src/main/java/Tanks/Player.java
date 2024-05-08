@@ -55,7 +55,6 @@ public class Player { // handles players and logic
 
     public void setTank() {
         this.tank = new Tank((float)this.xCoordinate, (float)this.yCoordinate, this.colourScheme, this.app, this.levelObj, this);
-        this.tank.setTurret();
     }
 
 
