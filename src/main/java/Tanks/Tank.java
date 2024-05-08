@@ -45,7 +45,7 @@ public class Tank {
         this.yCoordinate = yCoordinate;
         this.app = app;
         this.levelObj = levelObj;
-        this.tankWidth = 20;
+        this.tankWidth = 32;
         this.tankHeight = 16;
         this.turretWidth = 4;
         this.player = player;
@@ -81,10 +81,6 @@ public class Tank {
         app.shape(this.tank);
     }
 
-    public void setTurret() {
-        //this.turret = app.createShape(app.RECT, this.xCoordinate+(tankWidth/2)-(turretWidth/2), this.yCoordinate-this.tankHeight, this.turretWidth, this.tankHeight);
-    }
-
     public void drawTurret() { // draw turret
         app.fill(0);
         app.stroke(0);
@@ -94,10 +90,12 @@ public class Tank {
         //app.shape(this.turret);
         //this.turret.rotate(this.angle);
         app.pushMatrix();
-        app.translate(this.xCoordinate+(this.tankWidth/2)-(this.turretWidth/2), this.yCoordinate-this.tankHeight);
+        app.translate(this.xCoordinate+(this.tankWidth/2), this.yCoordinate);
         app.rotate(this.angle);
-        app.rect(0, 0, this.turretWidth, this.tankHeight);
+        app.rectMode(app.CENTER);
+        app.rect(0, 0, this.turretWidth, this.tankHeight*2);
         app.popMatrix();
+        app.rectMode(app.CORNER);
 
     }
 
