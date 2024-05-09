@@ -45,7 +45,7 @@ public class HealthPower {
         this.powerLength = ((float)this.power/(float)100) * (float)this.barWidth;
     }
 
-    public void drawHealthBar() {
+    public void drawHealthBar() { // what the method says
         int xCoordinate = ((864*3)/5) - (this.barWidth/2);
         int yCoordinate = 10;
 
@@ -69,7 +69,7 @@ public class HealthPower {
 
     }
 
-    public void displayHealthPowerText() {
+    public void displayHealthPowerText() { // what the method says
         int xCoordinate = ((864*3)/5) - (this.barWidth/2);
         int yCoordinate = 10;
         
@@ -82,7 +82,7 @@ public class HealthPower {
         app.text(this.health, xCoordinate + this.barWidth + 10, yCoordinate+this.barHeight-5);
     }
 
-    public void updateHealth(int health) {
+    public void updateHealth(int health) { 
         this.health = health;
         this.healthLength = ((float)this.health/(float)100) * (float)this.barWidth;
 
