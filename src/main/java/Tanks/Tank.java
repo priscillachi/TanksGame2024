@@ -24,6 +24,8 @@ public class Tank {
     private App app;
     private float xCoordinate;
     private float yCoordinate;
+    private float turretXCoordinate;
+    private float turretYCoordinate;
     private int[] colourScheme;
     private Level levelObj;
     private int tankWidth;
@@ -38,6 +40,7 @@ public class Tank {
     private float angle;
     private int speed;
     private boolean rotateTurret=false;
+    private Projectile projectile;
 
     public Tank(float xCoordinate, float yCoordinate, int[] colourScheme, App app, Level levelObj, Player player) {
         this.colourScheme = colourScheme;
@@ -50,7 +53,7 @@ public class Tank {
         this.turretWidth = 4;
         this.player = player;
         this.angle=0;
-        this.speed = 2;
+        this.speed = 4;
     }
 
     public int getTankWidth() {
@@ -90,7 +93,9 @@ public class Tank {
         //app.shape(this.turret);
         //this.turret.rotate(this.angle);
         app.pushMatrix();
-        app.translate(this.xCoordinate+(this.tankWidth/2), this.yCoordinate);
+        this.turretXCoordinate = this.xCoordinate+(this.tankWidth/2);
+        this.turretYCoordinate = this.yCoordinate;
+        app.translate(this.turretXCoordinate, this.turretYCoordinate);
         app.rotate(this.angle);
         app.rectMode(app.CENTER);
         app.rect(0, 0, this.turretWidth, this.tankHeight*2);
@@ -103,7 +108,7 @@ public class Tank {
         if (this.angle <= (float)(-Math.PI/2)) {
             ;
         } else {
-            this.angle -= (float)0.1;
+            this.angle -= (float)0.2;
         }
         
         //this.turret.rotate(this.angle);
@@ -113,7 +118,7 @@ public class Tank {
         if (this.angle >= (float)Math.PI/2) {
             ;
         } else {
-            this.angle += (float)0.1;
+            this.angle += (float)0.2;
         }
         
         //this.turret.rotate(this.angle);
@@ -158,5 +163,17 @@ public class Tank {
 
     public void setRotateTurret(boolean value) {
         this.rotateTurret = value;
+    }
+
+    public Player getPlayer() {
+        return this.player;
+    }
+
+    public float getTurretXCoordinate() {
+        return this.turretXCoordinate;
+    }
+
+    public float getTurretYCoordinate() {
+        return this.turretYCoordinate;
     }
 }
