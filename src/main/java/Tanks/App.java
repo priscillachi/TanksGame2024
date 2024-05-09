@@ -51,8 +51,7 @@ public class App extends PApplet {
     public Level level2 = new Level(this, 2);
     public Level level3 = new Level(this, 3);
 
-    public Level currentLevel;
-    public float[] terrainMovingAveragePoints;
+    public Level currentLevel = level1;
 
     //private ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
     //private int index = 0;
@@ -61,7 +60,7 @@ public class App extends PApplet {
     private float projectileXCoordinate;
     private float projectileYCoordinate;
     private int playersNumber;
-    private int playerTurn;
+    private int playerTurn = 0;
 	
 	// Feel free to add any additional methods or attributes you want. Please put classes in different files.
 
@@ -90,17 +89,26 @@ public class App extends PApplet {
         levelsData = jsonData.getJSONArray("levels");
         playersData = jsonData.getJSONObject("player_colours");
 
-        this.currentLevel = level1;
+        this.level1.getBackgroundTerrain().setTerrainMatrix();
+        this.level1.getBackgroundTerrain().calculateMovingAverage();
+        this.level1.getBackgroundTerrain().setForegroundColour();
+        this.level1.setPlayers();
+        this.level1.sortPlayers();
+        this.level1.setTrees();
 
-        this.currentLevel.getBackgroundTerrain().setTerrainMatrix();
-        this.currentLevel.getBackgroundTerrain().calculateMovingAverage();
-        terrainMovingAveragePoints = this.currentLevel.getBackgroundTerrain().getMovingAveragePoints();
-        this.currentLevel.getBackgroundTerrain().setForegroundColour();
-        this.currentLevel.setPlayers();
-        this.currentLevel.sortPlayers();
-        playersNumber = this.currentLevel.getPlayersObj().size();
-        playerTurn = 0;
-        this.currentLevel.setTrees();
+        this.level2.getBackgroundTerrain().setTerrainMatrix();
+        this.level2.getBackgroundTerrain().calculateMovingAverage();
+        this.level2.getBackgroundTerrain().setForegroundColour();
+        this.level2.setPlayers();
+        this.level2.sortPlayers();
+        this.level2.setTrees();
+
+        this.level3.getBackgroundTerrain().setTerrainMatrix();
+        this.level3.getBackgroundTerrain().calculateMovingAverage();
+        this.level3.getBackgroundTerrain().setForegroundColour();
+        this.level3.setPlayers();
+        this.level3.sortPlayers();
+        this.level3.setTrees();
         
     }
 
@@ -149,7 +157,7 @@ public class App extends PApplet {
 
                 projectile = new Projectile(this, xCoordinate, yCoordinate, angle, power, diameter, colourScheme);
                 this.projectileShot = true;
-                this.playerTurn += 1;
+                this.playerTurn += 1; // switch turns
             }
         }
         
@@ -180,12 +188,13 @@ public class App extends PApplet {
      */
 	@Override
     public void draw() {
-
+        
+        this.playersNumber = this.currentLevel.getPlayersObj().size(); // switch turns
         if (this.playerTurn < this.playersNumber) {
             this.currentLevel.setTurn(this.currentLevel.getPlayersObj().get(playerTurn));
         }
         
-        if (this.playerTurn == this.playersNumber) {
+        if (this.playerTurn == this.playersNumber) { // when last player is reached, go back to first player
             this.playerTurn = 0;
         }
         
@@ -225,7 +234,7 @@ public class App extends PApplet {
             projectileYCoordinate = projectile.getYCoordinate();
 
             if (projectileXCoordinate >= 0 && projectileXCoordinate <= 864) {
-                if (projectileYCoordinate >= this.terrainMovingAveragePoints[(int)(projectileXCoordinate)]) {
+                if (projectileYCoordinate >= this.currentLevel.getBackgroundTerrain().getMovingAveragePoints()[(int)(projectileXCoordinate)]) {
                     projectile.clearProjectile();
                     projectile = null;
                     projectileShot = false;
