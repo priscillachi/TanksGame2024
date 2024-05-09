@@ -196,7 +196,7 @@ public class Level {
     }
 
 
-    public void sortPlayers() { // alphabetical order
+    public void sortPlayers() { // alphabetical order (maybe change sort algo later if laggy)
         ArrayList<Player> playersObjSorted = new ArrayList<Player>();
         ArrayList<String> playersSorted = new ArrayList<String>();
         ArrayList<int[]> playersCoordinatesSorted = new ArrayList<int[]>();
