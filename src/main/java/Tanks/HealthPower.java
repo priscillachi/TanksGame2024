@@ -102,13 +102,13 @@ public class HealthPower {
         }
     }
 
-    public void powerIncrease() {
+    public void powerIncrease() { // for keyPressed
         if (this.power <= this.health) {
             this.updatePower(this.power+(float)1.2);
         }
     }
 
-    public void powerDecrease() {
+    public void powerDecrease() { // for keyPressed
         if (this.power >= 0) {
             this.updatePower(this.power-(float)1.2);
         }
