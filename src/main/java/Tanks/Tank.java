@@ -99,7 +99,7 @@ public class Tank {
 
     public void rotateTurretLeft() { // up arrow
         if (this.angle <= (float)(-Math.PI/2)) {
-            ;
+            ; // do nothing
         } else {
             this.angle -= (float)0.2;
         }
@@ -107,7 +107,7 @@ public class Tank {
 
     public void rotateTurretRight() { // down arrow
         if (this.angle >= (float)Math.PI/2) {
-            ;
+            ; // do nothing
         } else {
             this.angle += (float)0.2;
         }
@@ -115,7 +115,7 @@ public class Tank {
 
     public void moveTankLeft() { // left arrow
         if (this.xCoordinate == 0) {
-            ;
+            ; // do nothing
         } else {
             this.xCoordinate -= this.speed;
         }
@@ -123,7 +123,7 @@ public class Tank {
 
     public void moveTankRight() { // right arrow
         if (this.xCoordinate == 864-20) {
-            ;
+            ; // do nothing
         } else {
             this.xCoordinate += this.speed;
         }
@@ -161,5 +161,37 @@ public class Tank {
 
     public float getTurretYCoordinate() {
         return this.turretYCoordinate;
+    }
+
+    public void setProjectile() {
+        float projectileAngle = 0;
+        float projectileXCoordinate = 0;
+        float projectileYCoordinate = 0;
+        float power = this.player.getPower();
+        float diameter = this.turretWidth * 2;
+
+        if (this.angle < 0) {
+            projectileAngle = -this.angle - (float)Math.PI/2;
+        } else {
+            projectileAngle = (float)Math.PI/2 - this.angle;
+        }
+
+        if (projectileAngle < 0) {
+            projectileXCoordinate = this.turretXCoordinate - (this.tankHeight * (float)Math.cos(Math.abs(projectileAngle)));
+        } else {
+            projectileXCoordinate = this.turretXCoordinate + (this.tankHeight * (float)Math.cos(Math.abs(projectileAngle)));
+        }
+
+        projectileYCoordinate = this.turretYCoordinate - (this.tankHeight * (float)Math.sin(Math.abs(projectileAngle)));
+
+        projectile = new Projectile(this.app, this, projectileXCoordinate, projectileYCoordinate, projectileAngle, power, diameter, this.colourScheme);
+    }
+
+    public Projectile getProjectile() {
+        return this.projectile;
+    }
+
+    public void clearProjectile() {
+        this.projectile = null;
     }
 }
