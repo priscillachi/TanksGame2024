@@ -187,15 +187,6 @@ public class App extends PApplet {
             
         }
 
-        //pushMatrix();
-        //if (this.currentLevel.getTurn().getTank().getRotateTurret()==true); {
-            //translate(this.currentLevel.getTurn().getTank().getTurretWidth()/2, this.currentLevel.getTurn().getTank().getTankHeight());
-            //rotate(this.currentLevel.getTurn().getTank().getAngle());
-        //}
-        //this.currentLevel.getTurn().getTank().drawTurret();
-        //popMatrix();
-        //this.currentLevel.getTurn().getTank().setRotateTurret(false);
-
         this.currentLevel.getTurn().getHealthPower().drawHealthBar();
         this.currentLevel.getTurn().getHealthPower().displayHealthPowerText();
         this.currentLevel.getTurn().displayPlayerText();
