@@ -2,6 +2,9 @@ package Tanks;
 
 import org.checkerframework.checker.units.qual.A;
 import org.json.JSONTokener;
+
+import com.jogamp.newt.event.KeyListener;
+
 import processing.core.PApplet;
 import processing.core.PImage;
 import processing.core.PShape;
@@ -49,6 +52,16 @@ public class App extends PApplet {
     public Level level3 = new Level(this, 3);
 
     public Level currentLevel;
+    public float[] terrainMovingAveragePoints;
+
+    //private ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
+    //private int index = 0;
+    private Projectile projectile;
+    private boolean projectileShot = false;
+    private float projectileXCoordinate;
+    private float projectileYCoordinate;
+    private int playersNumber;
+    private int playerTurn;
 	
 	// Feel free to add any additional methods or attributes you want. Please put classes in different files.
 
@@ -81,13 +94,14 @@ public class App extends PApplet {
 
         this.currentLevel.getBackgroundTerrain().setTerrainMatrix();
         this.currentLevel.getBackgroundTerrain().calculateMovingAverage();
+        terrainMovingAveragePoints = this.currentLevel.getBackgroundTerrain().getMovingAveragePoints();
         this.currentLevel.getBackgroundTerrain().setForegroundColour();
         this.currentLevel.setPlayers();
         this.currentLevel.sortPlayers();
+        playersNumber = this.currentLevel.getPlayersObj().size();
+        playerTurn = 0;
         this.currentLevel.setTrees();
-        this.currentLevel.setTurn(this.currentLevel.getPlayersObj().get(0));
         
-
     }
 
     /**
@@ -95,6 +109,7 @@ public class App extends PApplet {
      */
 	@Override
     public void keyPressed(KeyEvent event){
+
         if (key==CODED) {
             if (keyCode == UP) {
                 this.currentLevel.getTurn().getTank().rotateTurretLeft();
@@ -110,6 +125,31 @@ public class App extends PApplet {
                 this.currentLevel.getTurn().getHealthPower().powerIncrease();
             } else if (key == 's' || key == 'S') {
                 this.currentLevel.getTurn().getHealthPower().powerDecrease();
+            } else if (key == ' ') {
+                float turretAngle = this.currentLevel.getTurn().getTank().getAngle();
+                float angle = 0;
+                float xCoordinate = 0;
+                float yCoordinate = 0;
+                float power = this.currentLevel.getTurn().getPower();
+                float diameter = this.currentLevel.getTurn().getTank().getTurretWidth() * 2;
+                int[] colourScheme = this.currentLevel.getTurn().getColourScheme();
+
+                if (turretAngle < 0) {
+                    angle = -turretAngle - (float)Math.PI/2;
+                } else {
+                    angle = (float)Math.PI/2 - turretAngle;
+                }
+
+                if (angle < 0) {
+                    xCoordinate = this.currentLevel.getTurn().getTank().getTurretXCoordinate() - (this.currentLevel.getTurn().getTank().getTankHeight() * (float)Math.cos(Math.abs(angle)));
+                } else {
+                    xCoordinate = this.currentLevel.getTurn().getTank().getTurretXCoordinate() + (this.currentLevel.getTurn().getTank().getTankHeight() * (float)Math.cos(Math.abs(angle)));
+                }
+                yCoordinate = this.currentLevel.getTurn().getTank().getTurretYCoordinate() - (this.currentLevel.getTurn().getTank().getTankHeight() * (float)Math.sin(Math.abs(angle)));
+
+                projectile = new Projectile(this, xCoordinate, yCoordinate, angle, power, diameter, colourScheme);
+                this.projectileShot = true;
+                this.playerTurn += 1;
             }
         }
         
@@ -140,11 +180,20 @@ public class App extends PApplet {
      */
 	@Override
     public void draw() {
+
+        if (this.playerTurn < this.playersNumber) {
+            this.currentLevel.setTurn(this.currentLevel.getPlayersObj().get(playerTurn));
+        }
+        
+        if (this.playerTurn == this.playersNumber) {
+            this.playerTurn = 0;
+        }
         
         this.currentLevel.setBackground();
         this.currentLevel.getBackgroundTerrain().setTerrain();
 
         for (int i=0; i<this.currentLevel.getTrees().size(); i++) {
+            this.currentLevel.getTrees().get(i).groundTree();
             this.currentLevel.getTrees().get(i).drawTree();
         }
 
@@ -169,6 +218,22 @@ public class App extends PApplet {
         this.currentLevel.displayFuelParachute();
         this.currentLevel.displayWind();
         this.currentLevel.displayScoreboard();
+
+        if (projectile != null && this.projectileShot == true) {
+            projectile.drawProjectile();
+            projectileXCoordinate = projectile.getXCoordinate();
+            projectileYCoordinate = projectile.getYCoordinate();
+
+            if (projectileXCoordinate >= 0 && projectileXCoordinate <= 864) {
+                if (projectileYCoordinate >= this.terrainMovingAveragePoints[(int)(projectileXCoordinate)]) {
+                    projectile.clearProjectile();
+                    projectile = null;
+                    projectileShot = false;
+                }
+            }
+        }
+
+
 
         //----------------------------------
         //display HUD:
