@@ -34,9 +34,6 @@ public class Tank {
     private float[] movingAverages;
     private Player player;
     private PShape tank;
-    //private PVector turretV1;
-    //private PVector turretV2;
-    //private PShape turret;
     private float angle;
     private int speed;
     private boolean rotateTurret=false;
@@ -88,10 +85,6 @@ public class Tank {
         app.fill(0);
         app.stroke(0);
         app.strokeWeight(1);
-        //app.rotate(this.angle);
-        //this.turret = app.createShape(app.RECT, this.xCoordinate+(tankWidth/2)-(turretWidth/2), this.yCoordinate-this.tankHeight, this.turretWidth, this.tankHeight);
-        //app.shape(this.turret);
-        //this.turret.rotate(this.angle);
         app.pushMatrix();
         this.turretXCoordinate = this.xCoordinate+(this.tankWidth/2);
         this.turretYCoordinate = this.yCoordinate;
@@ -110,8 +103,6 @@ public class Tank {
         } else {
             this.angle -= (float)0.2;
         }
-        
-        //this.turret.rotate(this.angle);
     }
 
     public void rotateTurretRight() { // down arrow
@@ -120,8 +111,6 @@ public class Tank {
         } else {
             this.angle += (float)0.2;
         }
-        
-        //this.turret.rotate(this.angle);
     }
 
     public void moveTankLeft() { // left arrow
@@ -149,9 +138,6 @@ public class Tank {
         return this.tank;
     }
 
-    //public PShape getTurret() {
-        //return this.turret;
-    //}
 
     public float getAngle() {
         return this.angle;
