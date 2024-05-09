@@ -121,6 +121,10 @@ public class Player { // handles players and logic
         this.fuel = fuel;
     }
 
+    public void updateParachute(int parachute) {
+        this.parachute = parachute;
+    }
+
     public void displayFuel() { // what the method says
         int xCoordinate = 210;
         int yCoordinate = 30;
