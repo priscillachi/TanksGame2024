@@ -90,7 +90,7 @@ public class Player { // handles players and logic
         ;
     }
 
-    public void displayPlayerText() {
+    public void displayPlayerText() { // what the method says
         int xCoordinate = 15;
         int yCoordinate = 30;
 
@@ -121,7 +121,7 @@ public class Player { // handles players and logic
         this.fuel = fuel;
     }
 
-    public void displayFuel() {
+    public void displayFuel() { // what the method says
         int xCoordinate = 210;
         int yCoordinate = 30;
 
@@ -133,7 +133,7 @@ public class Player { // handles players and logic
 
     }
 
-    public void displayParachute() {
+    public void displayParachute() { // what the method says
         int xCoordinate = 210;
         int yCoordinate = 57;
 
