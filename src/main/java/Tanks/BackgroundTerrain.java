@@ -177,10 +177,12 @@ public class BackgroundTerrain {
         
     public void setTerrain() {
         // draw lines from height of moving point average to bottom of screen
+        app.beginShape();
         for (int i=0; i<this.movingAveragePoints.length; i++) {
             app.stroke(this.foregroundColour[0], this.foregroundColour[1], this.foregroundColour[2]);
             app.rect(i,this.movingAveragePoints[i],1,640-this.movingAveragePoints[i]);
         }
+        app.endShape();
     }
 
     public void updateTerrain() {
