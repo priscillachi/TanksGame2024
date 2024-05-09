@@ -53,8 +53,8 @@ public class Player { // handles players and logic
     }
 
 
-    public void setTank() {
-        this.tank = new Tank((float)this.xCoordinate, (float)this.yCoordinate, this.colourScheme, this.app, this.levelObj, this);
+    public void setTank() { // create Tank object
+        this.tank = new Tank((float)this.xCoordinate, (float)this.yCoordinate, this.colourScheme, this.app, this.levelObj, this); 
     }
 
 
