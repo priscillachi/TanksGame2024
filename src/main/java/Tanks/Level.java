@@ -62,7 +62,7 @@ public class Level {
         return this.windLevel;
     }
 
-    public void displayWind() {
+    public void displayWind() { // what the method says
         this.windPositiveImage = app.loadImage(app.getClass().getResource("wind.png").getPath().toLowerCase(Locale.ROOT).replace("%20", " ")); // get image
         this.windNegativeImage = app.loadImage(app.getClass().getResource("wind-1.png").getPath().toLowerCase(Locale.ROOT).replace("%20", " ")); // get image
 
@@ -230,18 +230,7 @@ public class Level {
 
     }
 
-
-    public void switchTurns() {
-        for (int i=0; i<this.playersObj.size(); i++) {
-            if (i == this.playersObj.size()-1 && this.turn == this.playersObj.get(i)) {
-                this.turn = this.playersObj.get(0);
-            } else if (i != this.playersObj.size()-1 && this.turn == this.playersObj.get(i)) {
-                this.turn = this.playersObj.get(i+1);
-            }
-        }
-    }
-
-    public void setTurn(Player player) {
+    public void setTurn(Player player) { 
         this.turn = player;
     }
 
@@ -250,7 +239,7 @@ public class Level {
     }
 
 
-    public void displayScoreboard() {
+    public void displayScoreboard() { // what the method says
         app.strokeWeight(5);
         app.stroke(0);
         app.noFill();
@@ -271,7 +260,7 @@ public class Level {
         }
     }
 
-    public void displayFuelParachute() {
+    public void displayFuelParachute() { // what the method says
         fuelImage = app.loadImage(app.getClass().getResource("fuel.png").getPath().toLowerCase(Locale.ROOT).replace("%20", " "));
         app.image(fuelImage, 180, 5, 28, 28);
         this.turn.displayFuel();
