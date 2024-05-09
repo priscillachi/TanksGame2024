@@ -23,6 +23,7 @@ import java.lang.Math;
 public class Projectile {
     
     private App app;
+    private Tank tank;
     private float xCoordinate;
     private float yCoordinate;
     private float velocity;
@@ -35,9 +36,11 @@ public class Projectile {
     private float gravity;
     private int[] colourScheme;
     private PShape projectile;
+    private boolean projectileShot = false;
     
-    public Projectile(App app, float xCoordinate, float yCoordinate, float angle, float power, float diameter, int[] colourScheme) {
+    public Projectile(App app, Tank tank, float xCoordinate, float yCoordinate, float angle, float power, float diameter, int[] colourScheme) {
         this.app = app;
+        this.tank = tank;
         this.gravity = (float)0.24;
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
@@ -79,14 +82,7 @@ public class Projectile {
         projectile.setFill(app.color(this.colourScheme[0], this.colourScheme[1], this.colourScheme[2]));
         projectile.setStroke(app.color(this.colourScheme[0], this.colourScheme[1], this.colourScheme[2]));
         app.shape(projectile);
-        //app.stroke(this.colourScheme[0], this.colourScheme[1], this.colourScheme[2]);
-        //app.fill(this.colourScheme[0], this.colourScheme[1], this.colourScheme[2]);
-        //app.ellipse(xCoordinate, yCoordinate, diameter, diameter);
         this.updateVelocityCoordinates();
-    }
-
-    public void clearProjectile() {
-        projectile = null;
     }
 
     public void drawExplosion() {
@@ -99,6 +95,14 @@ public class Projectile {
 
     public float getYCoordinate() {
         return this.yCoordinate;
+    }
+
+    public void setProjectileShot(boolean value) {
+        this.projectileShot = value;
+    }
+
+    public boolean getProjectileShot() {
+        return this.projectileShot;
     }
 
 }
