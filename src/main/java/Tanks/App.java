@@ -53,12 +53,7 @@ public class App extends PApplet {
 
     public Level currentLevel = level1;
 
-    //private ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
-    //private int index = 0;
-    private Projectile projectile;
     private boolean projectileShot = false;
-    private float projectileXCoordinate;
-    private float projectileYCoordinate;
     private int playersNumber;
     private int playerTurn = 0;
 	
@@ -134,30 +129,10 @@ public class App extends PApplet {
             } else if (key == 's' || key == 'S') {
                 this.currentLevel.getTurn().getHealthPower().powerDecrease();
             } else if (key == ' ') {
-                float turretAngle = this.currentLevel.getTurn().getTank().getAngle();
-                float angle = 0;
-                float xCoordinate = 0;
-                float yCoordinate = 0;
-                float power = this.currentLevel.getTurn().getPower();
-                float diameter = this.currentLevel.getTurn().getTank().getTurretWidth() * 2;
-                int[] colourScheme = this.currentLevel.getTurn().getColourScheme();
-
-                if (turretAngle < 0) {
-                    angle = -turretAngle - (float)Math.PI/2;
-                } else {
-                    angle = (float)Math.PI/2 - turretAngle;
-                }
-
-                if (angle < 0) {
-                    xCoordinate = this.currentLevel.getTurn().getTank().getTurretXCoordinate() - (this.currentLevel.getTurn().getTank().getTankHeight() * (float)Math.cos(Math.abs(angle)));
-                } else {
-                    xCoordinate = this.currentLevel.getTurn().getTank().getTurretXCoordinate() + (this.currentLevel.getTurn().getTank().getTankHeight() * (float)Math.cos(Math.abs(angle)));
-                }
-                yCoordinate = this.currentLevel.getTurn().getTank().getTurretYCoordinate() - (this.currentLevel.getTurn().getTank().getTankHeight() * (float)Math.sin(Math.abs(angle)));
-
-                projectile = new Projectile(this, xCoordinate, yCoordinate, angle, power, diameter, colourScheme);
-                this.projectileShot = true;
+                this.currentLevel.getTurn().getTank().setProjectile();
+                this.currentLevel.getTurn().getTank().getProjectile().setProjectileShot(true);
                 this.playerTurn += 1; // switch turns
+                this.currentLevel.updateWind(); // change wind by + or - 5
             }
         }
         
@@ -227,22 +202,23 @@ public class App extends PApplet {
         this.currentLevel.displayFuelParachute();
         this.currentLevel.displayWind();
         this.currentLevel.displayScoreboard();
+        
+        for (int i=0; i<this.currentLevel.getPlayersObj().size(); i++) {
+            if (this.currentLevel.getPlayersObj().get(i).getTank().getProjectile() != null &&
+            this.currentLevel.getPlayersObj().get(i).getTank().getProjectile().getProjectileShot() == true) {
+                this.currentLevel.getPlayersObj().get(i).getTank().getProjectile().drawProjectile();
 
-        if (projectile != null && this.projectileShot == true) {
-            projectile.drawProjectile();
-            projectileXCoordinate = projectile.getXCoordinate();
-            projectileYCoordinate = projectile.getYCoordinate();
+                float projectileXCoordinate = this.currentLevel.getPlayersObj().get(i).getTank().getProjectile().getXCoordinate();
+                float projectileYCoordinate = this.currentLevel.getPlayersObj().get(i).getTank().getProjectile().getYCoordinate();
 
-            if (projectileXCoordinate >= 0 && projectileXCoordinate <= 864) {
-                if (projectileYCoordinate >= this.currentLevel.getBackgroundTerrain().getMovingAveragePoints()[(int)(projectileXCoordinate)]) {
-                    projectile.clearProjectile();
-                    projectile = null;
-                    projectileShot = false;
+                if (projectileXCoordinate >= 0 && projectileXCoordinate <= 864) {
+                    if (projectileYCoordinate >= this.currentLevel.getBackgroundTerrain().getMovingAveragePoints()[(int)(projectileXCoordinate)]) {
+                        this.currentLevel.getPlayersObj().get(i).getTank().getProjectile().setProjectileShot(false);
+                        this.currentLevel.getPlayersObj().get(i).getTank().clearProjectile();
+                    }
                 }
             }
         }
-
-
 
         //----------------------------------
         //display HUD:
