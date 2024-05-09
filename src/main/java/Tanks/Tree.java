@@ -47,7 +47,4 @@ public class Tree {
         app.image(this.treeImage, this.xCoordinate, this.yCoordinate, this.size, this.size);
     }
     
-    public void moveTree() {
-        ;
-    }
 }
