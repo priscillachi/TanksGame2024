@@ -51,27 +51,27 @@ public class Projectile {
 
     public void setVelocity() {
         this.velocity = (float)((0.16 * this.power) + 2);
-        this.xVelocity = this.velocity * (float)Math.cos(Math.abs(this.angle));
-        this.yVelocity = this.velocity * (float)Math.sin(Math.abs(this.angle));
+        this.xVelocity = this.velocity * (float)Math.cos(Math.abs(this.angle)); // get x component
+        this.yVelocity = this.velocity * (float)Math.sin(Math.abs(this.angle)); // get y component
     }
 
     public void updateVelocityCoordinates() {
 
-        this.yVelocity -= this.gravity;
+        this.yVelocity -= this.gravity; // minus gravity
 
         if ((this.wind < 0 && this.angle < 0) || (this.wind >= 0 && this.angle >= 0)) {
-            this.xVelocity += (float)Math.abs(this.wind * 0.001);
+            this.xVelocity += (float)Math.abs(this.wind * 0.001); // if velocity and wind are in different direction
         } else if ((this.wind >= 0 && this.angle < 0) || (this.wind < 0 && this.angle >= 0)) {
-                this.xVelocity -= (float)Math.abs(this.wind * 0.001);
+            this.xVelocity -= (float)Math.abs(this.wind * 0.001); // if velocity and wind are in same direction
         }
 
         if (this.angle < 0) {
-            this.xCoordinate -= this.xVelocity;
+            this.xCoordinate -= this.xVelocity; // minus velocity if angle < 0
         } else {
-            this.xCoordinate += this.xVelocity;
+            this.xCoordinate += this.xVelocity; // add velocity if angle > 0
         }
 
-        this.yCoordinate -= this.yVelocity;
+        this.yCoordinate -= this.yVelocity; // minus velocity
     }
 
     public void drawProjectile() {
