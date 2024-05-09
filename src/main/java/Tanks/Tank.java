@@ -129,10 +129,6 @@ public class Tank {
         }
     }
 
-    public void destroyTank() {
-        ;
-    }
-
 
     public PShape getTank() {
         return this.tank;
