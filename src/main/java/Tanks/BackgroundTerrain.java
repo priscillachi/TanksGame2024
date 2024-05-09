@@ -62,7 +62,7 @@ public class BackgroundTerrain {
     }
 
 
-    public void setBackground() {
+    public void setBackground() { // read JSON file and add background, foreground
 
         if (!app.levelsData.getJSONObject(level-1).isNull("background")) {
             this.backgroundImage = app.levelsData.getJSONObject(level-1).getString("background");
@@ -173,7 +173,7 @@ public class BackgroundTerrain {
             this.movingAveragePoints[i] = averagePoint;
         }
     }
-    
+
         
     public void setTerrain() {
         // draw lines from height of moving point average to bottom of screen
