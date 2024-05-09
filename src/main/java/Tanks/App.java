@@ -204,9 +204,20 @@ public class App extends PApplet {
 
                 if (projectileXCoordinate >= 0 && projectileXCoordinate <= 864) {
                     if (projectileYCoordinate >= this.currentLevel.getBackgroundTerrain().getMovingAveragePoints()[(int)(projectileXCoordinate)]) {
+                        this.currentLevel.getPlayersObj().get(i).getTank().getProjectile().setExplosionOut(true);
                         this.currentLevel.getPlayersObj().get(i).getTank().getProjectile().setProjectileShot(false);
-                        this.currentLevel.getPlayersObj().get(i).getTank().clearProjectile();
+                        //this.currentLevel.getPlayersObj().get(i).getTank().clearProjectile();
                     }
+                }
+            }
+
+            if (this.currentLevel.getPlayersObj().get(i).getTank().getProjectile() != null && 
+            this.currentLevel.getPlayersObj().get(i).getTank().getProjectile().getExplosionOut() == true) {
+                this.currentLevel.getPlayersObj().get(i).getTank().getProjectile().drawExplosion();
+                System.out.println(this.currentLevel.getPlayersObj().get(i).getTank().getProjectile().getExplosionRadius());
+
+                if (this.currentLevel.getPlayersObj().get(i).getTank().getProjectile().getExplosionRadius() == 30) {
+                    this.currentLevel.getPlayersObj().get(i).getTank().getProjectile().setExplosionOut(false);
                 }
             }
         }
