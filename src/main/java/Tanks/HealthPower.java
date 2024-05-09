@@ -66,7 +66,6 @@ public class HealthPower {
         app.line(xCoordinate, yCoordinate + this.barHeight, xCoordinate + this.powerLength, yCoordinate + this.barHeight);
         app.line(xCoordinate, yCoordinate, xCoordinate, yCoordinate + this.barHeight);
         app.line(xCoordinate + this.powerLength, yCoordinate, xCoordinate + this.powerLength, yCoordinate + this.barHeight);
-
     }
 
     public void displayHealthPowerText() { // what the method says
