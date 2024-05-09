@@ -58,6 +58,10 @@ public class Level {
         this.windLevel += windChange;
     }
 
+    public int getWind() {
+        return this.windLevel;
+    }
+
     public void displayWind() {
         this.windPositiveImage = app.loadImage(app.getClass().getResource("wind.png").getPath().toLowerCase(Locale.ROOT).replace("%20", " ")); // get image
         this.windNegativeImage = app.loadImage(app.getClass().getResource("wind-1.png").getPath().toLowerCase(Locale.ROOT).replace("%20", " ")); // get image
