@@ -70,6 +70,14 @@ public class Player { // handles players and logic
         return this.healthPower;
     }
 
+    public int getHealth() {
+        return this.healthPower.getHealth();
+    }
+
+    public float getPower() {
+        return this.healthPower.getPower();
+    }
+
     public void updateHealth(int health) {
         this.healthPower.updateHealth(health);
     }
