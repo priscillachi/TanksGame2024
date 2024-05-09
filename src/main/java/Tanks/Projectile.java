@@ -37,6 +37,8 @@ public class Projectile {
     private int[] colourScheme;
     private PShape projectile;
     private boolean projectileShot = false;
+    private boolean explosionOut = false;
+    private float explosionRadius = 0;
     
     public Projectile(App app, Tank tank, float xCoordinate, float yCoordinate, float angle, float power, float diameter, int[] colourScheme) {
         this.app = app;
@@ -78,15 +80,37 @@ public class Projectile {
     }
 
     public void drawProjectile() {
-        projectile = app.createShape(app.ELLIPSE, xCoordinate, yCoordinate, diameter, diameter);
-        projectile.setFill(app.color(this.colourScheme[0], this.colourScheme[1], this.colourScheme[2]));
-        projectile.setStroke(app.color(this.colourScheme[0], this.colourScheme[1], this.colourScheme[2]));
-        app.shape(projectile);
-        this.updateVelocityCoordinates();
+        if (this.projectileShot == true) {
+            projectile = app.createShape(app.ELLIPSE, xCoordinate, yCoordinate, diameter, diameter);
+            projectile.setFill(app.color(this.colourScheme[0], this.colourScheme[1], this.colourScheme[2]));
+            projectile.setStroke(app.color(this.colourScheme[0], this.colourScheme[1], this.colourScheme[2]));
+            app.shape(projectile);
+            this.updateVelocityCoordinates();
+        }
     }
 
     public void drawExplosion() {
-        ;
+
+        if (this.explosionOut == true) {
+            app.stroke(255, 0, 0);
+            app.fill (255, 0, 0);
+            app.ellipse(this.xCoordinate, this.yCoordinate, this.explosionRadius*2, this.explosionRadius*2);
+            app.stroke(255, 102, 0);
+            app.fill(255, 102, 0);
+            app.ellipse(this.xCoordinate, this.yCoordinate, this.explosionRadius, this.explosionRadius);
+            app.stroke(255, 255, 0);
+            app.fill(255, 255, 0);
+            app.ellipse(this.xCoordinate, this.yCoordinate, this.explosionRadius*2/5, this.explosionRadius*2/5);
+            this.expandExplosion();
+        }
+    }
+
+    public void expandExplosion() {
+        this.explosionRadius += 5; // 30 pixels over 0.2s = 150 pixels/s = 150 pixels per 30 frames = 5 pixels per frame
+    }
+
+    public float getExplosionRadius() {
+        return this.explosionRadius;
     }
 
     public float getXCoordinate() {
@@ -103,6 +127,14 @@ public class Projectile {
 
     public boolean getProjectileShot() {
         return this.projectileShot;
+    }
+
+    public void setExplosionOut(boolean value) {
+        this.explosionOut = value;
+    }
+
+    public boolean getExplosionOut() {
+        return this.explosionOut;
     }
 
 }
