@@ -195,6 +195,7 @@ public class Level {
 
     }
 
+
     public void sortPlayers() { // alphabetical order
         ArrayList<Player> playersObjSorted = new ArrayList<Player>();
         ArrayList<String> playersSorted = new ArrayList<String>();
@@ -227,8 +228,8 @@ public class Level {
         this.playersObj = playersObjSorted;
         this.playersCoordinates = playersCoordinatesSorted;
         this.colourSchemes = colourSchemesSorted;
-
     }
+
 
     public void setTurn(Player player) { 
         this.turn = player;
@@ -260,6 +261,7 @@ public class Level {
         }
     }
 
+
     public void displayFuelParachute() { // what the method says
         fuelImage = app.loadImage(app.getClass().getResource("fuel.png").getPath().toLowerCase(Locale.ROOT).replace("%20", " "));
         app.image(fuelImage, 180, 5, 28, 28);
@@ -269,5 +271,4 @@ public class Level {
         app.image(parachuteImage, 180, 35, 28, 28);
         this.turn.displayParachute();
     }
-
 }
