@@ -44,7 +44,6 @@ public class Tree {
     }
 
     public void drawTree() {
-        this.groundTree();
         app.image(this.treeImage, this.xCoordinate, this.yCoordinate, this.size, this.size);
     }
     
