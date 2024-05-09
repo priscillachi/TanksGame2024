@@ -41,7 +41,6 @@ public class BackgroundTerrain {
         this.levelObj = levelObj;
     }
 
-    
     public int getLevel() {
         return this.level;
     }
@@ -174,6 +173,7 @@ public class BackgroundTerrain {
             this.movingAveragePoints[i] = averagePoint;
         }
     }
+    
         
     public void setTerrain() {
         // draw lines from height of moving point average to bottom of screen
