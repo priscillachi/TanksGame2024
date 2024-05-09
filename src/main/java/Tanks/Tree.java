@@ -38,7 +38,7 @@ public class Tree {
         this.yCoordinate = yCoordinate;
     }
 
-    public void groundTree() {
+    public void groundTree() { // ensure trees stay on the terrain and don't hang in the air
         this.movingAverages = this.level.getBackgroundTerrain().getMovingAveragePoints();
         this.yCoordinate = this.movingAverages[(int)this.xCoordinate+(this.size/2)]-this.size;
     }
