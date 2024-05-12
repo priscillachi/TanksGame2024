@@ -38,6 +38,8 @@ public class Tank {
     private int speed;
     private boolean rotateTurret=false;
     private Projectile projectile;
+    private float tankCentreX;
+    private float tankCentreY;
 
     public Tank(float xCoordinate, float yCoordinate, int[] colourScheme, App app, Level levelObj, Player player) {
         this.colourScheme = colourScheme;
@@ -45,12 +47,14 @@ public class Tank {
         this.yCoordinate = yCoordinate;
         this.app = app;
         this.levelObj = levelObj;
-        this.tankWidth = 32;
+        this.tankWidth = 30;
         this.tankHeight = 16;
         this.turretWidth = 4;
         this.player = player;
         this.angle=0;
         this.speed = 4;
+        this.tankCentreX = this.xCoordinate + (this.tankWidth/2);
+        this.tankCentreY = this.yCoordinate + (this.tankHeight/2);
     }
 
     public int getTankWidth() {
@@ -72,59 +76,54 @@ public class Tank {
 
 
     public void drawTank() { // draw tank
-        this.groundTank();
-        app.fill(this.colourScheme[0], this.colourScheme[1], this.colourScheme[2]);
-        app.strokeWeight(4);
-        app.stroke(0);
-        app.rotate(0);
-        this.tank = app.createShape(app.RECT, this.xCoordinate, this.yCoordinate, this.tankWidth, this.tankHeight);
-        app.shape(this.tank);
+        if (this.player.getPlayerAlive() == true) {
+            this.groundTank();
+            app.fill(this.colourScheme[0], this.colourScheme[1], this.colourScheme[2]);
+            app.strokeWeight(4);
+            app.stroke(0);
+            app.rotate(0);
+            this.tank = app.createShape(app.RECT, this.xCoordinate, this.yCoordinate, this.tankWidth, this.tankHeight);
+            app.shape(this.tank);
+        }
     }
 
     public void drawTurret() { // draw turret
-        app.fill(0);
-        app.stroke(0);
-        app.strokeWeight(1);
-        app.pushMatrix();
-        this.turretXCoordinate = this.xCoordinate+(this.tankWidth/2);
-        this.turretYCoordinate = this.yCoordinate;
-        app.translate(this.turretXCoordinate, this.turretYCoordinate);
-        app.rotate(this.angle);
-        app.rectMode(app.CENTER);
-        app.rect(0, 0, this.turretWidth, this.tankHeight*2);
-        app.popMatrix();
-        app.rectMode(app.CORNER);
-
+        if (this.player.getPlayerAlive() == true) {
+            app.fill(0);
+            app.stroke(0);
+            app.strokeWeight(1);
+            app.pushMatrix();
+            this.turretXCoordinate = this.xCoordinate+(this.tankWidth/2);
+            this.turretYCoordinate = this.yCoordinate;
+            app.translate(this.turretXCoordinate, this.turretYCoordinate);
+            app.rotate(this.angle);
+            app.rectMode(app.CENTER);
+            app.rect(0, 0, this.turretWidth, this.tankHeight*2);
+            app.popMatrix();
+            app.rectMode(app.CORNER);
+        }
     }
 
     public void rotateTurretLeft() { // up arrow
-        if (this.angle <= (float)(-Math.PI/2)) {
-            ; // do nothing
-        } else {
+        if (this.angle-(float)0.2>=(float)(-Math.PI/2)) {
             this.angle -= (float)0.2;
         }
     }
 
     public void rotateTurretRight() { // down arrow
-        if (this.angle >= (float)Math.PI/2) {
-            ; // do nothing
-        } else {
+        if (this.angle<=(float)Math.PI/2-(float)0.2) {
             this.angle += (float)0.2;
         }
     }
 
     public void moveTankLeft() { // left arrow
-        if (this.xCoordinate == 0) {
-            ; // do nothing
-        } else {
+        if (this.xCoordinate-this.speed >= 0) {
             this.xCoordinate -= this.speed;
         }
     }
 
     public void moveTankRight() { // right arrow
-        if (this.xCoordinate == 864-20) {
-            ; // do nothing
-        } else {
+        if (this.xCoordinate <= 864-32-this.speed) {
             this.xCoordinate += this.speed;
         }
     }
@@ -137,14 +136,6 @@ public class Tank {
 
     public float getAngle() {
         return this.angle;
-    }
-
-    public boolean getRotateTurret() {
-        return this.rotateTurret;
-    }
-
-    public void setRotateTurret(boolean value) {
-        this.rotateTurret = value;
     }
 
     public Player getPlayer() {
@@ -174,8 +165,14 @@ public class Tank {
 
         if (projectileAngle < 0) {
             projectileXCoordinate = this.turretXCoordinate - (this.tankHeight * (float)Math.cos(Math.abs(projectileAngle)));
-        } else {
+        } else if (projectileAngle > 0){
             projectileXCoordinate = this.turretXCoordinate + (this.tankHeight * (float)Math.cos(Math.abs(projectileAngle)));
+        } else {
+            if (this.angle < 0) {
+                projectileXCoordinate = this.turretXCoordinate - this.tankHeight;
+            } else if (this.angle > 0) {
+                projectileXCoordinate = this.turretXCoordinate + this.tankHeight;
+            }
         }
 
         projectileYCoordinate = this.turretYCoordinate - (this.tankHeight * (float)Math.sin(Math.abs(projectileAngle)));
@@ -189,5 +186,24 @@ public class Tank {
 
     public void clearProjectile() {
         this.projectile = null;
+    }
+
+    public float[] tankHitbox() {
+        float[] hitbox = new float[4];
+
+        hitbox[0] = this.tankCentreX - this.tankWidth/2;
+        hitbox[1] = this.tankCentreX + this.tankWidth/2;
+        hitbox[2] = this.tankCentreY - this.tankHeight/2;
+        hitbox[3] = this.tankCentreY + this.tankHeight/2;
+
+        return hitbox;
+    }
+
+    public float getTankCentreX() {
+        return this.tankCentreX;
+    }
+
+    public float getTankCentreY() {
+        return this.tankCentreY;
     }
 }
