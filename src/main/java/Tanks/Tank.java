@@ -40,6 +40,8 @@ public class Tank {
     private Projectile projectile;
     private float tankCentreX;
     private float tankCentreY;
+    private int arrowCount = 0;
+    private boolean arrowOn = false;
 
     public Tank(float xCoordinate, float yCoordinate, int[] colourScheme, App app, Level levelObj, Player player) {
         this.colourScheme = colourScheme;
@@ -102,6 +104,33 @@ public class Tank {
             app.popMatrix();
             app.rectMode(app.CORNER);
         }
+    }
+
+    public void drawArrow() {
+        if (this.arrowOn == true) {
+            app.fill(0);
+            app.stroke(0);
+            app.strokeWeight(1);
+            app.rectMode(app.CENTER);
+            app.rect(this.turretXCoordinate, this.turretYCoordinate-(this.tankHeight*6), this.turretWidth, this.tankHeight*4);
+            app.rectMode(app.CORNER);
+            app.strokeWeight(this.turretWidth);
+            app.line(this.turretXCoordinate-this.tankHeight, this.turretYCoordinate-(this.tankHeight*5), this.turretXCoordinate, this.turretYCoordinate-(this.tankHeight*4));
+            app.line(this.turretXCoordinate+this.tankHeight, this.turretYCoordinate-(this.tankHeight*5), this.turretXCoordinate, this.turretYCoordinate-(this.tankHeight*4));
+            this.arrowCount += 1;
+        }
+
+        if (this.arrowCount == 60) { // remove after two seconds
+            this.arrowOn = false;
+        }
+    }
+
+    public void setArrowOn(boolean value) {
+        this.arrowOn = value;
+    }
+
+    public void setArrowCount(int num) {
+        this.arrowCount = num;
     }
 
     public void rotateTurretLeft() { // up arrow
@@ -206,4 +235,5 @@ public class Tank {
     public float getTankCentreY() {
         return this.tankCentreY;
     }
+
 }
