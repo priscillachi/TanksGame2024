@@ -57,6 +57,10 @@ public class Player { // handles players and logic
         return this.playerAlive;
     }
 
+    public void setPlayerAlive(boolean value) {
+        this.playerAlive = value;
+    }
+
 
     public void setTank() { // create Tank object
         this.tank = new Tank((float)this.xCoordinate, (float)this.yCoordinate, this.colourScheme, this.app, this.levelObj, this); 
@@ -106,8 +110,8 @@ public class Player { // handles players and logic
         app.text(printOut, xCoordinate, yCoordinate);
     }
 
-    public void updateScore() {
-        ;
+    public void updateScore(int score) {
+        this.score = score;
     }
 
     public int getScore() {
