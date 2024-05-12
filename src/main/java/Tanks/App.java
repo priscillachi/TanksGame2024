@@ -80,7 +80,7 @@ public class App extends PApplet {
         frameRate(FPS);
 		//See PApplet javadoc:
 		
-        jsonData = loadJSONObject(configPath);
+        jsonData = loadJSONObject(configPath); // read JSON file
         levelsData = jsonData.getJSONArray("levels");
         playersData = jsonData.getJSONObject("player_colours");
 
@@ -90,6 +90,8 @@ public class App extends PApplet {
         this.level1.setPlayers();
         this.level1.sortPlayers();
         this.level1.setTrees();
+        this.level1.getAlivePlayers().get(this.playerTurn).getTank().setArrowOn(true); // arrow on for first tank
+        this.playersNumber = this.currentLevel.getAlivePlayers().size();
 
         this.level2.getBackgroundTerrain().setTerrainMatrix();
         this.level2.getBackgroundTerrain().calculateMovingAverage();
@@ -97,6 +99,8 @@ public class App extends PApplet {
         this.level2.setPlayers();
         this.level2.sortPlayers();
         this.level2.setTrees();
+        this.level2.getAlivePlayers().get(this.playerTurn).getTank().setArrowOn(true); // arrow on for first tank
+        this.playersNumber = this.currentLevel.getAlivePlayers().size();
 
         this.level3.getBackgroundTerrain().setTerrainMatrix();
         this.level3.getBackgroundTerrain().calculateMovingAverage();
@@ -104,6 +108,8 @@ public class App extends PApplet {
         this.level3.setPlayers();
         this.level3.sortPlayers();
         this.level3.setTrees();
+        this.level3.getAlivePlayers().get(this.playerTurn).getTank().setArrowOn(true); // arrow on for first tank
+        this.playersNumber = this.currentLevel.getAlivePlayers().size();
         
     }
 
@@ -116,22 +122,33 @@ public class App extends PApplet {
         if (key==CODED) {
             if (keyCode == UP) {
                 this.currentLevel.getTurn().getTank().rotateTurretLeft();
-            } else if (keyCode == DOWN) {
+            } 
+            if (keyCode == DOWN) {
                 this.currentLevel.getTurn().getTank().rotateTurretRight();
-            } else if (keyCode == LEFT) {
+            } 
+            if (keyCode == LEFT) {
                 this.currentLevel.getTurn().getTank().moveTankLeft();
-            } else if (keyCode == RIGHT) {
+            } 
+            if (keyCode == RIGHT) {
                 this.currentLevel.getTurn().getTank().moveTankRight();
             }
         } else {
             if (key == 'w' || key == 'W') {
                 this.currentLevel.getTurn().getHealthPower().powerIncrease();
-            } else if (key == 's' || key == 'S') {
+            } 
+            if (key == 's' || key == 'S') {
                 this.currentLevel.getTurn().getHealthPower().powerDecrease();
-            } else if (key == ' ') {
+            } 
+            if (key == ' ') {
                 this.currentLevel.getTurn().getTank().setProjectile();
                 this.currentLevel.getTurn().getTank().getProjectile().setProjectileShot(true);
-                this.playerTurn += 1; // switch turns
+                if (this.playerTurn < this.playersNumber-1) {
+                    this.playerTurn += 1; // switch turns
+                } else if (this.playerTurn == this.playersNumber-1) {
+                    this.playerTurn = 0;
+                }
+                this.currentLevel.getAlivePlayers().get(this.playerTurn).getTank().setArrowOn(true); // arrow on for next tank
+                this.currentLevel.getAlivePlayers().get(this.playerTurn).getTank().setArrowCount(0);
                 this.currentLevel.updateWind(); // change wind by + or - 5
             }
         }
@@ -164,7 +181,6 @@ public class App extends PApplet {
 	@Override
     public void draw() {
         
-        this.playersNumber = this.currentLevel.getAlivePlayers().size(); // switch turns
         if (this.playerTurn < this.playersNumber) {
             this.currentLevel.setTurn(this.currentLevel.getAlivePlayers().get(playerTurn));
         }
@@ -187,6 +203,7 @@ public class App extends PApplet {
             
         }
 
+        this.currentLevel.getTurn().getTank().drawArrow();
         this.currentLevel.getTurn().getHealthPower().drawHealthBar(); // draw healthbar
         this.currentLevel.getTurn().getHealthPower().displayHealthPowerText(); // display health and power amounts
         this.currentLevel.getTurn().displayPlayerText(); // display turn
@@ -195,6 +212,10 @@ public class App extends PApplet {
         this.currentLevel.displayScoreboard(); // draw scoreboard
         
         for (int i=0; i<this.currentLevel.getAlivePlayers().size(); i++) {
+            if (this.currentLevel.getAlivePlayers().get(i).getHealthPower().getHealth() <= 0) {
+                this.currentLevel.getAlivePlayers().get(i).setPlayerAlive(false);
+            }
+
             if (this.currentLevel.getAlivePlayers().get(i).getTank().getProjectile() != null &&
             this.currentLevel.getAlivePlayers().get(i).getTank().getProjectile().getProjectileShot() == true) {
                 this.currentLevel.getAlivePlayers().get(i).getTank().getProjectile().drawProjectile();
@@ -214,14 +235,37 @@ public class App extends PApplet {
 
             if (this.currentLevel.getAlivePlayers().get(i).getTank().getProjectile() != null && 
             this.currentLevel.getAlivePlayers().get(i).getTank().getProjectile().getExplosionOut() == true) {
+                    
                 this.currentLevel.getAlivePlayers().get(i).getTank().getProjectile().drawExplosion();
 
                 if (this.currentLevel.getAlivePlayers().get(i).getTank().getProjectile().getExplosionRadius() == 30) {
                     this.currentLevel.getAlivePlayers().get(i).getTank().getProjectile().setExplosionOut(false);
+                    this.currentLevel.getAlivePlayers().get(i).getTank().getProjectile().setExplosionRadius(0);
+                }
+
+                // calculate tank damage
+                for (int j=0; j<this.currentLevel.getAlivePlayers().size(); j++) {
+                    if (this.currentLevel.getAlivePlayers().get(i).getTank().getProjectile().insideExplosion(this.currentLevel.getAlivePlayers().get(j).getTank().getTankCentreX(), 
+                    this.currentLevel.getAlivePlayers().get(j).getTank().getTankCentreY())) {
+                        float damage = ((30-(this.currentLevel.getAlivePlayers().get(i).getTank().getProjectile().distanceFromExplosion(this.currentLevel.getAlivePlayers().get(j).getTank().getTankCentreX(), 
+                        this.currentLevel.getAlivePlayers().get(j).getTank().getTankCentreY())))/30)*60; // 30-distance from centre of explosion divided by 30, then multipled by 60; i.e. percentage of damage * 60
+                        
+                        if (this.currentLevel.getAlivePlayers().get(j).getHealthPower().getHealth()>=(int)damage) {
+                            this.currentLevel.getAlivePlayers().get(j).getHealthPower().updateHealth(this.currentLevel.getAlivePlayers().get(j).getHealthPower().getHealth()-(int)damage);
+                        } else {
+                            this.currentLevel.getAlivePlayers().get(j).setPlayerAlive(false);
+                        }
+                        
+                        this.currentLevel.getAlivePlayers().get(i).updateScore(this.currentLevel.getAlivePlayers().get(i).getScore()+(int)damage);
+                    }
                 }
             }
+        }
 
-            // calculate tank damage
+        for (int i=0; i<this.currentLevel.getAlivePlayers().size(); i++) {
+            if (this.currentLevel.getAlivePlayers().get(i).getPlayerAlive()==false) {
+                this.currentLevel.removeAlivePlayer(this.currentLevel.getAlivePlayers().get(i));
+            }
         }
 
         //----------------------------------
