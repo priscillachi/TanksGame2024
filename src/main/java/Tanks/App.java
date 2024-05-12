@@ -164,9 +164,9 @@ public class App extends PApplet {
 	@Override
     public void draw() {
         
-        this.playersNumber = this.currentLevel.getPlayersObj().size(); // switch turns
+        this.playersNumber = this.currentLevel.getAlivePlayers().size(); // switch turns
         if (this.playerTurn < this.playersNumber) {
-            this.currentLevel.setTurn(this.currentLevel.getPlayersObj().get(playerTurn));
+            this.currentLevel.setTurn(this.currentLevel.getAlivePlayers().get(playerTurn));
         }
         
         if (this.playerTurn == this.playersNumber) { // when last player is reached, go back to first player
@@ -176,50 +176,52 @@ public class App extends PApplet {
         this.currentLevel.setBackground();
         this.currentLevel.getBackgroundTerrain().setTerrain();
 
-        for (int i=0; i<this.currentLevel.getTrees().size(); i++) {
+        for (int i=0; i<this.currentLevel.getTrees().size(); i++) { // draw trees every frame
             this.currentLevel.getTrees().get(i).groundTree();
             this.currentLevel.getTrees().get(i).drawTree();
         }
 
-        for (int i=0; i<this.currentLevel.getPlayersObj().size(); i++) {
-            this.currentLevel.getPlayersObj().get(i).getTank().drawTurret();
-            this.currentLevel.getPlayersObj().get(i).getTank().drawTank();
+        for (int i=0; i<this.currentLevel.getAlivePlayers().size(); i++) { // draw tanks every frame
+            this.currentLevel.getAlivePlayers().get(i).getTank().drawTurret();
+            this.currentLevel.getAlivePlayers().get(i).getTank().drawTank();
             
         }
 
-        this.currentLevel.getTurn().getHealthPower().drawHealthBar();
-        this.currentLevel.getTurn().getHealthPower().displayHealthPowerText();
-        this.currentLevel.getTurn().displayPlayerText();
-        this.currentLevel.displayFuelParachute();
-        this.currentLevel.displayWind();
-        this.currentLevel.displayScoreboard();
+        this.currentLevel.getTurn().getHealthPower().drawHealthBar(); // draw healthbar
+        this.currentLevel.getTurn().getHealthPower().displayHealthPowerText(); // display health and power amounts
+        this.currentLevel.getTurn().displayPlayerText(); // display turn
+        this.currentLevel.displayFuelParachute(); // draw parachute and fuel
+        this.currentLevel.displayWind(); // draw wind
+        this.currentLevel.displayScoreboard(); // draw scoreboard
         
-        for (int i=0; i<this.currentLevel.getPlayersObj().size(); i++) {
-            if (this.currentLevel.getPlayersObj().get(i).getTank().getProjectile() != null &&
-            this.currentLevel.getPlayersObj().get(i).getTank().getProjectile().getProjectileShot() == true) {
-                this.currentLevel.getPlayersObj().get(i).getTank().getProjectile().drawProjectile();
+        for (int i=0; i<this.currentLevel.getAlivePlayers().size(); i++) {
+            if (this.currentLevel.getAlivePlayers().get(i).getTank().getProjectile() != null &&
+            this.currentLevel.getAlivePlayers().get(i).getTank().getProjectile().getProjectileShot() == true) {
+                this.currentLevel.getAlivePlayers().get(i).getTank().getProjectile().drawProjectile();
 
-                float projectileXCoordinate = this.currentLevel.getPlayersObj().get(i).getTank().getProjectile().getXCoordinate();
-                float projectileYCoordinate = this.currentLevel.getPlayersObj().get(i).getTank().getProjectile().getYCoordinate();
+                float projectileXCoordinate = this.currentLevel.getAlivePlayers().get(i).getTank().getProjectile().getXCoordinate();
+                float projectileYCoordinate = this.currentLevel.getAlivePlayers().get(i).getTank().getProjectile().getYCoordinate();
 
                 if (projectileXCoordinate >= 0 && projectileXCoordinate <= 864) {
+
                     if (projectileYCoordinate >= this.currentLevel.getBackgroundTerrain().getMovingAveragePoints()[(int)(projectileXCoordinate)]) {
-                        this.currentLevel.getPlayersObj().get(i).getTank().getProjectile().setExplosionOut(true);
-                        this.currentLevel.getPlayersObj().get(i).getTank().getProjectile().setProjectileShot(false);
-                        //this.currentLevel.getPlayersObj().get(i).getTank().clearProjectile();
+                        this.currentLevel.getAlivePlayers().get(i).getTank().getProjectile().setExplosionOut(true);
+                        this.currentLevel.getAlivePlayers().get(i).getTank().getProjectile().setProjectileShot(false);
                     }
+
                 }
             }
 
-            if (this.currentLevel.getPlayersObj().get(i).getTank().getProjectile() != null && 
-            this.currentLevel.getPlayersObj().get(i).getTank().getProjectile().getExplosionOut() == true) {
-                this.currentLevel.getPlayersObj().get(i).getTank().getProjectile().drawExplosion();
-                System.out.println(this.currentLevel.getPlayersObj().get(i).getTank().getProjectile().getExplosionRadius());
+            if (this.currentLevel.getAlivePlayers().get(i).getTank().getProjectile() != null && 
+            this.currentLevel.getAlivePlayers().get(i).getTank().getProjectile().getExplosionOut() == true) {
+                this.currentLevel.getAlivePlayers().get(i).getTank().getProjectile().drawExplosion();
 
-                if (this.currentLevel.getPlayersObj().get(i).getTank().getProjectile().getExplosionRadius() == 30) {
-                    this.currentLevel.getPlayersObj().get(i).getTank().getProjectile().setExplosionOut(false);
+                if (this.currentLevel.getAlivePlayers().get(i).getTank().getProjectile().getExplosionRadius() == 30) {
+                    this.currentLevel.getAlivePlayers().get(i).getTank().getProjectile().setExplosionOut(false);
                 }
             }
+
+            // calculate tank damage
         }
 
         //----------------------------------
