@@ -116,6 +116,10 @@ public class Level {
         return this.alivePlayers;
     }
 
+    public void removeAlivePlayer(Player player) {
+        this.alivePlayers.remove(player);
+    }
+
     public ArrayList<int[]> getPlayersCoordinates() {
         return this.playersCoordinates;
     }
