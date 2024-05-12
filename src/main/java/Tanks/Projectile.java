@@ -115,6 +115,10 @@ public class Projectile {
         this.explosionRadius += 5; // 30 pixels over 0.2s = 150 pixels/s = 150 pixels per 30 frames = 5 pixels per frame
     }
 
+    public void setExplosionRadius(float value) {
+        this.explosionRadius = 0;
+    }
+
     public float getExplosionRadius() {
         return this.explosionRadius;
     }
@@ -143,8 +147,12 @@ public class Projectile {
         return this.explosionOut;
     }
 
-    public boolean insideExplosion(float x, float y) {
-        return (((x-this.xCoordinate)*(x-this.xCoordinate))+((y-this.yCoordinate)*(y-this.yCoordinate)) <= this.explosionRadius * this.explosionRadius);
+    public boolean insideExplosion(float x, float y) { // check if another tank is inside explosion
+        return (((x-this.xCoordinate)*(x-this.xCoordinate))+((y-this.yCoordinate)*(y-this.yCoordinate)) <= 30 * 30);
+    }
+
+    public float distanceFromExplosion(float x, float y) { // calculate distance from explosion
+        return (float)Math.sqrt((x-this.xCoordinate)*(x-this.xCoordinate))+((y-this.yCoordinate)*(y-this.yCoordinate));
     }
 
 }
