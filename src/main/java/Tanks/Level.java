@@ -28,6 +28,7 @@ public class Level {
     private ArrayList<int[]> playersCoordinates = new ArrayList<int[]>();
     private ArrayList<int[]> colourSchemes = new ArrayList<int[]>();
     private ArrayList<Player> playersObj = new ArrayList<Player>();
+    private ArrayList<Player> alivePlayers = new ArrayList<Player>();
     private int level;
     private PImage treeImage;
     private ArrayList<Tree> trees = new ArrayList<Tree>();
@@ -109,6 +110,10 @@ public class Level {
 
     public ArrayList<Player> getPlayersObj() {
         return this.playersObj;
+    }
+
+    public ArrayList<Player> getAlivePlayers() {
+        return this.alivePlayers;
     }
 
     public ArrayList<int[]> getPlayersCoordinates() {
@@ -228,6 +233,10 @@ public class Level {
         this.playersObj = playersObjSorted;
         this.playersCoordinates = playersCoordinatesSorted;
         this.colourSchemes = colourSchemesSorted;
+
+        for (int i=0; i<this.playersObj.size(); i++) {
+            this.alivePlayers.add(this.playersObj.get(i));
+        }
     }
 
 
