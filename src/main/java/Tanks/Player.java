@@ -31,6 +31,7 @@ public class Player { // handles players and logic
     private int score;
     private int parachute;
     private int fuel;
+    private boolean playerAlive=true;
 
     public Player(App app, Level levelObj, int xCoordinate, int yCoordinate, int[] colourScheme, String player) {
         this.app = app;
@@ -50,6 +51,10 @@ public class Player { // handles players and logic
 
     public String getPlayerString() {
         return this.player;
+    }
+
+    public boolean getPlayerAlive() {
+        return this.playerAlive;
     }
 
 
