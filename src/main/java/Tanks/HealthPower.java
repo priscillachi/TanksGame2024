@@ -31,6 +31,7 @@ public class HealthPower {
     private int[] colourScheme;
     private float healthLength;
     private float powerLength;
+    private boolean loseHealth=false;
 
     public HealthPower(App app, Level level, Player player) {
         this.app = app;
@@ -91,6 +92,24 @@ public class HealthPower {
         }
     }
 
+    public void decreaseHealth(int decrease) {
+        if (this.player.getTank().getProjectile() != null) {
+            
+            int newHealth = this.health - (int)decrease;
+            if (this.loseHealth==true) {
+                this.updateHealth(newHealth);
+
+                if (this.health==newHealth) {
+                    this.loseHealth = false;
+                }
+            }
+
+            if (this.health==newHealth) {
+                this.loseHealth = false;
+            }
+        }
+    }
+
     public int getHealth() {
         return this.health;
     }
@@ -116,5 +135,9 @@ public class HealthPower {
 
     public float getPower() {
         return this.power;
+    }
+
+    public void setLoseHealth(boolean value) {
+        this.loseHealth = value;
     }
 }
