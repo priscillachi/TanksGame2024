@@ -74,6 +74,7 @@ public class Tank {
     public void groundTank() { // handling the logic for where to ground the tanks
         this.movingAverages = this.levelObj.getBackgroundTerrain().getMovingAveragePoints();
         this.yCoordinate = this.movingAverages[(int)this.xCoordinate+(this.tankWidth/2)]-(this.tankHeight);
+        this.tankCentreY = this.yCoordinate + (this.tankHeight/2);
     }
 
 
@@ -148,12 +149,14 @@ public class Tank {
     public void moveTankLeft() { // left arrow
         if (this.xCoordinate-this.speed >= 0) {
             this.xCoordinate -= this.speed;
+            this.tankCentreX = this.xCoordinate + (this.tankWidth/2);
         }
     }
 
     public void moveTankRight() { // right arrow
         if (this.xCoordinate <= 864-32-this.speed) {
             this.xCoordinate += this.speed;
+            this.tankCentreX = this.xCoordinate + (this.tankWidth/2);
         }
     }
 
@@ -217,17 +220,6 @@ public class Tank {
         this.projectile = null;
     }
 
-    public float[] tankHitbox() {
-        float[] hitbox = new float[4];
-
-        hitbox[0] = this.tankCentreX - this.tankWidth/2;
-        hitbox[1] = this.tankCentreX + this.tankWidth/2;
-        hitbox[2] = this.tankCentreY - this.tankHeight/2;
-        hitbox[3] = this.tankCentreY + this.tankHeight/2;
-
-        return hitbox;
-    }
-
     public float getTankCentreX() {
         return this.tankCentreX;
     }
@@ -236,4 +228,12 @@ public class Tank {
         return this.tankCentreY;
     }
 
+    public boolean insideExplosion(float tankCentreX, float tankCentreY, float explosionCentreX, float explosionCentreY) { // check if another tank is inside explosion
+        return (((tankCentreX-explosionCentreX)*(tankCentreX-explosionCentreX))+((tankCentreY-explosionCentreY)*(tankCentreY-explosionCentreY)) <= 30 * 30);
+    }
+
+    public float damage(float tankCentreX, float tankCentreY, float explosionCentreX, float explosionCentreY) { // calculate distance from explosion
+        return ((30-(float)Math.sqrt(((tankCentreX-explosionCentreX)*(tankCentreX-explosionCentreX)) + ((tankCentreY-explosionCentreY)*(tankCentreY-explosionCentreY))))/30) * 60;
+        // 30-distance from centre of explosion divided by 30, then multipled by 60; i.e. percentage of damage * 60
+    }
 }
