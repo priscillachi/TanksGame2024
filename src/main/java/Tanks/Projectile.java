@@ -147,12 +147,4 @@ public class Projectile {
         return this.explosionOut;
     }
 
-    public boolean insideExplosion(float x, float y) { // check if another tank is inside explosion
-        return (((x-this.xCoordinate)*(x-this.xCoordinate))+((y-this.yCoordinate)*(y-this.yCoordinate)) <= 30 * 30);
-    }
-
-    public float distanceFromExplosion(float x, float y) { // calculate distance from explosion
-        return (float)Math.sqrt((x-this.xCoordinate)*(x-this.xCoordinate))+((y-this.yCoordinate)*(y-this.yCoordinate));
-    }
-
 }
