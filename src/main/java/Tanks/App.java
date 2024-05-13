@@ -181,6 +181,8 @@ public class App extends PApplet {
 	@Override
     public void draw() {
         
+        this.playersNumber = this.currentLevel.getAlivePlayers().size();
+
         if (this.playerTurn < this.playersNumber) {
             this.currentLevel.setTurn(this.currentLevel.getAlivePlayers().get(playerTurn));
         }
@@ -212,6 +214,9 @@ public class App extends PApplet {
         this.currentLevel.displayScoreboard(); // draw scoreboard
         
         for (int i=0; i<this.currentLevel.getAlivePlayers().size(); i++) {
+            float explosionCentreX=-69; // initialise random number hehe
+            float explosionCentreY=-69;
+
             if (this.currentLevel.getAlivePlayers().get(i).getHealthPower().getHealth() <= 0) {
                 this.currentLevel.getAlivePlayers().get(i).setPlayerAlive(false);
             }
@@ -228,8 +233,9 @@ public class App extends PApplet {
                     if (projectileYCoordinate >= this.currentLevel.getBackgroundTerrain().getMovingAveragePoints()[(int)(projectileXCoordinate)]) {
                         this.currentLevel.getAlivePlayers().get(i).getTank().getProjectile().setExplosionOut(true);
                         this.currentLevel.getAlivePlayers().get(i).getTank().getProjectile().setProjectileShot(false);
+                        explosionCentreX = projectileXCoordinate;
+                        explosionCentreY = projectileYCoordinate;
                     }
-
                 }
             }
 
@@ -242,22 +248,27 @@ public class App extends PApplet {
                     this.currentLevel.getAlivePlayers().get(i).getTank().getProjectile().setExplosionOut(false);
                     this.currentLevel.getAlivePlayers().get(i).getTank().getProjectile().setExplosionRadius(0);
                 }
+            }
 
-                // calculate tank damage
-                for (int j=0; j<this.currentLevel.getAlivePlayers().size(); j++) {
-                    if (this.currentLevel.getAlivePlayers().get(i).getTank().getProjectile().insideExplosion(this.currentLevel.getAlivePlayers().get(j).getTank().getTankCentreX(), 
-                    this.currentLevel.getAlivePlayers().get(j).getTank().getTankCentreY())) {
-                        float damage = ((30-(this.currentLevel.getAlivePlayers().get(i).getTank().getProjectile().distanceFromExplosion(this.currentLevel.getAlivePlayers().get(j).getTank().getTankCentreX(), 
-                        this.currentLevel.getAlivePlayers().get(j).getTank().getTankCentreY())))/30)*60; // 30-distance from centre of explosion divided by 30, then multipled by 60; i.e. percentage of damage * 60
-                        
-                        if (this.currentLevel.getAlivePlayers().get(j).getHealthPower().getHealth()>=(int)damage) {
-                            this.currentLevel.getAlivePlayers().get(j).getHealthPower().updateHealth(this.currentLevel.getAlivePlayers().get(j).getHealthPower().getHealth()-(int)damage);
-                        } else {
-                            this.currentLevel.getAlivePlayers().get(j).setPlayerAlive(false);
-                        }
-                        
-                        this.currentLevel.getAlivePlayers().get(i).updateScore(this.currentLevel.getAlivePlayers().get(i).getScore()+(int)damage);
+            // calculate tank damage
+            for (int j=0; j<this.currentLevel.getAlivePlayers().size(); j++) {
+                if (explosionCentreX != -69 && explosionCentreY != -69 && 
+                this.currentLevel.getAlivePlayers().get(i).getTank().insideExplosion(this.currentLevel.getAlivePlayers().get(j).getTank().getTankCentreX(), 
+                this.currentLevel.getAlivePlayers().get(j).getTank().getTankCentreY(), explosionCentreX, explosionCentreY)) {
+
+                    float damage = this.currentLevel.getAlivePlayers().get(i).getTank().damage(this.currentLevel.getAlivePlayers().get(j).getTank().getTankCentreX(),
+                    this.currentLevel.getAlivePlayers().get(j).getTank().getTankCentreY(), explosionCentreX, explosionCentreY);
+
+                    this.currentLevel.getAlivePlayers().get(j).getHealthPower().setLoseHealth(true);
+                    this.currentLevel.getAlivePlayers().get(j).getHealthPower().decreaseHealth((int)damage);
+                    this.currentLevel.getAlivePlayers().get(j).getHealthPower().setLoseHealth(false);
+                    
+                    if (i != j) {
+                        this.currentLevel.getAlivePlayers().get(i).setGainScore(true);
+                        this.currentLevel.getAlivePlayers().get(i).increaseScore((int)damage);
+                        this.currentLevel.getAlivePlayers().get(i).setGainScore(false);
                     }
+                    
                 }
             }
         }
