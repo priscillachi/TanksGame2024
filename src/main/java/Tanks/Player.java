@@ -111,6 +111,10 @@ public class Player { // handles players and logic
         app.text(printOut, xCoordinate, yCoordinate);
     }
 
+    public void setScore(int score) {
+        this.score = score;
+    }
+
     public void increaseScore(int increase) {
         int newScore = increase + this.score;
         if (this.gainScore == true) {
