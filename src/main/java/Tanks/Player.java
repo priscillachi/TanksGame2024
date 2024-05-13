@@ -32,6 +32,7 @@ public class Player { // handles players and logic
     private int parachute;
     private int fuel;
     private boolean playerAlive=true;
+    private boolean gainScore=false;
 
     public Player(App app, Level levelObj, int xCoordinate, int yCoordinate, int[] colourScheme, String player) {
         this.app = app;
@@ -110,8 +111,19 @@ public class Player { // handles players and logic
         app.text(printOut, xCoordinate, yCoordinate);
     }
 
-    public void updateScore(int score) {
-        this.score = score;
+    public void increaseScore(int increase) {
+        int newScore = increase + this.score;
+        if (this.gainScore == true) {
+            this.score = newScore;
+
+            if (this.score == newScore) {
+                this.gainScore = false;
+            }
+        }
+
+        if (this.score == newScore) {
+            this.gainScore = false;
+        }
     }
 
     public int getScore() {
@@ -155,5 +167,9 @@ public class Player { // handles players and logic
         app.fill(0);
         String parachuteNum = String.format("%d", this.parachute);
         app.text(parachuteNum, xCoordinate, yCoordinate);
+    }
+
+    public void setGainScore(boolean value) {
+        this.gainScore = value;
     }
 }
