@@ -243,6 +243,10 @@ public class Level {
         }
     }
 
+    public void sortScores() {
+        ; // to do
+    }
+
 
     public void setTurn(Player player) { 
         this.turn = player;
@@ -270,7 +274,7 @@ public class Level {
             app.text(playerPrint, 710, 50+(26*(i+2)));
 
             app.fill(0);
-            app.text(playerScore, 815, 50+(26*(i+2)));
+            app.text(playerScore, 810, 50+(26*(i+2)));
         }
     }
 
@@ -283,5 +287,20 @@ public class Level {
         parachuteImage = app.loadImage(app.getClass().getResource("parachute.png").getPath().toLowerCase(Locale.ROOT).replace("%20", " "));
         app.image(parachuteImage, 180, 35, 28, 28);
         this.turn.displayParachute();
+    }
+
+    public void displayFinalScoreboard() {
+        this.sortScores();
+        app.textSize(20);
+        app.strokeWeight(1);
+        app.fill(0);
+        String winnerPlayer = String.format("Player %s wins!", this.playersObj.get(0).getPlayerString());
+        app.text(winnerPlayer, 288, 213);
+        for (int i=0; i<this.playersObj.size(); i++) {
+            String playerPrint = String.format("Player %s", this.playersObj.get(i).getPlayerString());
+            String playerScore = String.format("%d", this.playersObj.get(i).getScore());
+            int[] colourScheme = this.colourSchemes.get(i);
+            app.fill(colourScheme[0], colourScheme[1], colourScheme[2]);
+        }
     }
 }
