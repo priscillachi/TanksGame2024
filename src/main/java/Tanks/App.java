@@ -180,7 +180,7 @@ public class App extends PApplet {
      */
 	@Override
     public void draw() {
-        
+
         this.playersNumber = this.currentLevel.getAlivePlayers().size();
 
         if (this.playerTurn < this.playersNumber) {
@@ -276,6 +276,27 @@ public class App extends PApplet {
         for (int i=0; i<this.currentLevel.getAlivePlayers().size(); i++) {
             if (this.currentLevel.getAlivePlayers().get(i).getPlayerAlive()==false) {
                 this.currentLevel.removeAlivePlayer(this.currentLevel.getAlivePlayers().get(i));
+            }
+        }
+
+
+        this.playersNumber = this.currentLevel.getAlivePlayers().size();
+
+        if (this.playersNumber == 1) {
+            if (this.currentLevel == level1) {
+                for (int i=0; i<this.currentLevel.getPlayersObj().size(); i++) {
+                    this.level2.getPlayersObj().get(i).setScore(this.currentLevel.getPlayersObj().get(i).getScore());
+                }
+
+                this.currentLevel = level2;
+            } else if (this.currentLevel == level2) {
+                for (int i=0; i<this.currentLevel.getPlayersObj().size(); i++) {
+                    this.level3.getPlayersObj().get(i).setScore(this.currentLevel.getPlayersObj().get(i).getScore());
+                }
+
+                this.currentLevel = level3;
+            } else if (this.currentLevel == level3) {
+                this.currentLevel.displayFinalScoreboard();
             }
         }
 
