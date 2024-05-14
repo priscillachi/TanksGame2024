@@ -94,7 +94,7 @@ public class HealthPower {
 
     public void decreaseHealth(int decrease) {
         if (this.player.getTank().getProjectile() != null) {
-            
+
             int newHealth = this.health - (int)decrease;
             if (this.loseHealth==true) {
                 this.updateHealth(newHealth);
