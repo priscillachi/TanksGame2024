@@ -70,6 +70,28 @@ public class Tank {
     public int getTurretWidth() {
         return this.turretWidth;
     }
+
+    public void setXCoordinate(float num) {
+        this.xCoordinate = num;
+    }
+
+    public void setYCoordinate(float num) {
+        this.yCoordinate = num;
+    }
+
+    public void increaseYCoordinate(float increase) { // use for descending on parachute
+        if (this.player.getParachuteOn() == true) {
+            this.yCoordinate += increase;
+        }
+    }
+
+    public float getXCoordinate() {
+        return this.xCoordinate;
+    }
+
+    public float getYCoordinate() {
+        return this.yCoordinate;
+    }
     
     public void groundTank() { // handling the logic for where to ground the tanks
         this.movingAverages = this.levelObj.getBackgroundTerrain().getMovingAveragePoints();
@@ -80,7 +102,6 @@ public class Tank {
 
     public void drawTank() { // draw tank
         if (this.player.getPlayerAlive() == true) {
-            this.groundTank();
             app.fill(this.colourScheme[0], this.colourScheme[1], this.colourScheme[2]);
             app.strokeWeight(4);
             app.stroke(0);
@@ -232,8 +253,8 @@ public class Tank {
         return (((tankCentreX-explosionCentreX)*(tankCentreX-explosionCentreX))+((tankCentreY-explosionCentreY)*(tankCentreY-explosionCentreY)) <= 30 * 30);
     }
 
-    public float damage(float tankCentreX, float tankCentreY, float explosionCentreX, float explosionCentreY) { // calculate distance from explosion
+    public float damage(float tankCentreX, float tankCentreY, float explosionCentreX, float explosionCentreY) { // calculate damage from explosion proportional to distance from explosion
         return ((30-(float)Math.sqrt(((tankCentreX-explosionCentreX)*(tankCentreX-explosionCentreX)) + ((tankCentreY-explosionCentreY)*(tankCentreY-explosionCentreY))))/30) * 60;
-        // 30-distance from centre of explosion divided by 30, then multipled by 60; i.e. percentage of damage * 60
+        // 30-distance from centre of explosion divided by 30, then multipled by 60; i.e. fraction of damage * 60
     }
 }
