@@ -41,6 +41,9 @@ public class Level {
     private Player turn;
     private PImage fuelImage;
     private PImage parachuteImage;
+    private int finalScoreboardCount=0;
+    private int switchLevelCount = 0;
+    private boolean switchLevelOn = false;
 
     public Level(App app, int level) {
         this.app = app;
@@ -244,7 +247,26 @@ public class Level {
     }
 
     public void sortScores() {
-        ; // to do
+        boolean swapped;
+        
+        for (int i=0; i<this.playersObj.size()-1; i++) {
+            swapped = false;
+            for (int j=0; j<this.playersObj.size()-i-1; j++) {
+                if (this.playersObj.get(j).getScore()<this.playersObj.get(j+1).getScore()) {
+                    Player temp = this.playersObj.get(j);
+                    this.playersObj.set(j, this.playersObj.get(j+1));
+                    this.playersObj.set(j+1, temp);
+
+                    int[] tempColour = this.colourSchemes.get(j);
+                    this.colourSchemes.set(j, this.colourSchemes.get(j+1));
+                    this.colourSchemes.set(j+1, tempColour);
+
+                    swapped = true;
+                }
+            }
+
+            if (swapped == false) {break;}
+        }
     }
 
 
@@ -265,6 +287,7 @@ public class Level {
         app.line(700, 50+28, 850, 50+28);
         app.strokeWeight(1);
         app.textSize(18);
+        app.fill(0);
         app.text("Scores", 710, 50+20);
         for (int i=0; i<this.playersObj.size(); i++) {
             String playerPrint = String.format("Player %s", this.playersObj.get(i).getPlayerString());
@@ -290,17 +313,61 @@ public class Level {
     }
 
     public void displayFinalScoreboard() {
-        this.sortScores();
-        app.textSize(20);
+        this.sortScores(); // sort descending
+        app.textSize(22);
         app.strokeWeight(1);
         app.fill(0);
         String winnerPlayer = String.format("Player %s wins!", this.playersObj.get(0).getPlayerString());
-        app.text(winnerPlayer, 288, 213);
+        app.text(winnerPlayer, 288, 203);
+        int[] winnerColour = this.colourSchemes.get(0);
+        app.fill(winnerColour[0], winnerColour[1], winnerColour[2], 25);
+        app.strokeWeight(5);
+        app.rect(288, 240, 170, 30*(2+this.playersObj.size()));
+        app.line(288, 280, 458, 280);
+        app.fill(0);
+        app.text("Final Scores", 298, 270);
+
         for (int i=0; i<this.playersObj.size(); i++) {
+
             String playerPrint = String.format("Player %s", this.playersObj.get(i).getPlayerString());
             String playerScore = String.format("%d", this.playersObj.get(i).getScore());
             int[] colourScheme = this.colourSchemes.get(i);
-            app.fill(colourScheme[0], colourScheme[1], colourScheme[2]);
+
+            if (this.finalScoreboardCount >= 21 * i) { // 0.7s buffer between each player and score displayed
+                app.fill(colourScheme[0], colourScheme[1], colourScheme[2]);
+                app.text(playerPrint, 298, 250+(30*(i+2)));
+    
+                app.fill(0);
+                app.text(playerScore, 405, 250+(30*(i+2)));
+            }
         }
+
+        this.finalScoreboardCount += 1; // to make sure there is 0.7s between scores displayed
+    }
+
+    public void setFinalScoreboardCount(int num) {
+        this.finalScoreboardCount = num;
+    }
+
+    public void increaseSwitchLevelCount(int increase) {
+        if (this.switchLevelOn == true) {
+            this.switchLevelCount += increase;
+        }
+    }
+
+    public void setSwitchLevelOn(boolean value) {
+        this.switchLevelOn = value;
+    }
+
+    public void setSwitchLevelCount(int num) {
+        this.switchLevelCount = num;
+    }
+
+    public int getSwitchLevelCount() {
+        return this.switchLevelCount;
+    }
+
+    public PImage getParachutImage() {
+        return this.parachuteImage;
     }
 }
