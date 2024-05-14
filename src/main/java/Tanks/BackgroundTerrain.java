@@ -185,8 +185,28 @@ public class BackgroundTerrain {
         app.endShape();
     }
 
-    public void updateTerrain() {
-        // change moving average points here;
-        //set terrain again;
+    public void updateTerrain(int x, float newYCoordinate) {
+        this.movingAveragePoints[x] = newYCoordinate;
+    }
+
+    public boolean insideExplosion(int x, float explosionCentreX, float explosionCentreY) {
+        return ((((float)x-explosionCentreX)*((float)x-explosionCentreX))+
+        ((this.movingAveragePoints[x]-explosionCentreY)*(this.movingAveragePoints[x]-explosionCentreY)) <= 30 * 30);
+    }
+
+    public boolean aboveExplosion(int x, float explosionCentreX, float explosionCentreY) {
+        return (this.movingAveragePoints[x] < explosionCentreY-(float)Math.sqrt((30*30)-((explosionCentreX-(float)x)*(explosionCentreX-(float)x))));
+    }
+
+    public float calculateNewY1(int x, float explosionCentreX, float explosionCentreY) { // use function of circle to update new y coordinate
+        float circleY = (float)Math.sqrt((30*30)-((explosionCentreX-(float)x)*(explosionCentreX-(float)x)));
+        float newY = this.movingAveragePoints[x]+(circleY-(this.movingAveragePoints[x]-explosionCentreY));
+        return newY;
+    }
+
+    public float calculateNewY2(int x, float explosionCentreX, float explosionCentreY) { // use when there is terrain on top of explosion
+        float circleY = (float)Math.sqrt((30*30)-((explosionCentreX-(float)x)*(explosionCentreX-(float)x)));
+        float newY = this.movingAveragePoints[x]+(2*circleY);
+        return newY;
     }
 }
