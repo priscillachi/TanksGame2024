@@ -33,6 +33,7 @@ public class Player { // handles players and logic
     private int fuel;
     private boolean playerAlive=true;
     private boolean gainScore=false;
+    private boolean parachuteOn=false;
 
     public Player(App app, Level levelObj, int xCoordinate, int yCoordinate, int[] colourScheme, String player) {
         this.app = app;
@@ -146,11 +147,11 @@ public class Player { // handles players and logic
         this.fuel = fuel;
     }
 
-    public void updateParachute(int parachute) {
+    public void setParachute(int parachute) {
         this.parachute = parachute;
     }
 
-    public void displayFuel() { // what the method says
+    public void displayFuel() { // display parachute symbol and amount in top left corner
         int xCoordinate = 210;
         int yCoordinate = 30;
 
@@ -162,7 +163,7 @@ public class Player { // handles players and logic
 
     }
 
-    public void displayParachute() { // what the method says
+    public void displayParachute() { // display parachute symbol and number in top left corner
         int xCoordinate = 210;
         int yCoordinate = 57;
 
@@ -175,5 +176,20 @@ public class Player { // handles players and logic
 
     public void setGainScore(boolean value) {
         this.gainScore = value;
+    }
+
+    public void drawParachute() { //draw parachute on tank
+        if (this.parachuteOn==true) {
+            PImage parachute = this.levelObj.getParachutImage();
+            app.image(parachute, this.tank.getXCoordinate()-10, this.tank.getYCoordinate()-(3*this.tank.getTankHeight()), this.tank.getTankWidth()+20, 3*this.tank.getTankHeight());
+        }
+    }
+
+    public void setParachuteOn(boolean value) {
+        this.parachuteOn = value;
+    }
+
+    public boolean getParachuteOn() {
+        return this.parachuteOn;
     }
 }
