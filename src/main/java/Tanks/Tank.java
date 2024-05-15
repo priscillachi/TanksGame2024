@@ -46,6 +46,16 @@ public class Tank {
     private boolean explosionOut = false;
     private boolean insideExplosion = false;
 
+    /**
+     * Constructor for Tank object.
+     * 
+     * @param xCoordinate is the x-coordinate of a tank, which updates when the LEFT and RIGHT keys are pressed.
+     * @param yCoordinate is the y-coordinate of a tank, which is grounded to the terrain, unless the tank is falling after the terrain below it falls.
+     * @param colourScheme is the colour scheme of the Player object which the Tank object belongs to.
+     * @param app is the App object that we will pass through to allow for drawing + more implementations of the PApplet library.
+     * @param levelObj is the Level object which the Tank object belongs to.
+     * @param player is the Player object which the Tank object belongs to.
+     */
     public Tank(float xCoordinate, float yCoordinate, int[] colourScheme, App app, Level levelObj, Player player) {
         this.colourScheme = colourScheme;
         this.xCoordinate = xCoordinate;
@@ -62,6 +72,7 @@ public class Tank {
         this.tankCentreY = this.yCoordinate + (this.tankHeight/2);
     }
 
+    // no Javadoc comments required for setters and getters
     public int getTankWidth() {
         return this.tankWidth;
     }
@@ -82,73 +93,12 @@ public class Tank {
         this.yCoordinate = num;
     }
 
-    public void increaseYCoordinate(float increase) { // use for descending on parachute
-        if (this.player.getParachuteOn() == true) {
-            this.yCoordinate += increase;
-        }
-    }
-
     public float getXCoordinate() {
         return this.xCoordinate;
     }
 
     public float getYCoordinate() {
         return this.yCoordinate;
-    }
-    
-    public void groundTank() { // handling the logic for where to ground the tanks
-        this.movingAverages = this.levelObj.getBackgroundTerrain().getMovingAveragePoints();
-        this.yCoordinate = this.movingAverages[(int)this.xCoordinate+(this.tankWidth/2)]-(this.tankHeight);
-        this.tankCentreY = this.yCoordinate + (this.tankHeight/2);
-    }
-
-
-    public void drawTank() { // draw tank
-        if (this.player.getPlayerAlive() == true) {
-            app.fill(this.colourScheme[0], this.colourScheme[1], this.colourScheme[2]);
-            app.strokeWeight(4);
-            app.stroke(0);
-            app.rotate(0);
-            this.tank = app.createShape(app.RECT, this.xCoordinate, this.yCoordinate, this.tankWidth, this.tankHeight);
-            app.shape(this.tank);
-            this.player.drawShield();
-        }
-    }
-
-    public void drawTurret() { // draw turret
-        if (this.player.getPlayerAlive() == true) {
-            app.fill(0);
-            app.stroke(0);
-            app.strokeWeight(1);
-            app.pushMatrix();
-            this.turretXCoordinate = this.xCoordinate+(this.tankWidth/2);
-            this.turretYCoordinate = this.yCoordinate;
-            app.translate(this.turretXCoordinate, this.turretYCoordinate);
-            app.rotate(this.angle);
-            app.rectMode(app.CENTER);
-            app.rect(0, 0, this.turretWidth, this.tankHeight*2);
-            app.popMatrix();
-            app.rectMode(app.CORNER);
-        }
-    }
-
-    public void drawArrow() {
-        if (this.arrowOn == true) {
-            app.fill(0);
-            app.stroke(0);
-            app.strokeWeight(1);
-            app.rectMode(app.CENTER);
-            app.rect(this.turretXCoordinate, this.turretYCoordinate-(this.tankHeight*6), this.turretWidth, this.tankHeight*4);
-            app.rectMode(app.CORNER);
-            app.strokeWeight(this.turretWidth);
-            app.line(this.turretXCoordinate-this.tankHeight, this.turretYCoordinate-(this.tankHeight*5), this.turretXCoordinate, this.turretYCoordinate-(this.tankHeight*4));
-            app.line(this.turretXCoordinate+this.tankHeight, this.turretYCoordinate-(this.tankHeight*5), this.turretXCoordinate, this.turretYCoordinate-(this.tankHeight*4));
-            this.arrowCount += 1;
-        }
-
-        if (this.arrowCount == 60) { // remove after two seconds
-            this.arrowOn = false;
-        }
     }
 
     public void setArrowOn(boolean value) {
@@ -157,38 +107,6 @@ public class Tank {
 
     public void setArrowCount(int num) {
         this.arrowCount = num;
-    }
-
-    public void rotateTurretLeft() { // up arrow
-        if (this.angle-(float)0.2>=(float)(-Math.PI/2)) {
-            this.angle -= (float)0.2;
-        }
-    }
-
-    public void rotateTurretRight() { // down arrow
-        if (this.angle<=(float)Math.PI/2-(float)0.2) {
-            this.angle += (float)0.2;
-        }
-    }
-
-    public void moveTankLeft() { // left arrow
-        if (this.xCoordinate-this.speed >= 0 && this.player.getFuel()>=this.speed) {
-            this.xCoordinate -= this.speed;
-            this.tankCentreX = this.xCoordinate + (this.tankWidth/2);
-
-            int currentFuel = this.player.getFuel();
-            this.player.setFuel(currentFuel-this.speed);
-        }
-    }
-
-    public void moveTankRight() { // right arrow
-        if (this.xCoordinate <= 864-32-this.speed && this.player.getFuel()>=this.speed) {
-            this.xCoordinate += this.speed;
-            this.tankCentreX = this.xCoordinate + (this.tankWidth/2);
-
-            int currentFuel = this.player.getFuel();
-            this.player.setFuel(currentFuel-this.speed);
-        }
     }
 
 
@@ -213,6 +131,166 @@ public class Tank {
         return this.turretYCoordinate;
     }
 
+    public Projectile getProjectile() {
+        return this.projectile;
+    }
+
+    public void clearProjectile() {
+        this.projectile = null;
+    }
+
+    public float getTankCentreX() {
+        return this.tankCentreX;
+    }
+
+    public float getTankCentreY() {
+        return this.tankCentreY;
+    }
+
+    public void setInsideExplosion(boolean value) {
+        this.insideExplosion = false;
+    }
+
+    public boolean getInsideExplosion() {
+        return this.insideExplosion;
+    }
+
+    public void setExplosionOut(boolean value) {
+        this.explosionOut = value;
+    }
+
+    public boolean getExplosionOut() {
+        return this.explosionOut;
+    }
+
+    public float getExplosionRadius() {
+        return this.explosionRadius;
+    }
+
+    /**
+     * Increases the y-coordinate when the tank is descending, either on a parachute or without a parachute.
+     * 
+     * @param increase is the number of pixels we want our y-coordinate to increase by.
+     */
+    public void increaseYCoordinate(float increase) { // use for descending
+        if (this.player.getParachuteOn() == true) {
+            this.yCoordinate += increase;
+        }
+    }
+    
+    /**
+     * Keeps the tank on the terrain.
+     */
+    public void groundTank() { // handling the logic for where to ground the tanks
+        this.movingAverages = this.levelObj.getBackgroundTerrain().getMovingAveragePoints();
+        this.yCoordinate = this.movingAverages[(int)this.xCoordinate+(this.tankWidth/2)]-(this.tankHeight);
+        this.tankCentreY = this.yCoordinate + (this.tankHeight/2);
+    }
+
+    /**
+     * Draws the tank. Will draw the shield if it is being hit and has shields left to use.
+     */
+    public void drawTank() { // draw tank
+        if (this.player.getPlayerAlive() == true) {
+            app.fill(this.colourScheme[0], this.colourScheme[1], this.colourScheme[2]);
+            app.strokeWeight(4);
+            app.stroke(0);
+            app.rotate(0);
+            this.tank = app.createShape(app.RECT, this.xCoordinate, this.yCoordinate, this.tankWidth, this.tankHeight);
+            app.shape(this.tank);
+            this.player.drawShield();
+        }
+    }
+
+    /**
+     * Draws the turret and handles its rotation when the UP and DOWN keys are pressed.
+     */
+    public void drawTurret() { // draw turret
+        if (this.player.getPlayerAlive() == true) {
+            app.fill(0);
+            app.stroke(0);
+            app.strokeWeight(1);
+            app.pushMatrix();
+            this.turretXCoordinate = this.xCoordinate+(this.tankWidth/2);
+            this.turretYCoordinate = this.yCoordinate;
+            app.translate(this.turretXCoordinate, this.turretYCoordinate);
+            app.rotate(this.angle);
+            app.rectMode(app.CENTER);
+            app.rect(0, 0, this.turretWidth, this.tankHeight*2);
+            app.popMatrix();
+            app.rectMode(app.CORNER);
+        }
+    }
+
+    /**
+     * Draws the arrow indicating the player's turn. Disappears after 2 seconds.
+     */
+    public void drawArrow() {
+        if (this.arrowOn == true) {
+            app.fill(0);
+            app.stroke(0);
+            app.strokeWeight(1);
+            app.rectMode(app.CENTER);
+            app.rect(this.turretXCoordinate, this.turretYCoordinate-(this.tankHeight*6), this.turretWidth, this.tankHeight*4);
+            app.rectMode(app.CORNER);
+            app.strokeWeight(this.turretWidth);
+            app.line(this.turretXCoordinate-this.tankHeight, this.turretYCoordinate-(this.tankHeight*5), this.turretXCoordinate, this.turretYCoordinate-(this.tankHeight*4));
+            app.line(this.turretXCoordinate+this.tankHeight, this.turretYCoordinate-(this.tankHeight*5), this.turretXCoordinate, this.turretYCoordinate-(this.tankHeight*4));
+            this.arrowCount += 1;
+        }
+
+        if (this.arrowCount == 60) { // remove after two seconds
+            this.arrowOn = false;
+        }
+    }
+
+    /**
+     * Rotates the turret left when the UP arrow is pressed. Call in the keyPressed() function of the App class.
+     */
+    public void rotateTurretLeft() { // up arrow
+        if (this.angle-(float)0.2>=(float)(-Math.PI/2)) {
+            this.angle -= (float)0.2;
+        }
+    }
+
+    /**
+     * Rotates the turret right when the DOWN arrow is pressed. Call in the keyPressed() function of the App class.
+     */
+    public void rotateTurretRight() { // down arrow
+        if (this.angle<=(float)Math.PI/2-(float)0.2) {
+            this.angle += (float)0.2;
+        }
+    }
+
+    /**
+     * Moves the tank left when the LEFT arrow is pressed by updating the x-coordinate and fuel. Call in the keyPressed() function of the App class.
+     */
+    public void moveTankLeft() { // left arrow
+        if (this.xCoordinate-this.speed >= 0 && this.player.getFuel()>=this.speed) {
+            this.xCoordinate -= this.speed;
+            this.tankCentreX = this.xCoordinate + (this.tankWidth/2);
+
+            int currentFuel = this.player.getFuel();
+            this.player.setFuel(currentFuel-this.speed);
+        }
+    }
+
+    /**
+     * Moves the tank right when the RIGHT arrow is pressed by updating the x-coordinate and fuel. Call in the keyPressed() function of the App class.
+     */
+    public void moveTankRight() { // right arrow
+        if (this.xCoordinate <= 864-32-this.speed && this.player.getFuel()>=this.speed) {
+            this.xCoordinate += this.speed;
+            this.tankCentreX = this.xCoordinate + (this.tankWidth/2);
+
+            int currentFuel = this.player.getFuel();
+            this.player.setFuel(currentFuel-this.speed);
+        }
+    }
+
+    /**
+     * Creates a new Projectile object each time the spacebar is pressed.
+     */
     public void setProjectile() {
         float projectileAngle = 0;
         float projectileXCoordinate = 0;
@@ -243,40 +321,37 @@ public class Tank {
         projectile = new Projectile(this.app, this, projectileXCoordinate, projectileYCoordinate, projectileAngle, power, diameter, this.colourScheme);
     }
 
-    public Projectile getProjectile() {
-        return this.projectile;
-    }
-
-    public void clearProjectile() {
-        this.projectile = null;
-    }
-
-    public float getTankCentreX() {
-        return this.tankCentreX;
-    }
-
-    public float getTankCentreY() {
-        return this.tankCentreY;
-    }
-
+    /**
+     * Returns true if another tank is inside the projectile's explosion.
+     * 
+     * @param tankCentreX is the x-coordinate of another tank's centre.
+     * @param tankCentreY is the y-coordinate of another tank's centre.
+     * @param explosionCentreX is the x-coordinate of the projectile's explosion centre.
+     * @param explosionCentreY is the y-coordinate of the projectile's explosion centre.
+     * @return true if another tank is inside the explosion circle, false if otherwise.
+     */
     public boolean insideExplosion(float tankCentreX, float tankCentreY, float explosionCentreX, float explosionCentreY) { // check if another tank is inside explosion
         this.insideExplosion = true;
         return (((tankCentreX-explosionCentreX)*(tankCentreX-explosionCentreX))+((tankCentreY-explosionCentreY)*(tankCentreY-explosionCentreY)) <= 30 * 30);
     }
 
-    public void setInsideExplosion(boolean value) {
-        this.insideExplosion = false;
-    }
-
-    public boolean getInsideExplosion() {
-        return this.insideExplosion;
-    }
-
+    /**
+     * Calculates the damange from the explosion. This is proportional to the distance from the explosion.
+     * 
+     * @param tankCentreX is the x-coordinate of another tank's centre.
+     * @param tankCentreY is the y-coordinate of another tank's centre.
+     * @param explosionCentreX is the x-coordinate of the projectile's explosion centre.
+     * @param explosionCentreY is the y-coordinate of the projectile's explosion centre.
+     * @return 30-distance from centre of explosion divided by 30, then multipled by 60; i.e. fraction of damage * 60
+     */
     public float damage(float tankCentreX, float tankCentreY, float explosionCentreX, float explosionCentreY) { // calculate damage from explosion proportional to distance from explosion
         return ((30-(float)Math.sqrt(((tankCentreX-explosionCentreX)*(tankCentreX-explosionCentreX)) + ((tankCentreY-explosionCentreY)*(tankCentreY-explosionCentreY))))/30) * 60;
         // 30-distance from centre of explosion divided by 30, then multipled by 60; i.e. fraction of damage * 60
     }
 
+    /**
+     * Draws explosion of the tank when it dies.
+     */
     public void drawExplosion() { // when health is 0
         if (this.explosionOut == true) {
             app.stroke(255, 0, 0);
@@ -292,19 +367,10 @@ public class Tank {
         }
     }
 
+    /**
+     * Expands the explosion of the tank as it dies.
+     */
     public void expandExplosion() {
-        this.explosionRadius += 5; // 30 pixels over 0.2s = 150 pixels/s = 150 pixels per 30 frames = 5 pixels per frame
-    }
-
-    public void setExplosionOut(boolean value) {
-        this.explosionOut = value;
-    }
-
-    public boolean getExplosionOut() {
-        return this.explosionOut;
-    }
-
-    public float getExplosionRadius() {
-        return this.explosionRadius;
+        this.explosionRadius += 5; 
     }
 }
