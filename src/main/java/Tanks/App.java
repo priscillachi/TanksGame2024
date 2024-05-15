@@ -145,8 +145,10 @@ public class App extends PApplet {
                 }
 
                 if (this.currentLevel.getAlivePlayers().size() > 0) {
-                    this.currentLevel.getAlivePlayers().get(this.playerTurn).getTank().setArrowOn(true); // arrow on for next tank
-                    this.currentLevel.getAlivePlayers().get(this.playerTurn).getTank().setArrowCount(0);
+                    if (this.playerTurn < this.currentLevel.getAlivePlayers().size()) {
+                        this.currentLevel.getAlivePlayers().get(this.playerTurn).getTank().setArrowOn(true); // arrow on for next tank
+                        this.currentLevel.getAlivePlayers().get(this.playerTurn).getTank().setArrowCount(0);
+                    }
                 }
                 this.currentLevel.updateWind(); // change wind by + or - 5
             }
@@ -160,7 +162,48 @@ public class App extends PApplet {
                     this.setup(); // call setup
 
                 } else {
-                    ; // repairs
+                    int currentScore = this.currentLevel.getAlivePlayers().get(this.playerTurn).getScore();
+                    if (currentScore >= 20) {
+
+                        int currentHealth = this.currentLevel.getAlivePlayers().get(this.playerTurn).getHealth();
+
+                        if (currentHealth <= 80) {
+                            this.currentLevel.getAlivePlayers().get(this.playerTurn).setScore(currentScore - 20);
+                            this.currentLevel.getAlivePlayers().get(this.playerTurn).updateHealth(currentHealth + 20);
+                        } else if (currentHealth > 80 && currentHealth < 100) {
+                            int healthIncrease = 100-currentHealth;
+                            this.currentLevel.getAlivePlayers().get(this.playerTurn).setScore(currentScore-healthIncrease);
+                            this.currentLevel.getAlivePlayers().get(this.playerTurn).updateHealth(100);
+                        }
+
+                    }
+                }
+            }
+            if (key == 'f') {
+                int currentScore = this.currentLevel.getAlivePlayers().get(this.playerTurn).getScore();
+
+                if (currentScore >= 10) {
+                    int currentFuel = this.currentLevel.getAlivePlayers().get(this.playerTurn).getFuel();
+                    this.currentLevel.getAlivePlayers().get(this.playerTurn).setFuel(currentFuel + 200);
+                    this.currentLevel.getAlivePlayers().get(this.playerTurn).setScore(currentScore-10);
+                }
+            }
+            if (key == 'h') {
+                int currentScore = this.currentLevel.getAlivePlayers().get(this.playerTurn).getScore();
+
+                if (currentScore >= 20) {
+                    int currentShield = this.currentLevel.getAlivePlayers().get(this.playerTurn).getShield();
+                    this.currentLevel.getAlivePlayers().get(this.playerTurn).setShield(currentShield+1);
+                    this.currentLevel.getAlivePlayers().get(this.playerTurn).setScore(currentScore - 20);
+                }
+            }
+            if (key == 'p') {
+                int currentScore = this.currentLevel.getAlivePlayers().get(this.playerTurn).getScore();
+
+                if (currentScore >= 15) {
+                    int currentParachute = this.currentLevel.getAlivePlayers().get(this.playerTurn).getParachute();
+                    this.currentLevel.getAlivePlayers().get(this.playerTurn).setParachute(currentParachute+1);
+                    this.currentLevel.getAlivePlayers().get(this.playerTurn).setScore(currentScore - 15);
                 }
             }
         }
@@ -230,6 +273,7 @@ public class App extends PApplet {
         this.currentLevel.getTurn().displayPlayerText(); // display turn
         this.currentLevel.displayFuelParachute(); // draw parachute and fuel
         this.currentLevel.displayWind(); // draw wind
+        this.currentLevel.displayShield();
         
         for (int i=0; i<this.currentLevel.getAlivePlayers().size(); i++) {
             float explosionCentreX=-69; // initialise random number hehe
@@ -241,6 +285,7 @@ public class App extends PApplet {
 
             if (this.currentLevel.getAlivePlayers().get(i).getTank().getYCoordinate()>640) { // player is dead if they all terrain below them falls
                 this.currentLevel.getAlivePlayers().get(i).setPlayerAlive(false);
+                this.currentLevel.getAlivePlayers().get(i).setBelowMap(true);
             }
 
             if (this.currentLevel.getAlivePlayers().get(i).getTank().getProjectile() != null && // ensures that projectile has been shot
@@ -296,19 +341,24 @@ public class App extends PApplet {
                 this.currentLevel.getAlivePlayers().get(i).getTank().insideExplosion(this.currentLevel.getAlivePlayers().get(j).getTank().getTankCentreX(), 
                 this.currentLevel.getAlivePlayers().get(j).getTank().getTankCentreY(), explosionCentreX, explosionCentreY)) { // checks if tank within circle of explosion
 
-                    float damage = this.currentLevel.getAlivePlayers().get(i).getTank().damage(this.currentLevel.getAlivePlayers().get(j).getTank().getTankCentreX(),
-                    this.currentLevel.getAlivePlayers().get(j).getTank().getTankCentreY(), explosionCentreX, explosionCentreY); // calculate damage
+                    if (this.currentLevel.getAlivePlayers().get(j).getShield()>0) {
+                        int currentShield = this.currentLevel.getAlivePlayers().get(j).getShield();
+                        this.currentLevel.getAlivePlayers().get(j).setShieldOn(true);
 
-                    this.currentLevel.getAlivePlayers().get(j).getHealthPower().setLoseHealth(true); 
-                    this.currentLevel.getAlivePlayers().get(j).getHealthPower().decreaseHealth((int)damage); // decrease tank health if in circle of explosion, proportionate to distance
-                    this.currentLevel.getAlivePlayers().get(j).getHealthPower().setLoseHealth(false);
-                    
-                    if (i != j) { // ensures that tank cannot shoot itself to gain points
-                        this.currentLevel.getAlivePlayers().get(i).setGainScore(true);
-                        this.currentLevel.getAlivePlayers().get(i).increaseScore((int)damage); // increase score
-                        this.currentLevel.getAlivePlayers().get(i).setGainScore(false);
+                    } else {
+                        float damage = this.currentLevel.getAlivePlayers().get(i).getTank().damage(this.currentLevel.getAlivePlayers().get(j).getTank().getTankCentreX(),
+                        this.currentLevel.getAlivePlayers().get(j).getTank().getTankCentreY(), explosionCentreX, explosionCentreY); // calculate damage
+
+                        this.currentLevel.getAlivePlayers().get(j).getHealthPower().setLoseHealth(true); 
+                        this.currentLevel.getAlivePlayers().get(j).getHealthPower().decreaseHealth((int)damage); // decrease tank health if in circle of explosion, proportionate to distance
+                        this.currentLevel.getAlivePlayers().get(j).getHealthPower().setLoseHealth(false);
+                        
+                        if (i != j) { // ensures that tank cannot shoot itself to gain points
+                            this.currentLevel.getAlivePlayers().get(i).setGainScore(true);
+                            this.currentLevel.getAlivePlayers().get(i).increaseScore((int)damage); // increase score
+                            this.currentLevel.getAlivePlayers().get(i).setGainScore(false);
+                        }
                     }
-                    
                 }
 
                 // check for parachute if tank higher than ground
@@ -320,7 +370,7 @@ public class App extends PApplet {
                         this.currentLevel.getAlivePlayers().get(j).getTank().drawTurret();
                         this.currentLevel.getAlivePlayers().get(j).getTank().drawTank();
 
-                        this.currentLevel.getAlivePlayers().get(j).getTank().increaseYCoordinate((float)0.5);
+                        this.currentLevel.getAlivePlayers().get(j).getTank().increaseYCoordinate((float)0.4);
 
                         if (this.currentLevel.getAlivePlayers().get(j).getTank().getYCoordinate() >= 
                         this.currentLevel.getBackgroundTerrain().getMovingAveragePoints()[(int)this.currentLevel.getAlivePlayers().get(j).getTank().getXCoordinate()+
@@ -334,6 +384,10 @@ public class App extends PApplet {
                         float heightFall = ((this.currentLevel.getBackgroundTerrain().getMovingAveragePoints()[(int)this.currentLevel.getAlivePlayers().get(j).getTank().getXCoordinate()+
                         (this.currentLevel.getAlivePlayers().get(j).getTank().getTankWidth()/2)]-(this.currentLevel.getAlivePlayers().get(j).getTank().getTankHeight())) -
                         this.currentLevel.getAlivePlayers().get(j).getTank().getYCoordinate());
+
+                        this.currentLevel.getAlivePlayers().get(j).getTank().drawTurret();
+                        this.currentLevel.getAlivePlayers().get(j).getTank().drawTank();
+                        this.currentLevel.getAlivePlayers().get(j).getTank().increaseYCoordinate((float)0.8); // fall down at twice the speed with no parachute
 
                         this.currentLevel.getAlivePlayers().get(j).getHealthPower().setLoseHealth(true); 
                         this.currentLevel.getAlivePlayers().get(j).getHealthPower().decreaseHealth((int)heightFall); // decrease tank health if in circle of explosion, proportionate to distance
@@ -351,7 +405,21 @@ public class App extends PApplet {
 
         for (int i=0; i<this.currentLevel.getAlivePlayers().size(); i++) {
             if (this.currentLevel.getAlivePlayers().get(i).getPlayerAlive()==false) {
-                this.currentLevel.removeAlivePlayer(this.currentLevel.getAlivePlayers().get(i)); // remove player from alivePlayers if not alive
+                this.currentLevel.getAlivePlayers().get(i).getTank().setExplosionOut(true);
+                this.currentLevel.getAlivePlayers().get(i).getTank().drawExplosion();
+
+                if (this.currentLevel.getAlivePlayers().get(i).getBelowMap() == true) {
+                    if (this.currentLevel.getAlivePlayers().get(i).getTank().getExplosionRadius() == 30) { // radius of tank explosion is 30 if player falls below map
+                        this.currentLevel.getAlivePlayers().get(i).getTank().setExplosionOut(false);
+                        this.currentLevel.removeAlivePlayer(this.currentLevel.getAlivePlayers().get(i)); // remove player from alivePlayers if not alive
+                    }
+                } else {
+                    if (this.currentLevel.getAlivePlayers().get(i).getTank().getExplosionRadius() == 15) { // normal radius of explosion is 15 if they die normally
+                        this.currentLevel.getAlivePlayers().get(i).getTank().setExplosionOut(false);
+                        this.currentLevel.removeAlivePlayer(this.currentLevel.getAlivePlayers().get(i)); // remove player from alivePlayers if not alive
+                    }
+                }
+
             }
         }
 
@@ -367,6 +435,7 @@ public class App extends PApplet {
                 for (int i=0; i<this.currentLevel.getPlayersObj().size(); i++) {
                     this.level2.getPlayersObj().get(i).setScore(this.currentLevel.getPlayersObj().get(i).getScore()); // transfers existing scores over to Player objects in next level
                     this.level2.getPlayersObj().get(i).setParachute(this.currentLevel.getPlayersObj().get(i).getParachute()); // transfers number of parachutes over to next level
+                    this.level2.getPlayersObj().get(i).setShield(this.currentLevel.getPlayersObj().get(i).getShield()); // transfers number of shields over
                 }
             
                 if (this.level1.getSwitchLevelCount() == 30) { // 1 second break between level switches (i.e. 30FPS --> count will go up to 30 in a second)
@@ -379,6 +448,7 @@ public class App extends PApplet {
                 for (int i=0; i<this.currentLevel.getPlayersObj().size(); i++) {
                     this.level3.getPlayersObj().get(i).setScore(this.currentLevel.getPlayersObj().get(i).getScore());
                     this.level3.getPlayersObj().get(i).setParachute(this.currentLevel.getPlayersObj().get(i).getParachute());
+                    this.level3.getPlayersObj().get(i).setShield(this.currentLevel.getPlayersObj().get(i).getShield());
                     
                 }
 
