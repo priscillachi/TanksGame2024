@@ -29,6 +29,14 @@ public class Tree {
     private int size;
     private PImage treeImage;
 
+    /**
+     * Constructor of Tree object.
+     * 
+     * @param app is the App object that we will pass through to allow for drawing + more implementations of the PApplet library.
+     * @param level is the Level object which the Tree object belongs to.
+     * @param xCoordinate is the x-coordinate of the tree.
+     * @param yCoordinate is the y-coordinate of the tree.
+     */
     public Tree(App app, Level level, float xCoordinate, float yCoordinate) {
         this.level = level;
         this.app = app;
@@ -38,11 +46,17 @@ public class Tree {
         this.yCoordinate = yCoordinate;
     }
 
+    /**
+     * Grounds the tree on the terrain. Trees will fall when terrain falls and stay grounded on the terrain.
+     */
     public void groundTree() { // ensure trees stay on the terrain and don't hang in the air
         this.movingAverages = this.level.getBackgroundTerrain().getMovingAveragePoints();
         this.yCoordinate = this.movingAverages[(int)this.xCoordinate+(this.size/2)]-this.size; // ground tree
     }
 
+    /**
+     * Draws the trees.
+     */
     public void drawTree() {
         app.image(this.treeImage, this.xCoordinate, this.yCoordinate, this.size, this.size);
     }
