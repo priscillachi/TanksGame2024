@@ -33,6 +33,13 @@ public class HealthPower {
     private float powerLength;
     private boolean loseHealth=false;
 
+    /**
+     * Constructor for HealthPower class. Keeps track of each player's health and power and the GUI for them.
+     * 
+     * @param app is the App object that we will pass through to allow for drawing + more implementations of the PApplet library.
+     * @param level is the Level object which a HealthPower object belongs to.
+     * @param player is the Player object which a HealthPower object belongs to.
+     */
     public HealthPower(App app, Level level, Player player) {
         this.app = app;
         this.level = level;
@@ -46,6 +53,7 @@ public class HealthPower {
         this.powerLength = ((float)this.power/(float)100) * (float)this.barWidth;
     }
 
+    // no Javadoc comments required for setters and getters
     public int getHealth() {
         return this.health;
     }
@@ -58,6 +66,9 @@ public class HealthPower {
         this.loseHealth = value;
     }
 
+    /**
+     * Draw health bar at the top of the screen.
+     */
     public void drawHealthBar() { // what the method says
         int xCoordinate = ((864*3)/5) - (this.barWidth/2);
         int yCoordinate = 10;
@@ -81,6 +92,9 @@ public class HealthPower {
         app.line(xCoordinate + this.powerLength, yCoordinate, xCoordinate + this.powerLength, yCoordinate + this.barHeight);
     }
 
+    /**
+     * Display how much health and power a player has.
+     */
     public void displayHealthPowerText() { // what the method says
         int xCoordinate = ((864*3)/5) - (this.barWidth/2);
         int yCoordinate = 10;
@@ -94,6 +108,11 @@ public class HealthPower {
         app.text(this.health, xCoordinate + this.barWidth + 10, yCoordinate+this.barHeight-5);
     }
 
+    /**
+     * Update the health amount. If the health falls below the current power amount, update the power such that it is equal to the health, as the power is at most equal to the health.
+     * 
+     * @param health is the health amount that we want to update our health value to.
+     */
     public void updateHealth(int health) { 
         this.health = health;
         this.healthLength = ((float)this.health/(float)100) * (float)this.barWidth;
@@ -104,6 +123,11 @@ public class HealthPower {
         }
     }
 
+    /**
+     * Decreases the health amount. Call when a player has been hit by a projectile.
+     * 
+     * @param decrease is the amount we want our health to decrease by.
+     */
     public void decreaseHealth(int decrease) {
         if (this.player.getTank().getProjectile() != null) {
 
@@ -122,6 +146,11 @@ public class HealthPower {
         }
     }
 
+    /**
+     * Update the power amount. It cannot exceed the health amount.
+     * 
+     * @param power is the amount of power we want to update our power to.
+     */
     public void updatePower(float power) {
         if (power <= this.health) {
             this.power = power;
@@ -129,12 +158,18 @@ public class HealthPower {
         }
     }
 
+    /**
+     * Increase the power by 1.2 when we press the 'w' key.
+     */
     public void powerIncrease() { // for keyPressed
         if (this.power <= this.health) {
             this.updatePower(this.power+(float)1.2);
         }
     }
 
+    /**
+     * Decrease the power by 1.2 when we press the 's' key.
+     */
     public void powerDecrease() { // for keyPressed
         if (this.power >= 0) {
             this.updatePower(this.power-(float)1.2);
