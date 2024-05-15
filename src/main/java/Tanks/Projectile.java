@@ -40,6 +40,18 @@ public class Projectile {
     private boolean explosionOut = false;
     private float explosionRadius = 0;
     
+    /**
+     * Constructor for Projectile class. Handles the motion of the projectile and its explosion.
+     * 
+     * @param app is the App object that we will pass through to allow for drawing + more implementations of the PApplet library.
+     * @param tank is the Tank object that a Projectile object shoots from.
+     * @param xCoordinate is the x-coordinate of the projectile at every frame.
+     * @param yCoordinate is the y-coordinate of the projectile at every frame.
+     * @param angle is the angle of the turret, which updates when the UP and DOWN keys are pressed.
+     * @param power is the power. This is the same power that is in a player's HealthPower object.
+     * @param diameter is the diameter of the projectile.
+     * @param colourScheme is the colour scheme of the player who is shooting the projectile.
+     */
     public Projectile(App app, Tank tank, float xCoordinate, float yCoordinate, float angle, float power, float diameter, int[] colourScheme) {
         this.app = app;
         this.tank = tank;
@@ -54,12 +66,16 @@ public class Projectile {
         this.setVelocity();
     }
 
+    /**
+     * Sets the starting x and y velocities according to the angle of the turret.
+     */
     public void setVelocity() {
         this.velocity = (float)((0.16 * this.power) + 2);
         this.xVelocity = this.velocity * (float)Math.cos(Math.abs(this.angle)); // get x component
         this.yVelocity = this.velocity * (float)Math.sin(Math.abs(this.angle)); // get y component
     }
 
+    // no need for Javadoc comments for setters and getters.
     public void setExplosionRadius(float value) {
         this.explosionRadius = 0;
     }
@@ -92,6 +108,9 @@ public class Projectile {
         return this.explosionOut;
     }
 
+    /**
+     * Updates velocity and coordinates according to wind, gravity, and angle.
+     */
     public void updateVelocityCoordinates() {
 
         this.yVelocity -= this.gravity; // minus gravity
@@ -117,6 +136,9 @@ public class Projectile {
         this.yCoordinate -= this.yVelocity; // minus velocity
     }
 
+    /**
+     * Draws the projectile.
+     */
     public void drawProjectile() {
         if (this.projectileShot == true) {
             projectile = app.createShape(app.ELLIPSE, xCoordinate, yCoordinate, diameter, diameter);
@@ -127,6 +149,9 @@ public class Projectile {
         }
     }
 
+    /**
+     * Draws the explosion, which expands until the outer circle hits a radius of 30.
+     */
     public void drawExplosion() {
 
         if (this.explosionOut == true) {
@@ -143,6 +168,9 @@ public class Projectile {
         }
     }
 
+    /**
+     * Expands the explosion by 30 pixels over 0.2 seconds, i.e. 5 pixels per frame.
+     */
     public void expandExplosion() {
         this.explosionRadius += 5; // 30 pixels over 0.2s = 150 pixels/s = 150 pixels per 30 frames = 5 pixels per frame
     }
