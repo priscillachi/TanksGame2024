@@ -35,12 +35,20 @@ public class BackgroundTerrain {
     private float[] movingAveragePoints = new float[896];
     private Level levelObj;
 
+    /**
+     * Constructor of BackgroundTerrain.
+     * 
+     * @param app is the App object that we will pass through to allow for drawing + more implementations of the PApplet library.
+     * @param level is the level number which a terrain belongs to.
+     * @param levelObj is the Level object which a terrain belongs to.
+     */
     public BackgroundTerrain(App app, int level, Level levelObj) {
         this.app = app;
         this.level = level;
         this.levelObj = levelObj;
     }
 
+    // no need for Javadoc comments for setters and getters
     public int getLevel() {
         return this.level;
     }
@@ -62,7 +70,10 @@ public class BackgroundTerrain {
     }
 
 
-    public void setBackground() { // read JSON file and add background, foreground
+    /**
+     * Read JSON file and add background.
+     */
+    public void setBackground() {
 
         if (!app.levelsData.getJSONObject(level-1).isNull("background")) {
             this.backgroundImage = app.levelsData.getJSONObject(level-1).getString("background");
@@ -71,6 +82,9 @@ public class BackgroundTerrain {
         }
     }
 
+    /**
+     * Read JSON file and set foreground colour.
+     */
     public void setForegroundColour() {
         if (!app.levelsData.getJSONObject(level-1).isNull("foreground-colour")) {
             String foreground = app.levelsData.getJSONObject(level-1).getString("foreground-colour");
@@ -82,7 +96,10 @@ public class BackgroundTerrain {
         }
     }
 
-    public void setTerrainMatrix() { // initialise terrain at the beginning - only call at setup
+    /**
+     * Initialise terrain at the beginning - call at setup.
+     */
+    public void setTerrainMatrix() {
         
         if (!app.levelsData.getJSONObject(level-1).isNull("layout")) {
             this.txtFileName = app.levelsData.getJSONObject(level-1).getString("layout");
@@ -115,6 +132,9 @@ public class BackgroundTerrain {
     }
 
 
+    /**
+     * Calculate the moving average from the list of heights generated in setTerrainMatrix().
+     */
     public void calculateMovingAverage() { // what the method says
 
         // add heights
@@ -174,35 +194,74 @@ public class BackgroundTerrain {
         }
     }
         
+    /**
+     * Draw terrain. Call this in the draw() function of the App class.
+     */
     public void setTerrain() {
         // draw lines from height of moving point average to bottom of screen
-        app.beginShape();
         for (int i=0; i<this.movingAveragePoints.length; i++) {
             app.stroke(this.foregroundColour[0], this.foregroundColour[1], this.foregroundColour[2]);
             app.rect(i,this.movingAveragePoints[i],1,640-this.movingAveragePoints[i]);
         }
-        app.endShape();
     }
 
+    /**
+     * Update terrain after a projectile explodes.
+     * 
+     * @param x is the x-coordinate where we want to update the terrain at.
+     * @param newYCoordinate is the new y-coordinate of the terrain that will correspond to the x-coordinate.
+     */
     public void updateTerrain(int x, float newYCoordinate) { // call when there is a projectile explosion
         this.movingAveragePoints[x] = newYCoordinate;
     }
 
+    /**
+     * Returns true when the terrain height at a certain x value is inside the explosion circle.
+     * 
+     * @param x is the x-coordinate that corresponds to the terrain height that we want to check.
+     * @param explosionCentreX is the x-coordinate of the point where the projectile explodes.
+     * @param explosionCentreY is the y-coordinate of the point where the projectile explodes.
+     * @return true if terrain height is inside the circle, false if otherwise.
+     */
     public boolean insideExplosion(int x, float explosionCentreX, float explosionCentreY) { // check to see if terrain points are inside explosion
         return ((((float)x-explosionCentreX)*((float)x-explosionCentreX))+
         ((this.movingAveragePoints[x]-explosionCentreY)*(this.movingAveragePoints[x]-explosionCentreY)) <= 30 * 30);
     }
 
+    /**
+     * Returns true if terrain height at a certain x value is above the explosion circle. Use this to see when to collapse the terrain.
+     * 
+     * @param x is the x-coordinate that corresponds to the terrain height that we want to check.
+     * @param explosionCentreX is the x-coordinate of the point where the projectile explodes.
+     * @param explosionCentreY is the y-coordinate of the point where the projectile explodes.
+     * @return true if terrain height is above the circle, false if otherwise.
+     */
     public boolean aboveExplosion(int x, float explosionCentreX, float explosionCentreY) { // check to see if terrain is above explosion - if true, call calculateNewY2 for when terrain falls down
         return (this.movingAveragePoints[x] < explosionCentreY-(float)Math.sqrt((30*30)-((explosionCentreX-(float)x)*(explosionCentreX-(float)x))));
     }
 
+    /**
+     * Calculates new y-coordinate for the terrain height at a certain x-coordinate for when the original terrain height is inside the explosion circle.
+     * 
+     * @param x is the x-coordinate that corresponds to the terrain height that we want to generate.
+     * @param explosionCentreX is the x-coordinate of the point where the projectile explodes.
+     * @param explosionCentreY is the y-coordinate of the point where the projectile explodes.
+     * @return new y-coordinate for when the terrain does not fall down, and just creates a crater.
+     */
     public float calculateNewY1(int x, float explosionCentreX, float explosionCentreY) { // use function of circle to update new y coordinate when terrain doesn't fall
         float circleY = (float)Math.sqrt((30*30)-((explosionCentreX-(float)x)*(explosionCentreX-(float)x)));
         float newY = this.movingAveragePoints[x]+(circleY-(this.movingAveragePoints[x]-explosionCentreY));
         return newY;
     }
 
+    /**
+     * Calculates new y-coordinate for the terrain height at a certain x-coordinate for when the original terrain height is above the explosion circle.
+     * 
+     * @param x is the x-coordinate that corresponds to the terrain height that we want to generate.
+     * @param explosionCentreX is the x-coordinate of the point where the projectile explodes.
+     * @param explosionCentreY is the y-coordinate of the point where the projectile explodes.
+     * @return new y-coordinate for when the terrain falls down.
+     */
     public float calculateNewY2(int x, float explosionCentreX, float explosionCentreY) { // use when there is terrain on top of explosion
         float circleY = (float)Math.sqrt((30*30)-((explosionCentreX-(float)x)*(explosionCentreX-(float)x)));
         float newY = this.movingAveragePoints[x]+(2*circleY);
