@@ -323,10 +323,10 @@ public class App extends PApplet {
                     if (j >= 0 && j <= 896) {
                         if (this.currentLevel.getBackgroundTerrain().insideExplosion(j, explosionCentreX, explosionCentreY)) {
                             float newY = this.currentLevel.getBackgroundTerrain().calculateNewY1(j, explosionCentreX, explosionCentreY);
-                            this.currentLevel.getBackgroundTerrain().updateTerrain(j, newY);
+                            this.currentLevel.getBackgroundTerrain().updateTerrain(j, newY); // update terrain when inside circle of explosion
                         } else if (this.currentLevel.getBackgroundTerrain().aboveExplosion(j, explosionCentreX, explosionCentreY)) {
                             float newY = this.currentLevel.getBackgroundTerrain().calculateNewY2(j, explosionCentreX, explosionCentreY);
-                            this.currentLevel.getBackgroundTerrain().updateTerrain(j, newY);
+                            this.currentLevel.getBackgroundTerrain().updateTerrain(j, newY); // update terrain when outside circle of explosion
                         }
                     }
                 }
@@ -370,7 +370,7 @@ public class App extends PApplet {
 
                         this.currentLevel.getAlivePlayers().get(j).getTank().increaseYCoordinate((float)0.4);
 
-                        if (this.currentLevel.getAlivePlayers().get(j).getTank().getYCoordinate() >= 
+                        if (this.currentLevel.getAlivePlayers().get(j).getTank().getYCoordinate() >= // set parachutes on
                         this.currentLevel.getBackgroundTerrain().getMovingAveragePoints()[(int)this.currentLevel.getAlivePlayers().get(j).getTank().getXCoordinate()+
                         (this.currentLevel.getAlivePlayers().get(j).getTank().getTankWidth()/2)]-(this.currentLevel.getAlivePlayers().get(j).getTank().getTankHeight())) {
                             this.currentLevel.getAlivePlayers().get(j).setParachuteOn(false);
