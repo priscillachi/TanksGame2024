@@ -42,6 +42,9 @@ public class Tank {
     private float tankCentreY;
     private int arrowCount = 0;
     private boolean arrowOn = false;
+    private float explosionRadius = 0;
+    private boolean explosionOut = false;
+    private boolean insideExplosion = false;
 
     public Tank(float xCoordinate, float yCoordinate, int[] colourScheme, App app, Level levelObj, Player player) {
         this.colourScheme = colourScheme;
@@ -108,6 +111,7 @@ public class Tank {
             app.rotate(0);
             this.tank = app.createShape(app.RECT, this.xCoordinate, this.yCoordinate, this.tankWidth, this.tankHeight);
             app.shape(this.tank);
+            this.player.drawShield();
         }
     }
 
@@ -168,16 +172,22 @@ public class Tank {
     }
 
     public void moveTankLeft() { // left arrow
-        if (this.xCoordinate-this.speed >= 0) {
+        if (this.xCoordinate-this.speed >= 0 && this.player.getFuel()>=this.speed) {
             this.xCoordinate -= this.speed;
             this.tankCentreX = this.xCoordinate + (this.tankWidth/2);
+
+            int currentFuel = this.player.getFuel();
+            this.player.setFuel(currentFuel-this.speed);
         }
     }
 
     public void moveTankRight() { // right arrow
-        if (this.xCoordinate <= 864-32-this.speed) {
+        if (this.xCoordinate <= 864-32-this.speed && this.player.getFuel()>=this.speed) {
             this.xCoordinate += this.speed;
             this.tankCentreX = this.xCoordinate + (this.tankWidth/2);
+
+            int currentFuel = this.player.getFuel();
+            this.player.setFuel(currentFuel-this.speed);
         }
     }
 
@@ -250,11 +260,51 @@ public class Tank {
     }
 
     public boolean insideExplosion(float tankCentreX, float tankCentreY, float explosionCentreX, float explosionCentreY) { // check if another tank is inside explosion
+        this.insideExplosion = true;
         return (((tankCentreX-explosionCentreX)*(tankCentreX-explosionCentreX))+((tankCentreY-explosionCentreY)*(tankCentreY-explosionCentreY)) <= 30 * 30);
+    }
+
+    public void setInsideExplosion(boolean value) {
+        this.insideExplosion = false;
+    }
+
+    public boolean getInsideExplosion() {
+        return this.insideExplosion;
     }
 
     public float damage(float tankCentreX, float tankCentreY, float explosionCentreX, float explosionCentreY) { // calculate damage from explosion proportional to distance from explosion
         return ((30-(float)Math.sqrt(((tankCentreX-explosionCentreX)*(tankCentreX-explosionCentreX)) + ((tankCentreY-explosionCentreY)*(tankCentreY-explosionCentreY))))/30) * 60;
         // 30-distance from centre of explosion divided by 30, then multipled by 60; i.e. fraction of damage * 60
+    }
+
+    public void drawExplosion() { // when health is 0
+        if (this.explosionOut == true) {
+            app.stroke(255, 0, 0);
+            app.fill (255, 0, 0);
+            app.ellipse(this.tankCentreX, this.tankCentreY, this.explosionRadius*2, this.explosionRadius*2);
+            app.stroke(255, 102, 0);
+            app.fill(255, 102, 0);
+            app.ellipse(this.tankCentreX, this.tankCentreY, this.explosionRadius, this.explosionRadius);
+            app.stroke(255, 255, 0);
+            app.fill(255, 255, 0);
+            app.ellipse(this.tankCentreX, this.tankCentreY, this.explosionRadius*2/5, this.explosionRadius*2/5);
+            this.expandExplosion();
+        }
+    }
+
+    public void expandExplosion() {
+        this.explosionRadius += 5; // 30 pixels over 0.2s = 150 pixels/s = 150 pixels per 30 frames = 5 pixels per frame
+    }
+
+    public void setExplosionOut(boolean value) {
+        this.explosionOut = value;
+    }
+
+    public boolean getExplosionOut() {
+        return this.explosionOut;
+    }
+
+    public float getExplosionRadius() {
+        return this.explosionRadius;
     }
 }
