@@ -60,6 +60,38 @@ public class Projectile {
         this.yVelocity = this.velocity * (float)Math.sin(Math.abs(this.angle)); // get y component
     }
 
+    public void setExplosionRadius(float value) {
+        this.explosionRadius = 0;
+    }
+
+    public float getExplosionRadius() {
+        return this.explosionRadius;
+    }
+
+    public float getXCoordinate() {
+        return this.xCoordinate;
+    }
+
+    public float getYCoordinate() {
+        return this.yCoordinate;
+    }
+
+    public void setProjectileShot(boolean value) {
+        this.projectileShot = value;
+    }
+
+    public boolean getProjectileShot() {
+        return this.projectileShot;
+    }
+
+    public void setExplosionOut(boolean value) {
+        this.explosionOut = value;
+    }
+
+    public boolean getExplosionOut() {
+        return this.explosionOut;
+    }
+
     public void updateVelocityCoordinates() {
 
         this.yVelocity -= this.gravity; // minus gravity
@@ -113,38 +145,6 @@ public class Projectile {
 
     public void expandExplosion() {
         this.explosionRadius += 5; // 30 pixels over 0.2s = 150 pixels/s = 150 pixels per 30 frames = 5 pixels per frame
-    }
-
-    public void setExplosionRadius(float value) {
-        this.explosionRadius = 0;
-    }
-
-    public float getExplosionRadius() {
-        return this.explosionRadius;
-    }
-
-    public float getXCoordinate() {
-        return this.xCoordinate;
-    }
-
-    public float getYCoordinate() {
-        return this.yCoordinate;
-    }
-
-    public void setProjectileShot(boolean value) {
-        this.projectileShot = value;
-    }
-
-    public boolean getProjectileShot() {
-        return this.projectileShot;
-    }
-
-    public void setExplosionOut(boolean value) {
-        this.explosionOut = value;
-    }
-
-    public boolean getExplosionOut() {
-        return this.explosionOut;
     }
 
 }
