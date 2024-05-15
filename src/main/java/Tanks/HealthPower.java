@@ -46,6 +46,18 @@ public class HealthPower {
         this.powerLength = ((float)this.power/(float)100) * (float)this.barWidth;
     }
 
+    public int getHealth() {
+        return this.health;
+    }
+
+    public float getPower() {
+        return this.power;
+    }
+
+    public void setLoseHealth(boolean value) {
+        this.loseHealth = value;
+    }
+
     public void drawHealthBar() { // what the method says
         int xCoordinate = ((864*3)/5) - (this.barWidth/2);
         int yCoordinate = 10;
@@ -110,10 +122,6 @@ public class HealthPower {
         }
     }
 
-    public int getHealth() {
-        return this.health;
-    }
-
     public void updatePower(float power) {
         if (power <= this.health) {
             this.power = power;
@@ -131,13 +139,5 @@ public class HealthPower {
         if (this.power >= 0) {
             this.updatePower(this.power-(float)1.2);
         }
-    }
-
-    public float getPower() {
-        return this.power;
-    }
-
-    public void setLoseHealth(boolean value) {
-        this.loseHealth = value;
     }
 }
