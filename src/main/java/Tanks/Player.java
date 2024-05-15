@@ -39,6 +39,17 @@ public class Player { // handles players and logic
     private float shieldCount = 0; // extension
     private boolean belowMap = false;
 
+
+    /**
+     * Constructor for Player class. Keeps track of everything a player has (e.g. score, parachutes, fuel, shield, etc.) and contains a Tank object.
+     * 
+     * @param app is the App object that we will pass through to allow for drawing + more implementations of the PApplet library.
+     * @param levelObj is the Level object which a Player object belongs to.
+     * @param xCoordinate is the x-coordinate of a player on the screen.
+     * @param yCoordinate is the y-coordinate of a player on the screen.
+     * @param colourScheme is the RGB colour scheme of a player.
+     * @param player is the String for the player's name, i.e. "A" for Player A, "B" for Player B, etc.
+     */
     public Player(App app, Level levelObj, int xCoordinate, int yCoordinate, int[] colourScheme, String player) {
         this.app = app;
         this.xCoordinate = xCoordinate;
@@ -52,6 +63,7 @@ public class Player { // handles players and logic
         this.shield=0; // extension
     }
 
+    // no need for Javadoc comments for getters and setters.
     public int[] getColourScheme() {
         return this.colourScheme;
     }
@@ -68,9 +80,8 @@ public class Player { // handles players and logic
         this.playerAlive = value;
     }
 
-
-    public void setTank() { // create Tank object
-        this.tank = new Tank((float)this.xCoordinate, (float)this.yCoordinate, this.colourScheme, this.app, this.levelObj, this); 
+    public void setScore(int score) {
+        this.score = score;
     }
 
     public Tank getTank() {
@@ -117,6 +128,11 @@ public class Player { // handles players and logic
         this.fuel = fuel;
     }
 
+    /**
+     * While the parachute feature is not an extension, I have implemented an extension feature where the number of parachutes increases when the key 'p' is pressed.
+     * 
+     * @param parachute is the number of parachutes that we want our parachute number to set or update to.
+     */
     public void setParachute(int parachute) {
         this.parachute = parachute;
     }
@@ -153,7 +169,16 @@ public class Player { // handles players and logic
         this.healthPower.updatePower(power);
     }
 
+    /**
+     * Creates a Tank object at the positions of the player.
+     */
+    public void setTank() { // create Tank object
+        this.tank = new Tank((float)this.xCoordinate, (float)this.yCoordinate, this.colourScheme, this.app, this.levelObj, this); 
+    }
 
+    /**
+     * Displays the text which states which player the turn belongs to.
+     */
     public void displayPlayerText() { // what the method says
         int xCoordinate = 15;
         int yCoordinate = 30;
@@ -165,10 +190,11 @@ public class Player { // handles players and logic
         app.text(printOut, xCoordinate, yCoordinate);
     }
 
-    public void setScore(int score) {
-        this.score = score;
-    }
-
+    /**
+     * Increases the player's score. Call when the player has hit another tank.
+     * 
+     * @param increase is the number we want our score to increase by.
+     */
     public void increaseScore(int increase) {
         int newScore = increase + this.score;
         if (this.gainScore == true) {
@@ -184,6 +210,9 @@ public class Player { // handles players and logic
         }
     }
 
+    /**
+     * Displays the amount of fuel left in the top left corner.
+     */
     public void displayFuel() { // display fuel amount in top left corner
         int xCoordinate = 210;
         int yCoordinate = 30;
@@ -196,6 +225,9 @@ public class Player { // handles players and logic
 
     }
 
+    /**
+     * Displays the number of parachutes left in the top left corner.
+     */
     public void displayParachute() { // display parachute number in top left corner
         int xCoordinate = 210;
         int yCoordinate = 58;
@@ -207,6 +239,9 @@ public class Player { // handles players and logic
         app.text(parachuteNum, xCoordinate, yCoordinate);
     }
 
+    /**
+     * Displays the number of shields left in the top left corner. This is an extension feature of my program.
+     */
     public void displayShield() { // display shield number in top left corner - extension
         int xCoordinate = 210;
         int yCoordinate = 86;
@@ -218,6 +253,9 @@ public class Player { // handles players and logic
         app.text(parachuteNum, xCoordinate, yCoordinate);
     }
 
+    /**
+     * Draws the shield, which disappears after 25 frames. This is an extension feature of my program.
+     */
     public void drawShield() { // draw shield on tank - extension; disappears after 25 frames (use counter to keep track)
         if (this.shieldOn == true) {
             app.stroke(0);
@@ -233,6 +271,9 @@ public class Player { // handles players and logic
         }
     }
 
+    /**
+     * Draws the parachute on the tank. While the parachute feature is not an extension, I have implemented an extension feature where the number of parachutes increases when the key 'p' is pressed.
+     */
     public void drawParachute() { //draw parachute on tank
         if (this.parachuteOn==true) {
             PImage parachute = this.levelObj.getParachutImage();
