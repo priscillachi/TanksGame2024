@@ -45,6 +45,12 @@ public class Level {
     private int switchLevelCount = 0;
     private boolean switchLevelOn = false;
 
+    /**
+     * Constructor for Level object.
+     * 
+     * @param app is the App object that we will pass through to allow for drawing + more implementations of the PApplet library.
+     * @param level is the level number that corresponds to a Level object.
+     */
     public Level(App app, int level) {
         this.app = app;
         this.level = level;
@@ -52,6 +58,7 @@ public class Level {
         this.setWind();
     }
 
+    // no Javadoc comments required for setters and getters
     public void setWind() {
         int initialWind = random.nextInt(35+35)-35;
         this.windLevel = initialWind;
@@ -152,6 +159,9 @@ public class Level {
         return this.turn;
     }
 
+    /**
+     * Initialise trees according to the matrix read from the corresponding level txt file. Call this in the setup() function of the App class.
+     */
     public void setTrees() {
 
         if (!app.levelsData.getJSONObject(level-1).isNull("trees")) { // make sure "trees" field is available
@@ -178,6 +188,9 @@ public class Level {
     }
 
 
+    /**
+     * Initialise players according to the matrix read from the corresponding level txt file. Call this in the setup() function of the App class.
+     */
     public void setPlayers() { // setup players coordinates, objects, tanks,etc.
         setTerrainMatrix();
 
@@ -220,7 +233,10 @@ public class Level {
 
     }
 
-
+    
+    /**
+     * Sort the players in alphabetical order. Call this in the setup() function in the App class.
+     */
     public void sortPlayers() { // alphabetical order (maybe change sort algo later if laggy)
         ArrayList<Player> playersObjSorted = new ArrayList<Player>();
         ArrayList<String> playersSorted = new ArrayList<String>();
@@ -259,6 +275,9 @@ public class Level {
         }
     }
 
+    /**
+     * Sort the playersObj ArrayList in descending order according the each player's score. Call this at the end of the game.
+     */
     public void sortScores() { // use to organise scores from highest to lowest at the end of game
         boolean swapped;
         
@@ -283,6 +302,9 @@ public class Level {
     }
 
 
+    /**
+     * Display the scoreboard at the top right corner of the game.
+     */
     public void displayScoreboard() { // what the method says
         app.strokeWeight(5);
         app.stroke(0);
@@ -305,7 +327,9 @@ public class Level {
         }
     }
 
-
+    /**
+     * Display wind at the top right corner of the game.
+     */
     public void displayWind() { // what the method says
         this.windPositiveImage = app.loadImage(app.getClass().getResource("wind.png").getPath().toLowerCase(Locale.ROOT).replace("%20", " ")); // get image
         this.windNegativeImage = app.loadImage(app.getClass().getResource("wind-1.png").getPath().toLowerCase(Locale.ROOT).replace("%20", " ")); // get image
@@ -327,7 +351,9 @@ public class Level {
         }
     }
 
-
+    /**
+     * Display fuel and parachute images at the top right corner of the game.
+     */
     public void displayFuelParachute() { // what the method says
         fuelImage = app.loadImage(app.getClass().getResource("fuel.png").getPath().toLowerCase(Locale.ROOT).replace("%20", " "));
         app.image(fuelImage, 180, 5, 28, 28);
@@ -345,6 +371,9 @@ public class Level {
         this.turn.displayShield();
     }
 
+    /**
+     * Display final scoreboard in descending score order. Call at the end of the game.
+     */
     public void displayFinalScoreboard() {
         this.sortScores(); // sort descending
         app.textSize(22);
