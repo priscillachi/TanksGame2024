@@ -34,6 +34,10 @@ public class Player { // handles players and logic
     private boolean playerAlive=true;
     private boolean gainScore=false;
     private boolean parachuteOn=false;
+    private int shield; // extension
+    private boolean shieldOn = false; // extension
+    private float shieldCount = 0; // extension
+    private boolean belowMap = false;
 
     public Player(App app, Level levelObj, int xCoordinate, int yCoordinate, int[] colourScheme, String player) {
         this.app = app;
@@ -45,6 +49,7 @@ public class Player { // handles players and logic
         this.score = 0;
         this.parachute = 3;
         this.fuel = 250;
+        this.shield=0; // extension
     }
 
     public int[] getColourScheme() {
@@ -68,7 +73,6 @@ public class Player { // handles players and logic
         this.tank = new Tank((float)this.xCoordinate, (float)this.yCoordinate, this.colourScheme, this.app, this.levelObj, this); 
     }
 
-
     public Tank getTank() {
         return this.tank;
     }
@@ -89,6 +93,58 @@ public class Player { // handles players and logic
         return this.healthPower.getPower();
     }
 
+    public void setShield(int num) { // extension
+        this.shield = num;
+    }
+
+    public int getShield() { // extension
+        return this.shield;
+    }
+
+    public int getScore() {
+        return this.score;
+    }
+
+    public int getFuel() {
+        return this.fuel;
+    }
+
+    public int getParachute() {
+        return this.parachute;
+    }
+
+    public void setFuel(int fuel) {
+        this.fuel = fuel;
+    }
+
+    public void setParachute(int parachute) {
+        this.parachute = parachute;
+    }
+
+    public void setParachuteOn(boolean value) { // if true: call when drawing parachute
+        this.parachuteOn = value;
+    }
+
+    public boolean getParachuteOn() {
+        return this.parachuteOn;
+    }
+
+    public boolean getBelowMap() {
+        return this.belowMap;
+    }
+
+    public void setBelowMap(boolean value) {
+        this.belowMap = value;
+    }
+
+    public void setShieldOn(boolean value) { // call when tanks are being hit and they still have shields left
+        this.shieldOn = value;
+    }
+
+    public void setGainScore(boolean value) { // set when score is to be gained
+        this.gainScore = value;
+    }
+
     public void updateHealth(int health) {
         this.healthPower.updateHealth(health);
     }
@@ -97,9 +153,6 @@ public class Player { // handles players and logic
         this.healthPower.updatePower(power);
     }
 
-    public void setAIPlayers() {
-        ;
-    }
 
     public void displayPlayerText() { // what the method says
         int xCoordinate = 15;
@@ -131,27 +184,7 @@ public class Player { // handles players and logic
         }
     }
 
-    public int getScore() {
-        return this.score;
-    }
-
-    public int getFuel() {
-        return this.fuel;
-    }
-
-    public int getParachute() {
-        return this.parachute;
-    }
-
-    public void updateFuel(int fuel) {
-        this.fuel = fuel;
-    }
-
-    public void setParachute(int parachute) {
-        this.parachute = parachute;
-    }
-
-    public void displayFuel() { // display parachute symbol and amount in top left corner
+    public void displayFuel() { // display fuel amount in top left corner
         int xCoordinate = 210;
         int yCoordinate = 30;
 
@@ -163,9 +196,9 @@ public class Player { // handles players and logic
 
     }
 
-    public void displayParachute() { // display parachute symbol and number in top left corner
+    public void displayParachute() { // display parachute number in top left corner
         int xCoordinate = 210;
-        int yCoordinate = 57;
+        int yCoordinate = 58;
 
         app.strokeWeight(1);
         app.textSize(18);
@@ -174,8 +207,30 @@ public class Player { // handles players and logic
         app.text(parachuteNum, xCoordinate, yCoordinate);
     }
 
-    public void setGainScore(boolean value) {
-        this.gainScore = value;
+    public void displayShield() { // display shield number in top left corner - extension
+        int xCoordinate = 210;
+        int yCoordinate = 86;
+
+        app.strokeWeight(1);
+        app.textSize(18);
+        app.fill(0);
+        String parachuteNum = String.format("%d", this.shield);
+        app.text(parachuteNum, xCoordinate, yCoordinate);
+    }
+
+    public void drawShield() { // draw shield on tank - extension; disappears after 25 frames (use counter to keep track)
+        if (this.shieldOn == true) {
+            app.stroke(0);
+            app.fill(this.colourScheme[0], this.colourScheme[1], this.colourScheme[2], 50);
+            app.ellipse(this.tank.getTankCentreX(), this.tank.getTankCentreY(), 45, 45);
+            this.shieldCount += 1;
+        }
+
+        if (this.shieldCount == 25) {
+            this.shieldOn = false;
+            this.shield -= 1;
+            this.shieldCount = 0;
+        }
     }
 
     public void drawParachute() { //draw parachute on tank
@@ -183,13 +238,5 @@ public class Player { // handles players and logic
             PImage parachute = this.levelObj.getParachutImage();
             app.image(parachute, this.tank.getXCoordinate()-10, this.tank.getYCoordinate()-(3*this.tank.getTankHeight()), this.tank.getTankWidth()+20, 3*this.tank.getTankHeight());
         }
-    }
-
-    public void setParachuteOn(boolean value) {
-        this.parachuteOn = value;
-    }
-
-    public boolean getParachuteOn() {
-        return this.parachuteOn;
     }
 }
