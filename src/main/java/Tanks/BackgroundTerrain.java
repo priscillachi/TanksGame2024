@@ -115,7 +115,7 @@ public class BackgroundTerrain {
     }
 
 
-    public void calculateMovingAverage() { // this can be called multiple times
+    public void calculateMovingAverage() { // what the method says
 
         // add heights
         for (int i=0; i<28; i++) {
@@ -126,7 +126,7 @@ public class BackgroundTerrain {
             }
         }
 
-        // turn heights into pixels
+        // turn heights in txt file into pixels
         int index=0;
         while (index < this.terrainHeightsText.size()) {
             for (int i=0; i<this.terrainHeightsFrame.length; i++) {
@@ -173,7 +173,6 @@ public class BackgroundTerrain {
             this.movingAveragePoints[i] = averagePoint;
         }
     }
-
         
     public void setTerrain() {
         // draw lines from height of moving point average to bottom of screen
@@ -185,20 +184,20 @@ public class BackgroundTerrain {
         app.endShape();
     }
 
-    public void updateTerrain(int x, float newYCoordinate) {
+    public void updateTerrain(int x, float newYCoordinate) { // call when there is a projectile explosion
         this.movingAveragePoints[x] = newYCoordinate;
     }
 
-    public boolean insideExplosion(int x, float explosionCentreX, float explosionCentreY) {
+    public boolean insideExplosion(int x, float explosionCentreX, float explosionCentreY) { // check to see if terrain points are inside explosion
         return ((((float)x-explosionCentreX)*((float)x-explosionCentreX))+
         ((this.movingAveragePoints[x]-explosionCentreY)*(this.movingAveragePoints[x]-explosionCentreY)) <= 30 * 30);
     }
 
-    public boolean aboveExplosion(int x, float explosionCentreX, float explosionCentreY) {
+    public boolean aboveExplosion(int x, float explosionCentreX, float explosionCentreY) { // check to see if terrain is above explosion - if true, call calculateNewY2 for when terrain falls down
         return (this.movingAveragePoints[x] < explosionCentreY-(float)Math.sqrt((30*30)-((explosionCentreX-(float)x)*(explosionCentreX-(float)x))));
     }
 
-    public float calculateNewY1(int x, float explosionCentreX, float explosionCentreY) { // use function of circle to update new y coordinate
+    public float calculateNewY1(int x, float explosionCentreX, float explosionCentreY) { // use function of circle to update new y coordinate when terrain doesn't fall
         float circleY = (float)Math.sqrt((30*30)-((explosionCentreX-(float)x)*(explosionCentreX-(float)x)));
         float newY = this.movingAveragePoints[x]+(circleY-(this.movingAveragePoints[x]-explosionCentreY));
         return newY;
