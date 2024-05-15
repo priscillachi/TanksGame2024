@@ -129,20 +129,17 @@ public class HealthPower {
      * @param decrease is the amount we want our health to decrease by.
      */
     public void decreaseHealth(int decrease) {
-        if (this.player.getTank().getProjectile() != null) {
-
-            int newHealth = this.health - (int)decrease;
-            if (this.loseHealth==true) {
-                this.updateHealth(newHealth);
-
-                if (this.health==newHealth) {
-                    this.loseHealth = false;
-                }
-            }
+        int newHealth = this.health - (int)decrease;
+        if (this.loseHealth==true) {
+            this.updateHealth(newHealth);
 
             if (this.health==newHealth) {
                 this.loseHealth = false;
             }
+        }
+
+        if (this.health==newHealth) {
+            this.loseHealth = false;
         }
     }
 
