@@ -66,27 +66,6 @@ public class Level {
         return this.windLevel;
     }
 
-    public void displayWind() { // what the method says
-        this.windPositiveImage = app.loadImage(app.getClass().getResource("wind.png").getPath().toLowerCase(Locale.ROOT).replace("%20", " ")); // get image
-        this.windNegativeImage = app.loadImage(app.getClass().getResource("wind-1.png").getPath().toLowerCase(Locale.ROOT).replace("%20", " ")); // get image
-
-        if (this.windLevel >= 0) {
-            app.image(this.windPositiveImage, 750, 2, 50, 50);
-            String wind = String.format("%d", this.windLevel);
-            app.strokeWeight(1);
-            app.textSize(18);
-            app.fill(0);
-            app.text(wind, 810, 30);
-        } else if (this.windLevel < 0) {
-            app.image(this.windNegativeImage, 750, 2, 50, 50);
-            String wind = String.format("%d", Math.abs(this.windLevel));
-            app.strokeWeight(1);
-            app.textSize(18);
-            app.fill(0);
-            app.text(wind, 810, 30);
-        }
-    }
-
     public void setBackground() {
         this.backgroundTerrain.setBackground();
     }
@@ -139,6 +118,40 @@ public class Level {
         return this.trees;
     }
 
+    public void setFinalScoreboardCount(int num) {
+        this.finalScoreboardCount = num;
+    }
+
+    public void increaseSwitchLevelCount(int increase) {
+        if (this.switchLevelOn == true) {
+            this.switchLevelCount += increase;
+        }
+    }
+
+    public void setSwitchLevelOn(boolean value) {
+        this.switchLevelOn = value;
+    }
+
+    public void setSwitchLevelCount(int num) {
+        this.switchLevelCount = num;
+    }
+
+    public int getSwitchLevelCount() {
+        return this.switchLevelCount;
+    }
+
+    public PImage getParachutImage() {
+        return this.parachuteImage;
+    }
+
+    public void setTurn(Player player) { 
+        this.turn = player;
+    }
+
+    public Player getTurn() {
+        return this.turn;
+    }
+
     public void setTrees() {
 
         if (!app.levelsData.getJSONObject(level-1).isNull("trees")) { // make sure "trees" field is available
@@ -165,7 +178,7 @@ public class Level {
     }
 
 
-    public void setPlayers() {
+    public void setPlayers() { // setup players coordinates, objects, tanks,etc.
         setTerrainMatrix();
 
         for (int i=0; i<28; i++) {
@@ -180,7 +193,7 @@ public class Level {
             }
         }
 
-        JSONObject playersData = app.playersData;
+        JSONObject playersData = app.playersData; // read from JSON file
 
         for (int i=0; i<this.players.size(); i++) {
 
@@ -198,7 +211,7 @@ public class Level {
         }
 
 
-        for (int i=0; i<this.players.size(); i++) {
+        for (int i=0; i<this.players.size(); i++) { // create player objects and set tanks
             Player playerObj = new Player(this.app, this, this.playersCoordinates.get(i)[0], this.playersCoordinates.get(i)[1], this.colourSchemes.get(i), this.players.get(i));
             this.playersObj.add(playerObj);
             playerObj.setTank();
@@ -246,7 +259,7 @@ public class Level {
         }
     }
 
-    public void sortScores() {
+    public void sortScores() { // use to organise scores from highest to lowest at the end of game
         boolean swapped;
         
         for (int i=0; i<this.playersObj.size()-1; i++) {
@@ -267,15 +280,6 @@ public class Level {
 
             if (swapped == false) {break;}
         }
-    }
-
-
-    public void setTurn(Player player) { 
-        this.turn = player;
-    }
-
-    public Player getTurn() {
-        return this.turn;
     }
 
 
@@ -302,6 +306,28 @@ public class Level {
     }
 
 
+    public void displayWind() { // what the method says
+        this.windPositiveImage = app.loadImage(app.getClass().getResource("wind.png").getPath().toLowerCase(Locale.ROOT).replace("%20", " ")); // get image
+        this.windNegativeImage = app.loadImage(app.getClass().getResource("wind-1.png").getPath().toLowerCase(Locale.ROOT).replace("%20", " ")); // get image
+
+        if (this.windLevel >= 0) {
+            app.image(this.windPositiveImage, 750, 2, 50, 50);
+            String wind = String.format("%d", this.windLevel);
+            app.strokeWeight(1);
+            app.textSize(18);
+            app.fill(0);
+            app.text(wind, 810, 30);
+        } else if (this.windLevel < 0) {
+            app.image(this.windNegativeImage, 750, 2, 50, 50);
+            String wind = String.format("%d", Math.abs(this.windLevel));
+            app.strokeWeight(1);
+            app.textSize(18);
+            app.fill(0);
+            app.text(wind, 810, 30);
+        }
+    }
+
+
     public void displayFuelParachute() { // what the method says
         fuelImage = app.loadImage(app.getClass().getResource("fuel.png").getPath().toLowerCase(Locale.ROOT).replace("%20", " "));
         app.image(fuelImage, 180, 5, 28, 28);
@@ -310,6 +336,13 @@ public class Level {
         parachuteImage = app.loadImage(app.getClass().getResource("parachute.png").getPath().toLowerCase(Locale.ROOT).replace("%20", " "));
         app.image(parachuteImage, 180, 35, 28, 28);
         this.turn.displayParachute();
+    }
+
+    public void displayShield() {
+        int[] shieldColour = this.turn.getColourScheme();
+        app.fill(shieldColour[0], shieldColour[1], shieldColour[2], 50);
+        app.ellipse(194,78,26,26);
+        this.turn.displayShield();
     }
 
     public void displayFinalScoreboard() {
@@ -322,6 +355,7 @@ public class Level {
         int[] winnerColour = this.colourSchemes.get(0);
         app.fill(winnerColour[0], winnerColour[1], winnerColour[2], 25);
         app.strokeWeight(5);
+        app.stroke(0);
         app.rect(288, 240, 170, 30*(2+this.playersObj.size()));
         app.line(288, 280, 458, 280);
         app.fill(0);
@@ -343,31 +377,5 @@ public class Level {
         }
 
         this.finalScoreboardCount += 1; // to make sure there is 0.7s between scores displayed
-    }
-
-    public void setFinalScoreboardCount(int num) {
-        this.finalScoreboardCount = num;
-    }
-
-    public void increaseSwitchLevelCount(int increase) {
-        if (this.switchLevelOn == true) {
-            this.switchLevelCount += increase;
-        }
-    }
-
-    public void setSwitchLevelOn(boolean value) {
-        this.switchLevelOn = value;
-    }
-
-    public void setSwitchLevelCount(int num) {
-        this.switchLevelCount = num;
-    }
-
-    public int getSwitchLevelCount() {
-        return this.switchLevelCount;
-    }
-
-    public PImage getParachutImage() {
-        return this.parachuteImage;
     }
 }
