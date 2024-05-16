@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Tanks.PlayerTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2024-05-16T14:53:41" hostname="chis-mbp.lan" time="4.513">
+  <properties/>
+  <testcase name="increaseScore()" classname="Tanks.PlayerTest" time="1.145"/>
+  <testcase name="drawShield()" classname="Tanks.PlayerTest" time="1.076"/>
+  <testcase name="updateHealthPower()" classname="Tanks.PlayerTest" time="1.133"/>
+  <testcase name="drawParachute()" classname="Tanks.PlayerTest" time="1.156"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

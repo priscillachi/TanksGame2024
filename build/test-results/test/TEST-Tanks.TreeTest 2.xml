@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Tanks.TreeTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2024-05-16T14:53:54" hostname="chis-mbp.lan" time="2.299">
+  <properties/>
+  <testcase name="testDrawTree()" classname="Tanks.TreeTest" time="1.088"/>
+  <testcase name="testGroundTree()" classname="Tanks.TreeTest" time="1.21"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Projectile.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">TanksGame2024</a> &gt; <a href="index.source.html" class="el_package">Tanks</a> &gt; <span class="el_source">Projectile.java</span></div><h1>Projectile.java</h1><pre class="source lang-java linenums">package Tanks;
+
+import org.checkerframework.checker.units.qual.A;
+import org.json.JSONTokener;
+import processing.core.PApplet;
+import processing.core.PImage;
+import processing.core.PShape;
+import processing.core.PVector;
+import processing.data.JSONArray;
+import processing.data.JSONObject;
+import processing.event.KeyEvent;
+import processing.event.MouseEvent;
+
+import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
+
+import java.io.*;
+import java.util.*;
+import java.lang.Math;
+
+
+public class Projectile {
+    
+    private App app;
+    private Tank tank;
+    private float xCoordinate;
+    private float yCoordinate;
+    private float velocity;
+    private float xVelocity;
+    private float yVelocity;
+    private float diameter;
+    private int wind;
+    private float angle;
+    private float power;
+    private float gravity;
+    private int[] colourScheme;
+    private PShape projectile;
+<span class="fc" id="L39">    private boolean projectileShot = false;</span>
+<span class="fc" id="L40">    private boolean explosionOut = false;</span>
+<span class="fc" id="L41">    private float explosionRadius = 0;</span>
+    
+    /**
+     * Constructor for Projectile class. Handles the motion of the projectile and its explosion.
+     * 
+     * @param app is the App object that we will pass through to allow for drawing + more implementations of the PApplet library.
+     * @param tank is the Tank object that a Projectile object shoots from.
+     * @param xCoordinate is the x-coordinate of the projectile at every frame.
+     * @param yCoordinate is the y-coordinate of the projectile at every frame.
+     * @param angle is the angle of the turret, which updates when the UP and DOWN keys are pressed.
+     * @param power is the power. This is the same power that is in a player's HealthPower object.
+     * @param diameter is the diameter of the projectile.
+     * @param colourScheme is the colour scheme of the player who is shooting the projectile.
+     */
+<span class="fc" id="L55">    public Projectile(App app, Tank tank, float xCoordinate, float yCoordinate, float angle, float power, float diameter, int[] colourScheme) {</span>
+<span class="fc" id="L56">        this.app = app;</span>
+<span class="fc" id="L57">        this.tank = tank;</span>
+<span class="fc" id="L58">        this.gravity = (float)0.24;</span>
+<span class="fc" id="L59">        this.xCoordinate = xCoordinate;</span>
+<span class="fc" id="L60">        this.yCoordinate = yCoordinate;</span>
+<span class="fc" id="L61">        this.angle = angle;</span>
+<span class="fc" id="L62">        this.power = power;</span>
+<span class="fc" id="L63">        this.diameter = diameter;</span>
+<span class="fc" id="L64">        this.wind = this.app.currentLevel.getWind();</span>
+<span class="fc" id="L65">        this.colourScheme = colourScheme;</span>
+<span class="fc" id="L66">        this.setVelocity();</span>
+<span class="fc" id="L67">    }</span>
+
+    /**
+     * Sets the starting x and y velocities according to the angle of the turret.
+     */
+    public void setVelocity() {
+<span class="fc" id="L73">        this.velocity = (float)((0.16 * this.power) + 2);</span>
+<span class="fc" id="L74">        this.xVelocity = this.velocity * (float)Math.cos(Math.abs(this.angle)); // get x component</span>
+<span class="fc" id="L75">        this.yVelocity = this.velocity * (float)Math.sin(Math.abs(this.angle)); // get y component</span>
+<span class="fc" id="L76">    }</span>
+
+    // no need for Javadoc comments for setters and getters.
+    public void setExplosionRadius(float value) {
+<span class="nc" id="L80">        this.explosionRadius = 0;</span>
+<span class="nc" id="L81">    }</span>
+
+    public float getExplosionRadius() {
+<span class="nc" id="L84">        return this.explosionRadius;</span>
+    }
+
+    public float getXCoordinate() {
+<span class="fc" id="L88">        return this.xCoordinate;</span>
+    }
+
+    public float getYCoordinate() {
+<span class="fc" id="L92">        return this.yCoordinate;</span>
+    }
+
+    public void setXCoordinate(float value) {
+<span class="nc" id="L96">        this.xCoordinate = value;</span>
+<span class="nc" id="L97">    }</span>
+
+    public void setYCoordinate(float value) {
+<span class="nc" id="L100">        this.yCoordinate = value;</span>
+<span class="nc" id="L101">    }</span>
+
+    public void setProjectileShot(boolean value) {
+<span class="fc" id="L104">        this.projectileShot = value;</span>
+<span class="fc" id="L105">    }</span>
+
+    public boolean getProjectileShot() {
+<span class="fc" id="L108">        return this.projectileShot;</span>
+    }
+
+    public void setExplosionOut(boolean value) {
+<span class="fc" id="L112">        this.explosionOut = value;</span>
+<span class="fc" id="L113">    }</span>
+
+    public boolean getExplosionOut() {
+<span class="fc" id="L116">        return this.explosionOut;</span>
+    }
+
+    public void setAngle(float angle) {
+<span class="fc" id="L120">        this.angle = angle;</span>
+<span class="fc" id="L121">    }</span>
+
+    public void setWind(int wind) {
+<span class="fc" id="L124">        this.wind = wind;</span>
+<span class="fc" id="L125">    }</span>
+
+
+    /**
+     * Updates velocity and coordinates according to wind, gravity, and angle.
+     */
+    public void updateVelocityCoordinates() {
+
+<span class="fc" id="L133">        this.yVelocity -= this.gravity; // minus gravity</span>
+
+<span class="fc bfc" id="L135" title="All 8 branches covered.">        if ((this.wind &lt; 0 &amp;&amp; this.angle &lt; 0) || (this.wind &gt;= 0 &amp;&amp; this.angle &gt;= 0)) {</span>
+<span class="fc" id="L136">            this.xVelocity += (float)Math.abs(this.wind * 0.001); // if angle and wind are in different direction</span>
+<span class="pc bpc" id="L137" title="3 of 8 branches missed.">        } else if ((this.wind &gt;= 0 &amp;&amp; this.angle &lt; 0) || (this.wind &lt; 0 &amp;&amp; this.angle &gt;= 0)) {</span>
+<span class="fc" id="L138">            this.xVelocity -= (float)Math.abs(this.wind * 0.001); // if angle and wind are in same direction</span>
+        }
+
+<span class="fc bfc" id="L141" title="All 2 branches covered.">        if (this.angle &lt; 0) {</span>
+<span class="fc" id="L142">            this.xCoordinate -= this.xVelocity; // minus velocity if angle &lt; 0</span>
+<span class="fc bfc" id="L143" title="All 2 branches covered.">        } else if (this.angle &gt; 0) {</span>
+<span class="fc" id="L144">            this.xCoordinate += this.xVelocity; // add velocity if angle &gt; 0</span>
+        } else { // if angle = 0, check turret angle
+<span class="fc bfc" id="L146" title="All 2 branches covered.">            if (this.tank.getAngle() &lt; 0) {</span>
+<span class="fc" id="L147">                this.xCoordinate -= this.xVelocity;</span>
+<span class="fc bfc" id="L148" title="All 2 branches covered.">            } else if (this.tank.getAngle() &gt; 0) {</span>
+<span class="fc" id="L149">                this.xCoordinate += this.xVelocity;</span>
+            }
+        }
+
+<span class="fc" id="L153">        this.yCoordinate -= this.yVelocity; // minus velocity</span>
+<span class="fc" id="L154">    }</span>
+
+    /**
+     * Draws the projectile.
+     * 
+     * @return true if executed, false if otherwise.
+     */
+    public boolean drawProjectile() {
+        
+<span class="fc bfc" id="L163" title="All 2 branches covered.">        if (this.projectileShot == true) {</span>
+<span class="fc" id="L164">            projectile = app.createShape(app.ELLIPSE, xCoordinate, yCoordinate, diameter, diameter);</span>
+<span class="fc" id="L165">            projectile.setFill(app.color(this.colourScheme[0], this.colourScheme[1], this.colourScheme[2]));</span>
+<span class="fc" id="L166">            projectile.setStroke(app.color(this.colourScheme[0], this.colourScheme[1], this.colourScheme[2]));</span>
+<span class="fc" id="L167">            app.shape(projectile);</span>
+<span class="fc" id="L168">            this.updateVelocityCoordinates();</span>
+
+<span class="fc" id="L170">            return true;</span>
+        }
+
+<span class="fc" id="L173">        return false;</span>
+    }
+
+    /**
+     * Draws the explosion, which expands until the outer circle hits a radius of 30.
+     * 
+     * @return true if executed, false if otherwise.
+     */
+    public boolean drawExplosion() {
+
+<span class="fc bfc" id="L183" title="All 2 branches covered.">        if (this.explosionOut == true) {</span>
+<span class="fc" id="L184">            app.stroke(255, 0, 0);</span>
+<span class="fc" id="L185">            app.fill (255, 0, 0);</span>
+<span class="fc" id="L186">            app.ellipse(this.xCoordinate, this.yCoordinate, this.explosionRadius*2, this.explosionRadius*2);</span>
+<span class="fc" id="L187">            app.stroke(255, 102, 0);</span>
+<span class="fc" id="L188">            app.fill(255, 102, 0);</span>
+<span class="fc" id="L189">            app.ellipse(this.xCoordinate, this.yCoordinate, this.explosionRadius, this.explosionRadius);</span>
+<span class="fc" id="L190">            app.stroke(255, 255, 0);</span>
+<span class="fc" id="L191">            app.fill(255, 255, 0);</span>
+<span class="fc" id="L192">            app.ellipse(this.xCoordinate, this.yCoordinate, this.explosionRadius*2/5, this.explosionRadius*2/5);</span>
+<span class="fc" id="L193">            this.expandExplosion();</span>
+
+<span class="fc" id="L195">            return true;</span>
+        }
+
+<span class="fc" id="L198">        return false;</span>
+    }
+
+    /**
+     * Expands the explosion by 30 pixels over 0.2 seconds, i.e. 5 pixels per frame.
+     */
+    public void expandExplosion() {
+<span class="fc" id="L205">        this.explosionRadius += 5; // 30 pixels over 0.2s = 150 pixels/s = 150 pixels per 30 frames = 5 pixels per frame</span>
+<span class="fc" id="L206">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

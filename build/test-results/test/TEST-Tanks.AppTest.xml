@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Tanks.AppTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2024-05-16T15:05:43" hostname="chis-mbp.lan" time="2.877">
+  <properties/>
+  <testcase name="checkAppExists()" classname="Tanks.AppTest" time="1.675"/>
+  <testcase name="appTest()" classname="Tanks.AppTest" time="1.201"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

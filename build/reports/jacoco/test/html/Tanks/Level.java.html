@@ -1,0 +1,476 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Level.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">TanksGame2024</a> &gt; <a href="index.source.html" class="el_package">Tanks</a> &gt; <span class="el_source">Level.java</span></div><h1>Level.java</h1><pre class="source lang-java linenums">package Tanks;
+
+import org.checkerframework.checker.units.qual.A;
+import org.json.JSONTokener;
+
+import com.jogamp.common.ExceptionUtils;
+
+import processing.core.PApplet;
+import processing.core.PImage;
+import processing.core.PShape;
+import processing.core.PVector;
+import processing.data.JSONArray;
+import processing.data.JSONObject;
+import processing.event.KeyEvent;
+import processing.event.MouseEvent;
+
+import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
+
+import java.io.*;
+import java.util.*;
+import java.lang.Math;
+
+
+public class Level {
+
+    private BackgroundTerrain backgroundTerrain;
+    private App app;
+<span class="fc" id="L30">    private ArrayList&lt;String&gt; players = new ArrayList&lt;String&gt;();</span>
+<span class="fc" id="L31">    private ArrayList&lt;int[]&gt; playersCoordinates = new ArrayList&lt;int[]&gt;();</span>
+<span class="fc" id="L32">    private ArrayList&lt;int[]&gt; colourSchemes = new ArrayList&lt;int[]&gt;();</span>
+<span class="fc" id="L33">    private ArrayList&lt;Player&gt; playersObj = new ArrayList&lt;Player&gt;();</span>
+<span class="fc" id="L34">    private ArrayList&lt;Player&gt; alivePlayers = new ArrayList&lt;Player&gt;();</span>
+    private int level;
+    private PImage treeImage;
+<span class="fc" id="L37">    private ArrayList&lt;Tree&gt; trees = new ArrayList&lt;Tree&gt;();</span>
+    private String[][] terrainMatrix;
+<span class="fc" id="L39">    private ArrayList&lt;int[]&gt; treeCoordinates = new ArrayList&lt;int[]&gt;();</span>
+    private PImage windPositiveImage;
+    private PImage windNegativeImage;
+    private int windLevel;
+<span class="fc" id="L43">    private Random random = new Random();</span>
+    private Player turn;
+    private PImage fuelImage;
+    private PImage parachuteImage;
+<span class="fc" id="L47">    private int finalScoreboardCount=0;</span>
+<span class="fc" id="L48">    private int switchLevelCount = 0;</span>
+<span class="fc" id="L49">    private boolean switchLevelOn = false;</span>
+
+    /**
+     * Constructor for Level object.
+     * 
+     * @param app is the App object that we will pass through to allow for drawing + more implementations of the PApplet library.
+     * @param level is the level number that corresponds to a Level object.
+     */
+<span class="fc" id="L57">    public Level(App app, int level) {</span>
+<span class="fc" id="L58">        this.app = app;</span>
+<span class="fc" id="L59">        this.level = level;</span>
+<span class="fc" id="L60">        this.backgroundTerrain = new BackgroundTerrain(app, level, this);</span>
+<span class="fc" id="L61">        this.setWind();</span>
+<span class="fc" id="L62">    }</span>
+
+    // no Javadoc comments required for setters and getters
+    public void setWind() {
+<span class="fc" id="L66">        int initialWind = random.nextInt(35+35)-35;</span>
+<span class="fc" id="L67">        this.windLevel = initialWind;</span>
+<span class="fc" id="L68">    }</span>
+
+    public void updateWind() {
+<span class="nc" id="L71">        int windChange = random.nextInt(5+6)-5;</span>
+<span class="nc" id="L72">        this.windLevel += windChange;</span>
+<span class="nc" id="L73">    }</span>
+
+    public int getWind() {
+<span class="fc" id="L76">        return this.windLevel;</span>
+    }
+
+    public void setBackground() {
+<span class="fc" id="L80">        this.backgroundTerrain.setBackground();</span>
+<span class="fc" id="L81">    }</span>
+
+    public BackgroundTerrain getBackgroundTerrain() {
+<span class="fc" id="L84">        return this.backgroundTerrain;</span>
+    }
+
+    public void setTerrain() {
+<span class="nc" id="L88">        this.backgroundTerrain.setTerrain();</span>
+<span class="nc" id="L89">    }</span>
+
+    public void setTerrainMatrix() {
+<span class="fc" id="L92">        this.terrainMatrix = this.backgroundTerrain.getTerrainMatrix();</span>
+<span class="fc" id="L93">    }</span>
+
+    public int getLevel() {
+<span class="nc" id="L96">        return this.level;</span>
+    }
+
+    public ArrayList&lt;String&gt; getPlayers() {
+<span class="nc" id="L100">        return this.players;</span>
+    }
+
+    public ArrayList&lt;Player&gt; getPlayersObj() {
+<span class="nc" id="L104">        return this.playersObj;</span>
+    }
+
+    public ArrayList&lt;Player&gt; getAlivePlayers() {
+<span class="fc" id="L108">        return this.alivePlayers;</span>
+    }
+
+    public void removeAlivePlayer(Player player) {
+<span class="fc" id="L112">        this.alivePlayers.remove(player);</span>
+<span class="fc" id="L113">    }</span>
+
+    public ArrayList&lt;int[]&gt; getPlayersCoordinates() {
+<span class="nc" id="L116">        return this.playersCoordinates;</span>
+    }
+
+    public ArrayList&lt;int[]&gt; getTreeCoordinates() {
+<span class="nc" id="L120">        return this.treeCoordinates;</span>
+    }
+
+    public PImage getTreeImage() {
+<span class="fc" id="L124">        return this.treeImage;</span>
+    }
+
+    public ArrayList&lt;Tree&gt; getTrees() {
+<span class="fc" id="L128">        return this.trees;</span>
+    }
+
+    public void setFinalScoreboardCount(int num) {
+<span class="nc" id="L132">        this.finalScoreboardCount = num;</span>
+<span class="nc" id="L133">    }</span>
+
+    public void increaseSwitchLevelCount(int increase) {
+<span class="nc bnc" id="L136" title="All 2 branches missed.">        if (this.switchLevelOn == true) {</span>
+<span class="nc" id="L137">            this.switchLevelCount += increase;</span>
+        }
+<span class="nc" id="L139">    }</span>
+
+    public void setSwitchLevelOn(boolean value) {
+<span class="nc" id="L142">        this.switchLevelOn = value;</span>
+<span class="nc" id="L143">    }</span>
+
+    public void setSwitchLevelCount(int num) {
+<span class="nc" id="L146">        this.switchLevelCount = num;</span>
+<span class="nc" id="L147">    }</span>
+
+    public int getSwitchLevelCount() {
+<span class="nc" id="L150">        return this.switchLevelCount;</span>
+    }
+
+    public PImage getParachutImage() {
+<span class="fc" id="L154">        return this.parachuteImage;</span>
+    }
+
+    public void setTurn(Player player) { 
+<span class="fc" id="L158">        this.turn = player;</span>
+<span class="fc" id="L159">    }</span>
+
+    public Player getTurn() {
+<span class="fc" id="L162">        return this.turn;</span>
+    }
+
+    /**
+     * Initialise trees according to the matrix read from the corresponding level txt file. Call this in the setup() function of the App class.
+     * 
+     * @return true if executed, false if otherwise.
+     */
+    public boolean setTrees() {
+
+<span class="fc bfc" id="L172" title="All 2 branches covered.">        if (!app.levelsData.getJSONObject(level-1).isNull(&quot;trees&quot;)) { // make sure &quot;trees&quot; field is available</span>
+<span class="fc" id="L173">            setTerrainMatrix(); // get matrix</span>
+
+<span class="fc" id="L175">            String image = app.levelsData.getJSONObject(level-1).getString(&quot;trees&quot;); // read &quot;trees&quot; field</span>
+<span class="fc" id="L176">            this.treeImage = app.loadImage(app.getClass().getResource(image).getPath().toLowerCase(Locale.ROOT).replace(&quot;%20&quot;, &quot; &quot;)); // get image</span>
+
+<span class="fc bfc" id="L178" title="All 2 branches covered.">            for (int i=0; i&lt;28; i++) {</span>
+<span class="fc bfc" id="L179" title="All 2 branches covered.">                for (int j=0; j&lt;20; j++) {</span>
+<span class="fc bfc" id="L180" title="All 2 branches covered.">                    if (this.terrainMatrix[j][i].equals(&quot;T&quot;)) { // read coordinates of T</span>
+                    
+<span class="fc" id="L182">                        int[] coordinates = {(i*32),(j*32)}; // add coordinates</span>
+<span class="fc" id="L183">                        this.treeCoordinates.add(coordinates); // keep in list to keep track</span>
+                    }
+                }
+            }
+
+<span class="fc bfc" id="L188" title="All 2 branches covered.">            for (int i=0; i&lt;this.treeCoordinates.size(); i++) {</span>
+<span class="fc" id="L189">                Tree treeObj = new Tree(app, this, this.treeCoordinates.get(i)[0], this.treeCoordinates.get(i)[1]);</span>
+<span class="fc" id="L190">                this.trees.add(treeObj);</span>
+            }
+
+<span class="fc" id="L193">            return true;</span>
+        }
+
+<span class="fc" id="L196">        return false;</span>
+    }
+
+
+    /**
+     * Initialise players according to the matrix read from the corresponding level txt file. Call this in the setup() function of the App class.
+     * 
+     * @return true if executed, false if otherwise.
+     */
+    public boolean setPlayers() { // setup players coordinates, objects, tanks,etc.
+<span class="fc" id="L206">        setTerrainMatrix();</span>
+
+<span class="fc bfc" id="L208" title="All 2 branches covered.">        for (int i=0; i&lt;28; i++) {</span>
+<span class="fc bfc" id="L209" title="All 2 branches covered.">            for (int j=0; j&lt;20; j++) {</span>
+<span class="fc bfc" id="L210" title="All 6 branches covered.">                if (!this.terrainMatrix[j][i].equals(&quot; &quot;) &amp;&amp; !this.terrainMatrix[j][i].equals(&quot;X&quot;) &amp;&amp; !this.terrainMatrix[j][i].equals(&quot;T&quot;) </span>
+<span class="pc bpc" id="L211" title="3 of 6 branches missed.">                &amp;&amp; !this.terrainMatrix[j][i].equals(null) &amp;&amp; !this.terrainMatrix[j][i].equals(&quot;\n&quot;) &amp;&amp; !this.terrainMatrix[j][i].equals(&quot;\t&quot;)) {</span>
+<span class="fc" id="L212">                    this.players.add(terrainMatrix[j][i]);</span>
+
+<span class="fc" id="L214">                    int[] coordinates = {(i*32),j*32};</span>
+<span class="fc" id="L215">                    this.playersCoordinates.add(coordinates);</span>
+                }
+            }
+        }
+
+<span class="fc" id="L220">        JSONObject playersData = app.playersData; // read from JSON file</span>
+
+<span class="fc bfc" id="L222" title="All 2 branches covered.">        for (int i=0; i&lt;this.players.size(); i++) {</span>
+
+<span class="pc bpc" id="L224" title="1 of 2 branches missed.">            if (!playersData.isNull(this.players.get(i))) {</span>
+<span class="fc" id="L225">                String colours = playersData.getString(this.players.get(i)); // add colour scheme</span>
+<span class="fc" id="L226">                String[] coloursSplit = colours.split(&quot;,&quot;);</span>
+<span class="fc" id="L227">                int[] colourScheme = new int[3];</span>
+                
+<span class="fc bfc" id="L229" title="All 2 branches covered.">                for (int j=0; j&lt;coloursSplit.length; j++) {</span>
+<span class="fc" id="L230">                    colourScheme[j] = Integer.parseInt(coloursSplit[j]);</span>
+                }
+
+<span class="fc" id="L233">                this.colourSchemes.add(colourScheme);</span>
+            }
+        }
+
+
+<span class="fc bfc" id="L238" title="All 2 branches covered.">        for (int i=0; i&lt;this.players.size(); i++) { // create player objects and set tanks</span>
+<span class="fc" id="L239">            Player playerObj = new Player(this.app, this, this.playersCoordinates.get(i)[0], this.playersCoordinates.get(i)[1], this.colourSchemes.get(i), this.players.get(i));</span>
+<span class="fc" id="L240">            this.playersObj.add(playerObj);</span>
+<span class="fc" id="L241">            playerObj.setTank();</span>
+<span class="fc" id="L242">            playerObj.setHealthPower();</span>
+        }
+
+<span class="pc bpc" id="L245" title="3 of 6 branches missed.">        if (this.playersCoordinates.size() &gt; 0 &amp;&amp; this.colourSchemes.size() &gt; 0 &amp;&amp; this.playersObj.size() &gt; 0) {</span>
+<span class="fc" id="L246">            return true;</span>
+        } else {
+<span class="nc" id="L248">            return false;</span>
+        }
+
+    }
+
+    
+    /**
+     * Sort the players in alphabetical order. Call this in the setup() function in the App class.
+     */
+    public void sortPlayers() { // alphabetical order (maybe change sort algo later if laggy)
+<span class="fc" id="L258">        ArrayList&lt;Player&gt; playersObjSorted = new ArrayList&lt;Player&gt;();</span>
+<span class="fc" id="L259">        ArrayList&lt;String&gt; playersSorted = new ArrayList&lt;String&gt;();</span>
+<span class="fc" id="L260">        ArrayList&lt;int[]&gt; playersCoordinatesSorted = new ArrayList&lt;int[]&gt;();</span>
+<span class="fc" id="L261">        ArrayList&lt;int[]&gt; colourSchemesSorted = new ArrayList&lt;int[]&gt;();</span>
+
+<span class="fc bfc" id="L263" title="All 2 branches covered.">        while (this.players.size() &gt; 0) {</span>
+<span class="fc" id="L264">            String smallest = this.players.get(0);</span>
+<span class="fc" id="L265">            int index=0;</span>
+
+<span class="fc bfc" id="L267" title="All 2 branches covered.">            for (int i = 0; i&lt;this.players.size(); i++) {</span>
+<span class="fc bfc" id="L268" title="All 2 branches covered.">                if (this.players.get(i).compareTo(smallest) &lt; 0) {</span>
+<span class="fc" id="L269">                    smallest = this.players.get(i);</span>
+<span class="fc" id="L270">                    index = i;</span>
+                }
+            }
+
+<span class="fc" id="L274">            playersSorted.add(smallest);</span>
+<span class="fc" id="L275">            playersObjSorted.add(this.playersObj.get(index));</span>
+<span class="fc" id="L276">            playersCoordinatesSorted.add(this.playersCoordinates.get(index));</span>
+<span class="fc" id="L277">            colourSchemesSorted.add(this.colourSchemes.get(index));</span>
+
+<span class="fc" id="L279">            this.players.remove(index);</span>
+<span class="fc" id="L280">            this.playersObj.remove(index);</span>
+<span class="fc" id="L281">            this.playersCoordinates.remove(index);</span>
+<span class="fc" id="L282">            this.colourSchemes.remove(index);</span>
+<span class="fc" id="L283">        }</span>
+
+<span class="fc" id="L285">        this.players = playersSorted;</span>
+<span class="fc" id="L286">        this.playersObj = playersObjSorted;</span>
+<span class="fc" id="L287">        this.playersCoordinates = playersCoordinatesSorted;</span>
+<span class="fc" id="L288">        this.colourSchemes = colourSchemesSorted;</span>
+
+<span class="fc bfc" id="L290" title="All 2 branches covered.">        for (int i=0; i&lt;this.playersObj.size(); i++) {</span>
+<span class="fc" id="L291">            this.alivePlayers.add(this.playersObj.get(i));</span>
+        }
+<span class="fc" id="L293">    }</span>
+
+    /**
+     * Sort the playersObj ArrayList in descending order according the each player's score. Call this at the end of the game.
+     */
+    public void sortScores() { // use to organise scores from highest to lowest at the end of game
+        boolean swapped;
+        
+<span class="pc bpc" id="L301" title="1 of 2 branches missed.">        for (int i=0; i&lt;this.playersObj.size()-1; i++) {</span>
+<span class="fc" id="L302">            swapped = false;</span>
+<span class="fc bfc" id="L303" title="All 2 branches covered.">            for (int j=0; j&lt;this.playersObj.size()-i-1; j++) {</span>
+<span class="pc bpc" id="L304" title="1 of 2 branches missed.">                if (this.playersObj.get(j).getScore()&lt;this.playersObj.get(j+1).getScore()) {</span>
+<span class="nc" id="L305">                    Player temp = this.playersObj.get(j);</span>
+<span class="nc" id="L306">                    this.playersObj.set(j, this.playersObj.get(j+1));</span>
+<span class="nc" id="L307">                    this.playersObj.set(j+1, temp);</span>
+
+<span class="nc" id="L309">                    int[] tempColour = this.colourSchemes.get(j);</span>
+<span class="nc" id="L310">                    this.colourSchemes.set(j, this.colourSchemes.get(j+1));</span>
+<span class="nc" id="L311">                    this.colourSchemes.set(j+1, tempColour);</span>
+
+<span class="nc" id="L313">                    swapped = true;</span>
+                }
+            }
+
+<span class="pc bpc" id="L317" title="1 of 2 branches missed.">            if (swapped == false) {break;}</span>
+        }
+<span class="fc" id="L319">    }</span>
+
+
+    /**
+     * Display the scoreboard at the top right corner of the game.
+     * 
+     * @return true if executed, false if otherwise.
+     */
+    public boolean displayScoreboard() { // what the method says
+
+        try {
+<span class="fc" id="L330">            app.strokeWeight(5);</span>
+<span class="fc" id="L331">            app.stroke(0);</span>
+<span class="fc" id="L332">            app.noFill();</span>
+<span class="fc" id="L333">            app.rect(700, 50, 150, 28*(1+this.players.size()));</span>
+<span class="fc" id="L334">            app.line(700, 50+28, 850, 50+28);</span>
+<span class="fc" id="L335">            app.strokeWeight(1);</span>
+<span class="fc" id="L336">            app.textSize(18);</span>
+<span class="fc" id="L337">            app.fill(0);</span>
+<span class="fc" id="L338">            app.text(&quot;Scores&quot;, 710, 50+20);</span>
+<span class="fc bfc" id="L339" title="All 2 branches covered.">            for (int i=0; i&lt;this.playersObj.size(); i++) {</span>
+<span class="fc" id="L340">                String playerPrint = String.format(&quot;Player %s&quot;, this.playersObj.get(i).getPlayerString());</span>
+<span class="fc" id="L341">                String playerScore = String.format(&quot;%d&quot;, this.playersObj.get(i).getScore());</span>
+<span class="fc" id="L342">                int[] colourScheme = this.colourSchemes.get(i);</span>
+<span class="fc" id="L343">                app.fill(colourScheme[0], colourScheme[1], colourScheme[2]);</span>
+<span class="fc" id="L344">                app.text(playerPrint, 710, 50+(26*(i+2)));</span>
+    
+<span class="fc" id="L346">                app.fill(0);</span>
+<span class="fc" id="L347">                app.text(playerScore, 810, 50+(26*(i+2)));</span>
+            }
+
+<span class="fc" id="L350">            return true;</span>
+<span class="nc" id="L351">        } catch (Exception e) {</span>
+<span class="nc" id="L352">            return false;</span>
+        }
+    }
+
+    /**
+     * Display wind at the top right corner of the game.
+     * 
+     * @return true if executed, false if otherwise.
+     */
+    public boolean displayWind() { // what the method says
+        try {
+<span class="fc" id="L363">            this.windPositiveImage = app.loadImage(app.getClass().getResource(&quot;wind.png&quot;).getPath().toLowerCase(Locale.ROOT).replace(&quot;%20&quot;, &quot; &quot;)); // get image</span>
+<span class="fc" id="L364">            this.windNegativeImage = app.loadImage(app.getClass().getResource(&quot;wind-1.png&quot;).getPath().toLowerCase(Locale.ROOT).replace(&quot;%20&quot;, &quot; &quot;)); // get image</span>
+    
+<span class="fc bfc" id="L366" title="All 2 branches covered.">            if (this.windLevel &gt;= 0) {</span>
+<span class="fc" id="L367">                app.image(this.windPositiveImage, 750, 2, 50, 50);</span>
+<span class="fc" id="L368">                String wind = String.format(&quot;%d&quot;, this.windLevel);</span>
+<span class="fc" id="L369">                app.strokeWeight(1);</span>
+<span class="fc" id="L370">                app.textSize(18);</span>
+<span class="fc" id="L371">                app.fill(0);</span>
+<span class="fc" id="L372">                app.text(wind, 810, 30);</span>
+<span class="pc bpc" id="L373" title="1 of 2 branches missed.">            } else if (this.windLevel &lt; 0) {</span>
+<span class="fc" id="L374">                app.image(this.windNegativeImage, 750, 2, 50, 50);</span>
+<span class="fc" id="L375">                String wind = String.format(&quot;%d&quot;, Math.abs(this.windLevel));</span>
+<span class="fc" id="L376">                app.strokeWeight(1);</span>
+<span class="fc" id="L377">                app.textSize(18);</span>
+<span class="fc" id="L378">                app.fill(0);</span>
+<span class="fc" id="L379">                app.text(wind, 810, 30);</span>
+            }
+
+<span class="fc" id="L382">            return true;</span>
+<span class="fc" id="L383">        } catch (Exception e) {</span>
+<span class="fc" id="L384">            return false;</span>
+        }
+
+    }
+
+    /**
+     * Display fuel and parachute images at the top left corner of the game.
+     * 
+     * @return true if executed, false if otherwise.
+     */
+    public boolean displayFuelParachute() { // what the method says
+        try {
+<span class="fc" id="L396">            fuelImage = app.loadImage(app.getClass().getResource(&quot;fuel.png&quot;).getPath().toLowerCase(Locale.ROOT).replace(&quot;%20&quot;, &quot; &quot;));</span>
+<span class="fc" id="L397">            app.image(fuelImage, 180, 5, 28, 28);</span>
+<span class="fc" id="L398">            this.turn.displayFuel();</span>
+    
+<span class="fc" id="L400">            parachuteImage = app.loadImage(app.getClass().getResource(&quot;parachute.png&quot;).getPath().toLowerCase(Locale.ROOT).replace(&quot;%20&quot;, &quot; &quot;));</span>
+<span class="fc" id="L401">            app.image(parachuteImage, 180, 35, 28, 28);</span>
+<span class="fc" id="L402">            this.turn.displayParachute();</span>
+
+<span class="fc" id="L404">            return true;</span>
+<span class="nc" id="L405">        } catch (Exception e) {</span>
+<span class="nc" id="L406">            return false;</span>
+        }
+
+    }
+
+    /**
+     * Display shield symbol at the top left corner of the game.
+     * 
+     * @return true if executed, false if otherwise.
+     */
+    public boolean displayShield() {
+        try {
+<span class="fc" id="L418">            int[] shieldColour = this.turn.getColourScheme();</span>
+<span class="fc" id="L419">            app.fill(shieldColour[0], shieldColour[1], shieldColour[2], 50);</span>
+<span class="fc" id="L420">            app.ellipse(194,78,26,26);</span>
+<span class="fc" id="L421">            this.turn.displayShield();</span>
+
+<span class="fc" id="L423">            return true;</span>
+<span class="nc" id="L424">        } catch (Exception e) {</span>
+<span class="nc" id="L425">            return false;</span>
+        }
+
+    }
+
+    /**
+     * Display final scoreboard in descending score order. Call at the end of the game.
+     * 
+     * @return true if executed, false if otherwise.
+     */
+    public boolean displayFinalScoreboard() {
+        try {
+<span class="fc" id="L437">            this.sortScores(); // sort descending</span>
+<span class="fc" id="L438">            app.textSize(22);</span>
+<span class="fc" id="L439">            app.strokeWeight(1);</span>
+<span class="fc" id="L440">            app.fill(0);</span>
+<span class="fc" id="L441">            String winnerPlayer = String.format(&quot;Player %s wins!&quot;, this.playersObj.get(0).getPlayerString());</span>
+<span class="fc" id="L442">            app.text(winnerPlayer, 288, 203);</span>
+<span class="fc" id="L443">            int[] winnerColour = this.colourSchemes.get(0);</span>
+<span class="fc" id="L444">            app.fill(winnerColour[0], winnerColour[1], winnerColour[2], 25);</span>
+<span class="fc" id="L445">            app.strokeWeight(5);</span>
+<span class="fc" id="L446">            app.stroke(0);</span>
+<span class="fc" id="L447">            app.rect(288, 240, 170, 30*(2+this.playersObj.size()));</span>
+<span class="fc" id="L448">            app.line(288, 280, 458, 280);</span>
+<span class="fc" id="L449">            app.fill(0);</span>
+<span class="fc" id="L450">            app.text(&quot;Final Scores&quot;, 298, 270);</span>
+    
+<span class="fc bfc" id="L452" title="All 2 branches covered.">            for (int i=0; i&lt;this.playersObj.size(); i++) {</span>
+    
+<span class="fc" id="L454">                String playerPrint = String.format(&quot;Player %s&quot;, this.playersObj.get(i).getPlayerString());</span>
+<span class="fc" id="L455">                String playerScore = String.format(&quot;%d&quot;, this.playersObj.get(i).getScore());</span>
+<span class="fc" id="L456">                int[] colourScheme = this.colourSchemes.get(i);</span>
+    
+<span class="fc bfc" id="L458" title="All 2 branches covered.">                if (this.finalScoreboardCount &gt;= 21 * i) { // 0.7s buffer between each player and score displayed</span>
+<span class="fc" id="L459">                    app.fill(colourScheme[0], colourScheme[1], colourScheme[2]);</span>
+<span class="fc" id="L460">                    app.text(playerPrint, 298, 250+(30*(i+2)));</span>
+        
+<span class="fc" id="L462">                    app.fill(0);</span>
+<span class="fc" id="L463">                    app.text(playerScore, 405, 250+(30*(i+2)));</span>
+                }
+            }
+    
+<span class="fc" id="L467">            this.finalScoreboardCount += 1; // to make sure there is 0.7s between scores displayed</span>
+
+<span class="fc" id="L469">            return true;</span>
+<span class="nc" id="L470">        } catch (Exception e) {</span>
+<span class="nc" id="L471">            return false;</span>
+        }
+
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

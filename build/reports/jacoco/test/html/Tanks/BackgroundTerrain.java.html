@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BackgroundTerrain.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">TanksGame2024</a> &gt; <a href="index.source.html" class="el_package">Tanks</a> &gt; <span class="el_source">BackgroundTerrain.java</span></div><h1>BackgroundTerrain.java</h1><pre class="source lang-java linenums">package Tanks;
+
+import org.checkerframework.checker.units.qual.A;
+import org.json.JSONTokener;
+import processing.core.PApplet;
+import processing.core.PImage;
+import processing.core.PShape;
+import processing.core.PVector;
+import processing.data.JSONArray;
+import processing.data.JSONObject;
+import processing.event.KeyEvent;
+import processing.event.MouseEvent;
+
+import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
+
+import java.io.*;
+import java.util.*;
+import java.lang.Math;
+
+
+public class BackgroundTerrain {
+
+    private String backgroundImage;
+    private PImage bg;
+    private App app;
+    private int level;
+    private String txtFileName;
+    private String[] layoutData;
+<span class="fc" id="L31">    private String[][] terrainMatrix = new String[20][28];</span>
+<span class="fc" id="L32">    private int[] foregroundColour = new int[3];</span>
+<span class="fc" id="L33">    private ArrayList&lt;Integer&gt; terrainHeightsText = new ArrayList&lt;Integer&gt;();</span>
+<span class="fc" id="L34">    private int[] terrainHeightsFrame = new int[896];</span>
+<span class="fc" id="L35">    private float[] movingAveragePoints = new float[896];</span>
+    private Level levelObj;
+
+    /**
+     * Constructor of BackgroundTerrain.
+     * 
+     * @param app is the App object that we will pass through to allow for drawing + more implementations of the PApplet library.
+     * @param level is the level number which a terrain belongs to.
+     * @param levelObj is the Level object which a terrain belongs to.
+     */
+<span class="fc" id="L45">    public BackgroundTerrain(App app, int level, Level levelObj) {</span>
+<span class="fc" id="L46">        this.app = app;</span>
+<span class="fc" id="L47">        this.level = level;</span>
+<span class="fc" id="L48">        this.levelObj = levelObj;</span>
+<span class="fc" id="L49">    }</span>
+
+    // no need for Javadoc comments for setters and getters
+    public int getLevel() {
+<span class="nc" id="L53">        return this.level;</span>
+    }
+
+    public ArrayList&lt;Integer&gt; getTerrainHeightsText() {
+<span class="nc" id="L57">        return this.terrainHeightsText;</span>
+    }
+
+    public int[] getTerrainHeightsFrame() {
+<span class="nc" id="L61">        return this.terrainHeightsFrame;</span>
+    }
+
+    public String[][] getTerrainMatrix() {
+<span class="fc" id="L65">        return this.terrainMatrix;</span>
+    }
+
+    public float[] getMovingAveragePoints() {
+<span class="fc" id="L69">        return this.movingAveragePoints;</span>
+    }
+
+
+    /**
+     * Read JSON file and add background.
+     * 
+     * @return true if executed, false if otherwise
+     */
+    public boolean setBackground() {
+
+<span class="pc bpc" id="L80" title="1 of 2 branches missed.">        if (!app.levelsData.getJSONObject(level-1).isNull(&quot;background&quot;)) {</span>
+<span class="fc" id="L81">            this.backgroundImage = app.levelsData.getJSONObject(level-1).getString(&quot;background&quot;);</span>
+<span class="fc" id="L82">            this.bg = app.loadImage(app.getClass().getResource(backgroundImage).getPath().toLowerCase(Locale.ROOT).replace(&quot;%20&quot;, &quot; &quot;));</span>
+<span class="fc" id="L83">            app.background(bg);</span>
+<span class="fc" id="L84">            return true;            </span>
+        }
+
+<span class="nc" id="L87">        return false;</span>
+    }
+
+    /**
+     * Read JSON file and set foreground colour.
+     * 
+     * @return true if executed, false if otherwise
+     */
+    public boolean setForegroundColour() {
+<span class="pc bpc" id="L96" title="1 of 2 branches missed.">        if (!app.levelsData.getJSONObject(level-1).isNull(&quot;foreground-colour&quot;)) {</span>
+<span class="fc" id="L97">            String foreground = app.levelsData.getJSONObject(level-1).getString(&quot;foreground-colour&quot;);</span>
+<span class="fc" id="L98">            String[] foregroundList = foreground.split(&quot;,&quot;);</span>
+
+<span class="fc bfc" id="L100" title="All 2 branches covered.">            for (int i=0; i&lt;foregroundList.length; i++) {</span>
+<span class="fc" id="L101">                this.foregroundColour[i] = Integer.parseInt(foregroundList[i]);</span>
+            }
+
+<span class="fc" id="L104">            return true;</span>
+        }
+
+<span class="nc" id="L107">        return false;</span>
+    }
+
+    /**
+     * Initialise terrain at the beginning - call at setup.
+     * 
+     * @return true if executed, false if otherwise
+     */
+    public boolean setTerrainMatrix() {
+        
+<span class="pc bpc" id="L117" title="1 of 2 branches missed.">        if (!app.levelsData.getJSONObject(level-1).isNull(&quot;layout&quot;)) {</span>
+<span class="fc" id="L118">            this.txtFileName = app.levelsData.getJSONObject(level-1).getString(&quot;layout&quot;);</span>
+<span class="fc" id="L119">            this.layoutData = app.loadStrings(txtFileName);</span>
+
+            // read txt file as a matrix
+<span class="fc bfc" id="L122" title="All 2 branches covered.">            for (int i=0; i&lt;this.layoutData.length; i++) {</span>
+<span class="fc bfc" id="L123" title="All 2 branches covered.">                if (i == 20) break;</span>
+<span class="fc bfc" id="L124" title="All 2 branches covered.">                for (int j=0; j&lt;this.layoutData[i].length(); j++) {</span>
+<span class="pc bpc" id="L125" title="1 of 2 branches missed.">                    if (j==28) break;</span>
+<span class="fc" id="L126">                    this.terrainMatrix[i][j]=this.layoutData[i].substring(j,j+1);</span>
+                }
+            }
+
+            // get rid of null and newlines and tabs
+<span class="fc bfc" id="L131" title="All 2 branches covered.">            for (int i=0; i&lt;28; i++) {</span>
+<span class="fc bfc" id="L132" title="All 2 branches covered.">                for (int j=0; j&lt;20; j++) {</span>
+<span class="pc bpc" id="L133" title="1 of 6 branches missed.">                    if (this.terrainMatrix[j][i] == null || this.terrainMatrix[j][i].equals(&quot;\n&quot;) || this.terrainMatrix[j][i].equals(&quot;\t&quot;)) {</span>
+<span class="fc" id="L134">                        this.terrainMatrix[j][i] = &quot; &quot;;</span>
+                    }
+                }
+            }
+
+
+<span class="fc bfc" id="L140" title="All 2 branches covered.">            for (int i=0; i&lt;this.terrainMatrix.length; i++) {</span>
+<span class="fc bfc" id="L141" title="All 2 branches covered.">                for (int j=0; j&lt;this.terrainMatrix[i].length; j++) {</span>
+                }
+            }
+
+<span class="fc" id="L145">            return true;</span>
+        }
+
+<span class="nc" id="L148">        return false;</span>
+    }
+
+
+    /**
+     * Calculate the moving average from the list of heights generated in setTerrainMatrix().
+     * 
+     * @return true if executed, false if otherwise
+     */
+    public boolean calculateMovingAverage() { // what the method says
+
+        // add heights
+<span class="fc bfc" id="L160" title="All 2 branches covered.">        for (int i=0; i&lt;28; i++) {</span>
+<span class="fc bfc" id="L161" title="All 2 branches covered.">            for (int j=0; j&lt;20; j++) {</span>
+<span class="fc bfc" id="L162" title="All 2 branches covered.">                if (this.terrainMatrix[j][i].equals(&quot;X&quot;)) {</span>
+<span class="fc" id="L163">                    this.terrainHeightsText.add(j);</span>
+                }
+            }
+        }
+
+        // turn heights in txt file into pixels
+<span class="fc" id="L169">        int index=0;</span>
+<span class="fc bfc" id="L170" title="All 2 branches covered.">        while (index &lt; this.terrainHeightsText.size()) {</span>
+<span class="fc bfc" id="L171" title="All 2 branches covered.">            for (int i=0; i&lt;this.terrainHeightsFrame.length; i++) {</span>
+<span class="fc" id="L172">                this.terrainHeightsFrame[i]=(this.terrainHeightsText.get(index)) * 32;</span>
+
+<span class="fc bfc" id="L174" title="All 2 branches covered.">                if ((i+1)%32==0) {</span>
+<span class="fc" id="L175">                    index += 1;</span>
+                }
+            }
+        }
+
+
+        // moving average once
+<span class="fc bfc" id="L182" title="All 2 branches covered.">        for (int i=0; i&lt;this.terrainHeightsFrame.length; i++) {</span>
+<span class="fc" id="L183">            int sum = 0;</span>
+
+<span class="fc" id="L185">            int j=i;</span>
+<span class="fc" id="L186">            int increase=0;</span>
+<span class="fc bfc" id="L187" title="All 2 branches covered.">            while (j&lt;i+32) {</span>
+<span class="fc bfc" id="L188" title="All 2 branches covered.">                if (j==896) break;</span>
+<span class="fc" id="L189">                sum += this.terrainHeightsFrame[j];</span>
+<span class="fc" id="L190">                j+=1;</span>
+<span class="fc" id="L191">                increase+=1;</span>
+            }
+
+<span class="fc" id="L194">            float averagePoint = sum/increase;</span>
+<span class="fc" id="L195">            this.movingAveragePoints[i] = averagePoint;</span>
+        }
+
+        // moving average twice
+<span class="fc bfc" id="L199" title="All 2 branches covered.">        for (int i=0; i&lt;this.movingAveragePoints.length; i++) {</span>
+<span class="fc" id="L200">            int sum = 0;</span>
+
+<span class="fc" id="L202">            int j=i;</span>
+<span class="fc" id="L203">            int increase=0;</span>
+<span class="fc bfc" id="L204" title="All 2 branches covered.">            while (j&lt;i+32) {</span>
+<span class="fc bfc" id="L205" title="All 2 branches covered.">                if (j==896) break;</span>
+<span class="fc" id="L206">                sum += this.movingAveragePoints[j];</span>
+<span class="fc" id="L207">                j+=1;</span>
+<span class="fc" id="L208">                increase+=1;</span>
+            }
+
+<span class="fc" id="L211">            float averagePoint = sum/increase;</span>
+<span class="fc" id="L212">            this.movingAveragePoints[i] = averagePoint;</span>
+        }
+
+<span class="pc bpc" id="L215" title="1 of 2 branches missed.">        if (this.movingAveragePoints != null) {</span>
+<span class="fc" id="L216">            return true;</span>
+        } else {
+<span class="nc" id="L218">            return false;</span>
+        }
+    }
+        
+    /**
+     * Draw terrain. Call this in the draw() function of the App class.
+     */
+    public void setTerrain() {
+        // draw lines from height of moving point average to bottom of screen
+<span class="fc bfc" id="L227" title="All 2 branches covered.">        for (int i=0; i&lt;this.movingAveragePoints.length; i++) {</span>
+<span class="fc" id="L228">            app.stroke(this.foregroundColour[0], this.foregroundColour[1], this.foregroundColour[2]);</span>
+<span class="fc" id="L229">            app.rect(i,this.movingAveragePoints[i],1,640-this.movingAveragePoints[i]);</span>
+        }
+<span class="fc" id="L231">    }</span>
+
+    /**
+     * Update terrain after a projectile explodes.
+     * 
+     * @param x is the x-coordinate where we want to update the terrain at.
+     * @param newYCoordinate is the new y-coordinate of the terrain that will correspond to the x-coordinate.
+     */
+    public void updateTerrain(int x, float newYCoordinate) { // call when there is a projectile explosion
+<span class="nc" id="L240">        this.movingAveragePoints[x] = newYCoordinate;</span>
+<span class="nc" id="L241">    }</span>
+
+    /**
+     * Returns true when the terrain height at a certain x value is inside the explosion circle.
+     * 
+     * @param x is the x-coordinate that corresponds to the terrain height that we want to check.
+     * @param explosionCentreX is the x-coordinate of the point where the projectile explodes.
+     * @param explosionCentreY is the y-coordinate of the point where the projectile explodes.
+     * @return true if terrain height is inside the circle, false if otherwise.
+     */
+    public boolean insideExplosion(int x, float explosionCentreX, float explosionCentreY) { // check to see if terrain points are inside explosion
+<span class="nc bnc" id="L252" title="All 2 branches missed.">        return ((((float)x-explosionCentreX)*((float)x-explosionCentreX))+</span>
+        ((this.movingAveragePoints[x]-explosionCentreY)*(this.movingAveragePoints[x]-explosionCentreY)) &lt;= 30 * 30);
+    }
+
+    /**
+     * Returns true if terrain height at a certain x value is above the explosion circle. Use this to see when to collapse the terrain.
+     * 
+     * @param x is the x-coordinate that corresponds to the terrain height that we want to check.
+     * @param explosionCentreX is the x-coordinate of the point where the projectile explodes.
+     * @param explosionCentreY is the y-coordinate of the point where the projectile explodes.
+     * @return true if terrain height is above the circle, false if otherwise.
+     */
+    public boolean aboveExplosion(int x, float explosionCentreX, float explosionCentreY) { // check to see if terrain is above explosion - if true, call calculateNewY2 for when terrain falls down
+<span class="nc bnc" id="L265" title="All 2 branches missed.">        return (this.movingAveragePoints[x] &lt; explosionCentreY-(float)Math.sqrt((30*30)-((explosionCentreX-(float)x)*(explosionCentreX-(float)x))));</span>
+    }
+
+    /**
+     * Calculates new y-coordinate for the terrain height at a certain x-coordinate for when the original terrain height is inside the explosion circle.
+     * 
+     * @param x is the x-coordinate that corresponds to the terrain height that we want to generate.
+     * @param explosionCentreX is the x-coordinate of the point where the projectile explodes.
+     * @param explosionCentreY is the y-coordinate of the point where the projectile explodes.
+     * @return new y-coordinate for when the terrain does not fall down, and just creates a crater.
+     */
+    public float calculateNewY1(int x, float explosionCentreX, float explosionCentreY) { // use function of circle to update new y coordinate when terrain doesn't fall
+<span class="nc" id="L277">        float circleY = (float)Math.sqrt((30*30)-((explosionCentreX-(float)x)*(explosionCentreX-(float)x)));</span>
+<span class="nc" id="L278">        float newY = this.movingAveragePoints[x]+(circleY-(this.movingAveragePoints[x]-explosionCentreY));</span>
+<span class="nc" id="L279">        return newY;</span>
+    }
+
+    /**
+     * Calculates new y-coordinate for the terrain height at a certain x-coordinate for when the original terrain height is above the explosion circle.
+     * 
+     * @param x is the x-coordinate that corresponds to the terrain height that we want to generate.
+     * @param explosionCentreX is the x-coordinate of the point where the projectile explodes.
+     * @param explosionCentreY is the y-coordinate of the point where the projectile explodes.
+     * @return new y-coordinate for when the terrain falls down.
+     */
+    public float calculateNewY2(int x, float explosionCentreX, float explosionCentreY) { // use when there is terrain on top of explosion
+<span class="nc" id="L291">        float circleY = (float)Math.sqrt((30*30)-((explosionCentreX-(float)x)*(explosionCentreX-(float)x)));</span>
+<span class="nc" id="L292">        float newY = this.movingAveragePoints[x]+(2*circleY);</span>
+<span class="nc" id="L293">        return newY;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
