@@ -178,106 +178,166 @@ public class Player { // handles players and logic
 
     /**
      * Displays the text which states which player the turn belongs to.
+     * 
+     * @return true if executed, false if otherwise.
      */
-    public void displayPlayerText() { // what the method says
-        int xCoordinate = 15;
-        int yCoordinate = 30;
+    public boolean displayPlayerText() { // what the method says
+        try {
+            int xCoordinate = 15;
+            int yCoordinate = 30;
+    
+            app.strokeWeight(1);
+            app.textSize(18);
+            app.fill(0);
+            String printOut = String.format("Player %s's turn", this.player);
+            app.text(printOut, xCoordinate, yCoordinate);
 
-        app.strokeWeight(1);
-        app.textSize(18);
-        app.fill(0);
-        String printOut = String.format("Player %s's turn", this.player);
-        app.text(printOut, xCoordinate, yCoordinate);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+
     }
 
     /**
      * Increases the player's score. Call when the player has hit another tank.
      * 
      * @param increase is the number we want our score to increase by.
+     * @return true if executed, false if otherwise.
      */
-    public void increaseScore(int increase) {
-        int newScore = increase + this.score;
-        if (this.gainScore == true) {
-            this.score = newScore;
-
+    public boolean increaseScore(int increase) {
+        try {
+            int newScore = increase + this.score;
+            if (this.gainScore == true) {
+                this.score = newScore;
+    
+                if (this.score == newScore) {
+                    this.gainScore = false;
+                }
+            }
+    
             if (this.score == newScore) {
                 this.gainScore = false;
             }
+
+            return true;
+
+        } catch (Exception e) {
+            return false;
         }
 
-        if (this.score == newScore) {
-            this.gainScore = false;
-        }
     }
 
     /**
      * Displays the amount of fuel left in the top left corner.
+     * 
+     * @return true if executed, false if otherwise.
      */
-    public void displayFuel() { // display fuel amount in top left corner
-        int xCoordinate = 210;
-        int yCoordinate = 30;
+    public boolean displayFuel() { // display fuel amount in top left corner
+        try {
+            int xCoordinate = 210;
+            int yCoordinate = 30;
+    
+            app.strokeWeight(1);
+            app.textSize(18);
+            app.fill(0);
+            String fuelNum = String.format("%d", this.fuel);
+            app.text(fuelNum, xCoordinate, yCoordinate);
 
-        app.strokeWeight(1);
-        app.textSize(18);
-        app.fill(0);
-        String fuelNum = String.format("%d", this.fuel);
-        app.text(fuelNum, xCoordinate, yCoordinate);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+
 
     }
 
     /**
      * Displays the number of parachutes left in the top left corner.
+     * 
+     * @return true if executed, false if otherwise.
      */
-    public void displayParachute() { // display parachute number in top left corner
-        int xCoordinate = 210;
-        int yCoordinate = 58;
+    public boolean displayParachute() { // display parachute number in top left corner
+        try {
+            int xCoordinate = 210;
+            int yCoordinate = 58;
+    
+            app.strokeWeight(1);
+            app.textSize(18);
+            app.fill(0);
+            String parachuteNum = String.format("%d", this.parachute);
+            app.text(parachuteNum, xCoordinate, yCoordinate);
 
-        app.strokeWeight(1);
-        app.textSize(18);
-        app.fill(0);
-        String parachuteNum = String.format("%d", this.parachute);
-        app.text(parachuteNum, xCoordinate, yCoordinate);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+
     }
 
     /**
      * Displays the number of shields left in the top left corner. This is an extension feature of my program.
+     * 
+     * @return true if executed, false if otherwise.
      */
-    public void displayShield() { // display shield number in top left corner - extension
-        int xCoordinate = 210;
-        int yCoordinate = 86;
+    public boolean displayShield() { // display shield number in top left corner - extension
+        try {
+            int xCoordinate = 210;
+            int yCoordinate = 86;
+    
+            app.strokeWeight(1);
+            app.textSize(18);
+            app.fill(0);
+            String parachuteNum = String.format("%d", this.shield);
+            app.text(parachuteNum, xCoordinate, yCoordinate);
 
-        app.strokeWeight(1);
-        app.textSize(18);
-        app.fill(0);
-        String parachuteNum = String.format("%d", this.shield);
-        app.text(parachuteNum, xCoordinate, yCoordinate);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+
     }
 
     /**
      * Draws the shield, which disappears after 25 frames. This is an extension feature of my program.
+     * 
+     * @return true if executed, false if otherwise.
      */
-    public void drawShield() { // draw shield on tank - extension; disappears after 25 frames (use counter to keep track)
-        if (this.shieldOn == true) {
-            app.stroke(0);
-            app.fill(this.colourScheme[0], this.colourScheme[1], this.colourScheme[2], 50);
-            app.ellipse(this.tank.getTankCentreX(), this.tank.getTankCentreY(), 45, 45);
-            this.shieldCount += 1;
+    public boolean drawShield() { // draw shield on tank - extension; disappears after 25 frames (use counter to keep track)
+        try {
+            if (this.shieldOn == true) {
+                app.stroke(0);
+                app.fill(this.colourScheme[0], this.colourScheme[1], this.colourScheme[2], 50);
+                app.ellipse(this.tank.getTankCentreX(), this.tank.getTankCentreY(), 45, 45);
+                this.shieldCount += 1;
+            }
+    
+            if (this.shieldCount == 25) {
+                this.shieldOn = false;
+                this.shield -= 1;
+                this.shieldCount = 0;
+            }
+
+            return true;
+        } catch (Exception e) {
+            return false;
         }
 
-        if (this.shieldCount == 25) {
-            this.shieldOn = false;
-            this.shield -= 1;
-            this.shieldCount = 0;
-        }
     }
 
     /**
      * Draws the parachute on the tank. While the parachute feature is not an extension, I have implemented an extension feature where the number of parachutes increases when the key 'p' is pressed.
+     * 
+     * @return true if executed, false if otherwise.
      */
-    public void drawParachute() { //draw parachute on tank
+    public boolean drawParachute() { //draw parachute on tank
         if (this.parachuteOn==true) {
             PImage parachute = this.levelObj.getParachutImage();
             app.image(parachute, this.tank.getXCoordinate()-10, this.tank.getYCoordinate()-(3*this.tank.getTankHeight()), this.tank.getTankWidth()+20, 3*this.tank.getTankHeight());
+
+            return true;
         }
+
+        return false;
     }
 }
