@@ -48,17 +48,33 @@ public class Tree {
 
     /**
      * Grounds the tree on the terrain. Trees will fall when terrain falls and stay grounded on the terrain.
+     * 
+     * @return true if executed, false if otherwise
      */
-    public void groundTree() { // ensure trees stay on the terrain and don't hang in the air
-        this.movingAverages = this.level.getBackgroundTerrain().getMovingAveragePoints();
-        this.yCoordinate = this.movingAverages[(int)this.xCoordinate+(this.size/2)]-this.size; // ground tree
+    public boolean groundTree() { // ensure trees stay on the terrain and don't hang in the air
+        try {
+            this.movingAverages = this.level.getBackgroundTerrain().getMovingAveragePoints();
+            this.yCoordinate = this.movingAverages[(int)this.xCoordinate+(this.size/2)]-this.size; // ground tree
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+
     }
 
     /**
      * Draws the trees.
+     * 
+     * @return true if executed, false if otherwise
      */
-    public void drawTree() {
-        app.image(this.treeImage, this.xCoordinate, this.yCoordinate, this.size, this.size);
+    public boolean drawTree() {
+        try {
+            app.image(this.treeImage, this.xCoordinate, this.yCoordinate, this.size, this.size);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+
     }
     
 }
