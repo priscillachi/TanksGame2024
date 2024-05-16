@@ -156,7 +156,6 @@ public class HealthPower {
      * @return true if executed, false if otherwise.
      */
     public boolean decreaseHealth(int decrease) {
-        try {
             int newHealth = this.health - (int)decrease;
             if (this.loseHealth==true) {
                 this.updateHealth(newHealth);
@@ -164,17 +163,11 @@ public class HealthPower {
                 if (this.health==newHealth) {
                     this.loseHealth = false;
                 }
-            }
-    
-            if (this.health==newHealth) {
-                this.loseHealth = false;
+
+                return true;
             }
 
-            return true;
-
-        } catch (Exception e) {
             return false;
-        }
     }
 
     /**
