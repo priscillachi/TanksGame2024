@@ -68,58 +68,84 @@ public class HealthPower {
 
     /**
      * Draw health bar at the top of the screen.
+     * 
+     * @return true if executed, false if otherwise.
      */
-    public void drawHealthBar() { // what the method says
-        int xCoordinate = ((864*3)/5) - (this.barWidth/2);
-        int yCoordinate = 10;
+    public boolean drawHealthBar() { // what the method says
+        try{
+            int xCoordinate = ((864*3)/5) - (this.barWidth/2);
+            int yCoordinate = 10;
+    
+            // fill in
+            app.fill(this.colourScheme[0], this.colourScheme[1], this.colourScheme[2]);
+            app.rect(xCoordinate, yCoordinate, this.healthLength, this.barHeight);
+    
+            app.strokeWeight(5);
+            app.stroke(0); // black box
+            app.line(xCoordinate + this.powerLength, yCoordinate, xCoordinate + this.barWidth, yCoordinate);
+            app.line(xCoordinate + this.powerLength, yCoordinate + this.barHeight, xCoordinate + this.barWidth, yCoordinate + this.barHeight);
+            app.line(xCoordinate + this.powerLength, yCoordinate, xCoordinate + this.powerLength, yCoordinate + this.barHeight);
+            app.line(xCoordinate + this.barWidth, yCoordinate, xCoordinate + this.barWidth, yCoordinate + this.barHeight);
+    
+            app.strokeWeight(5);
+            app.stroke(87); // grey box
+            app.line(xCoordinate, yCoordinate, xCoordinate + this.powerLength, yCoordinate);
+            app.line(xCoordinate, yCoordinate + this.barHeight, xCoordinate + this.powerLength, yCoordinate + this.barHeight);
+            app.line(xCoordinate, yCoordinate, xCoordinate, yCoordinate + this.barHeight);
+            app.line(xCoordinate + this.powerLength, yCoordinate, xCoordinate + this.powerLength, yCoordinate + this.barHeight);
 
-        // fill in
-        app.fill(this.colourScheme[0], this.colourScheme[1], this.colourScheme[2]);
-        app.rect(xCoordinate, yCoordinate, this.healthLength, this.barHeight);
+            return true;
 
-        app.strokeWeight(5);
-        app.stroke(0); // black box
-        app.line(xCoordinate + this.powerLength, yCoordinate, xCoordinate + this.barWidth, yCoordinate);
-        app.line(xCoordinate + this.powerLength, yCoordinate + this.barHeight, xCoordinate + this.barWidth, yCoordinate + this.barHeight);
-        app.line(xCoordinate + this.powerLength, yCoordinate, xCoordinate + this.powerLength, yCoordinate + this.barHeight);
-        app.line(xCoordinate + this.barWidth, yCoordinate, xCoordinate + this.barWidth, yCoordinate + this.barHeight);
+        } catch (Exception e) {
+            return false;
+        }
 
-        app.strokeWeight(5);
-        app.stroke(87); // grey box
-        app.line(xCoordinate, yCoordinate, xCoordinate + this.powerLength, yCoordinate);
-        app.line(xCoordinate, yCoordinate + this.barHeight, xCoordinate + this.powerLength, yCoordinate + this.barHeight);
-        app.line(xCoordinate, yCoordinate, xCoordinate, yCoordinate + this.barHeight);
-        app.line(xCoordinate + this.powerLength, yCoordinate, xCoordinate + this.powerLength, yCoordinate + this.barHeight);
     }
 
     /**
      * Display how much health and power a player has.
+     * 
+     * @return true if executed, false if otherwise.
      */
-    public void displayHealthPowerText() { // what the method says
-        int xCoordinate = ((864*3)/5) - (this.barWidth/2);
-        int yCoordinate = 10;
-        
-        app.strokeWeight(1);
-        app.textSize(18);
-        app.fill(0);
-        app.text("Health:", xCoordinate-(this.barWidth/2)+14, yCoordinate+this.barHeight-5); // word health next to bar
-        app.text("Power:", xCoordinate-(this.barWidth/2)+14, yCoordinate+this.barHeight+22); // word power next to bar
-        app.text((int)this.power, xCoordinate, yCoordinate+this.barHeight+22); // power number next to bar
-        app.text(this.health, xCoordinate + this.barWidth + 10, yCoordinate+this.barHeight-5);
+    public boolean displayHealthPowerText() { // what the method says
+        try {
+            int xCoordinate = ((864*3)/5) - (this.barWidth/2);
+            int yCoordinate = 10;
+            
+            app.strokeWeight(1);
+            app.textSize(18);
+            app.fill(0);
+            app.text("Health:", xCoordinate-(this.barWidth/2)+14, yCoordinate+this.barHeight-5); // word health next to bar
+            app.text("Power:", xCoordinate-(this.barWidth/2)+14, yCoordinate+this.barHeight+22); // word power next to bar
+            app.text((int)this.power, xCoordinate, yCoordinate+this.barHeight+22); // power number next to bar
+            app.text(this.health, xCoordinate + this.barWidth + 10, yCoordinate+this.barHeight-5);
+
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     /**
      * Update the health amount. If the health falls below the current power amount, update the power such that it is equal to the health, as the power is at most equal to the health.
      * 
      * @param health is the health amount that we want to update our health value to.
+     * @return true if executed, false if otherwise.
      */
-    public void updateHealth(int health) { 
-        this.health = health;
-        this.healthLength = ((float)this.health/(float)100) * (float)this.barWidth;
+    public boolean updateHealth(int health) { 
+        try {
+            this.health = health;
+            this.healthLength = ((float)this.health/(float)100) * (float)this.barWidth;
+    
+            if (this.health <= this.power) {
+                this.power = this.health;
+                this.powerLength = ((float)this.power/(float)100) * (float)this.barWidth;
+            }
 
-        if (this.health <= this.power) {
-            this.power = this.health;
-            this.powerLength = ((float)this.power/(float)100) * (float)this.barWidth;
+            return true;
+
+        } catch (Exception e) {
+            return false;
         }
     }
 
@@ -127,19 +153,27 @@ public class HealthPower {
      * Decreases the health amount. Call when a player has been hit by a projectile.
      * 
      * @param decrease is the amount we want our health to decrease by.
+     * @return true if executed, false if otherwise.
      */
-    public void decreaseHealth(int decrease) {
-        int newHealth = this.health - (int)decrease;
-        if (this.loseHealth==true) {
-            this.updateHealth(newHealth);
-
+    public boolean decreaseHealth(int decrease) {
+        try {
+            int newHealth = this.health - (int)decrease;
+            if (this.loseHealth==true) {
+                this.updateHealth(newHealth);
+    
+                if (this.health==newHealth) {
+                    this.loseHealth = false;
+                }
+            }
+    
             if (this.health==newHealth) {
                 this.loseHealth = false;
             }
-        }
 
-        if (this.health==newHealth) {
-            this.loseHealth = false;
+            return true;
+
+        } catch (Exception e) {
+            return false;
         }
     }
 
@@ -147,29 +181,46 @@ public class HealthPower {
      * Update the power amount. It cannot exceed the health amount.
      * 
      * @param power is the amount of power we want to update our power to.
+     * @return true if excecuted, false if otherwise.
      */
-    public void updatePower(float power) {
+    public boolean updatePower(float power) {
         if (power <= this.health) {
             this.power = power;
             this.powerLength = ((float)this.power/(float)100) * (float)this.barWidth;
+
+            return true;
         }
+
+        return false;
     }
 
     /**
      * Increase the power by 1.2 when we press the 'w' key.
+     * 
+     * @return true if excecuted, false if otherwise.
      */
-    public void powerIncrease() { // for keyPressed
+    public boolean powerIncrease() { // for keyPressed
         if (this.power <= this.health) {
             this.updatePower(this.power+(float)1.2);
+
+            return true;
         }
+
+        return false;
     }
 
     /**
      * Decrease the power by 1.2 when we press the 's' key.
+     * 
+     * @return true if excecuted, false if otherwise.
      */
-    public void powerDecrease() { // for keyPressed
+    public boolean powerDecrease() { // for keyPressed
         if (this.power >= 0) {
             this.updatePower(this.power-(float)1.2);
+
+            return true;
         }
+
+        return false;
     }
 }
