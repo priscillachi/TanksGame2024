@@ -52,8 +52,8 @@ public class App extends PApplet {
     public Level level3 = new Level(this, 3);
 
     public Level currentLevel = level1;
-    private int playersNumber;
-    private int playerTurn = 0;
+    public int playersNumber;
+    public int playerTurn = 0;
 	
 
     public App() {
