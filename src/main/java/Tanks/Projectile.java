@@ -110,49 +110,68 @@ public class Projectile {
 
     /**
      * Updates velocity and coordinates according to wind, gravity, and angle.
+     * 
+     * @return true if executed, false if otherwise.
      */
-    public void updateVelocityCoordinates() {
+    public boolean updateVelocityCoordinates() {
 
-        this.yVelocity -= this.gravity; // minus gravity
+        try {
 
-        if ((this.wind < 0 && this.angle < 0) || (this.wind >= 0 && this.angle >= 0)) {
-            this.xVelocity += (float)Math.abs(this.wind * 0.001); // if angle and wind are in different direction
-        } else if ((this.wind >= 0 && this.angle < 0) || (this.wind < 0 && this.angle >= 0)) {
-            this.xVelocity -= (float)Math.abs(this.wind * 0.001); // if angle and wind are in same direction
-        }
+            this.yVelocity -= this.gravity; // minus gravity
 
-        if (this.angle < 0) {
-            this.xCoordinate -= this.xVelocity; // minus velocity if angle < 0
-        } else if (this.angle > 0) {
-            this.xCoordinate += this.xVelocity; // add velocity if angle > 0
-        } else { // if angle = 0, check turret angle
-            if (this.tank.getAngle() < 0) {
-                this.xCoordinate -= this.xVelocity;
-            } else if (this.tank.getAngle() > 0) {
-                this.xCoordinate += this.xVelocity;
+            if ((this.wind < 0 && this.angle < 0) || (this.wind >= 0 && this.angle >= 0)) {
+                this.xVelocity += (float)Math.abs(this.wind * 0.001); // if angle and wind are in different direction
+            } else if ((this.wind >= 0 && this.angle < 0) || (this.wind < 0 && this.angle >= 0)) {
+                this.xVelocity -= (float)Math.abs(this.wind * 0.001); // if angle and wind are in same direction
             }
-        }
+    
+            if (this.angle < 0) {
+                this.xCoordinate -= this.xVelocity; // minus velocity if angle < 0
+            } else if (this.angle > 0) {
+                this.xCoordinate += this.xVelocity; // add velocity if angle > 0
+            } else { // if angle = 0, check turret angle
+                if (this.tank.getAngle() < 0) {
+                    this.xCoordinate -= this.xVelocity;
+                } else if (this.tank.getAngle() > 0) {
+                    this.xCoordinate += this.xVelocity;
+                }
+            }
+    
+            this.yCoordinate -= this.yVelocity; // minus velocity
 
-        this.yCoordinate -= this.yVelocity; // minus velocity
+            return true;
+
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     /**
      * Draws the projectile.
+     * 
+     * @return true if executed, false if otherwise.
      */
-    public void drawProjectile() {
+    public boolean drawProjectile() {
+        
         if (this.projectileShot == true) {
             projectile = app.createShape(app.ELLIPSE, xCoordinate, yCoordinate, diameter, diameter);
             projectile.setFill(app.color(this.colourScheme[0], this.colourScheme[1], this.colourScheme[2]));
             projectile.setStroke(app.color(this.colourScheme[0], this.colourScheme[1], this.colourScheme[2]));
             app.shape(projectile);
             this.updateVelocityCoordinates();
+
+            return true;
         }
+
+        return false;
     }
 
     /**
      * Draws the explosion, which expands until the outer circle hits a radius of 30.
+     * 
+     * @return true if executed, false if otherwise.
      */
-    public void drawExplosion() {
+    public boolean drawExplosion() {
 
         if (this.explosionOut == true) {
             app.stroke(255, 0, 0);
@@ -165,14 +184,26 @@ public class Projectile {
             app.fill(255, 255, 0);
             app.ellipse(this.xCoordinate, this.yCoordinate, this.explosionRadius*2/5, this.explosionRadius*2/5);
             this.expandExplosion();
+
+            return true;
         }
+
+        return false;
     }
 
     /**
      * Expands the explosion by 30 pixels over 0.2 seconds, i.e. 5 pixels per frame.
+     * 
+     * @return true if executed, false if otherwise.
      */
-    public void expandExplosion() {
-        this.explosionRadius += 5; // 30 pixels over 0.2s = 150 pixels/s = 150 pixels per 30 frames = 5 pixels per frame
+    public boolean expandExplosion() {
+        try {
+            this.explosionRadius += 5; // 30 pixels over 0.2s = 150 pixels/s = 150 pixels per 30 frames = 5 pixels per frame
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+
     }
 
 }
