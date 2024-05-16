@@ -72,20 +72,27 @@ public class BackgroundTerrain {
 
     /**
      * Read JSON file and add background.
+     * 
+     * @return true if executed, false if otherwise
      */
-    public void setBackground() {
+    public boolean setBackground() {
 
         if (!app.levelsData.getJSONObject(level-1).isNull("background")) {
             this.backgroundImage = app.levelsData.getJSONObject(level-1).getString("background");
             this.bg = app.loadImage(app.getClass().getResource(backgroundImage).getPath().toLowerCase(Locale.ROOT).replace("%20", " "));
-            app.background(bg);            
+            app.background(bg);
+            return true;            
         }
+
+        return false;
     }
 
     /**
      * Read JSON file and set foreground colour.
+     * 
+     * @return true if executed, false if otherwise
      */
-    public void setForegroundColour() {
+    public boolean setForegroundColour() {
         if (!app.levelsData.getJSONObject(level-1).isNull("foreground-colour")) {
             String foreground = app.levelsData.getJSONObject(level-1).getString("foreground-colour");
             String[] foregroundList = foreground.split(",");
@@ -93,13 +100,19 @@ public class BackgroundTerrain {
             for (int i=0; i<foregroundList.length; i++) {
                 this.foregroundColour[i] = Integer.parseInt(foregroundList[i]);
             }
+
+            return true;
         }
+
+        return false;
     }
 
     /**
      * Initialise terrain at the beginning - call at setup.
+     * 
+     * @return true if executed, false if otherwise
      */
-    public void setTerrainMatrix() {
+    public boolean setTerrainMatrix() {
         
         if (!app.levelsData.getJSONObject(level-1).isNull("layout")) {
             this.txtFileName = app.levelsData.getJSONObject(level-1).getString("layout");
@@ -128,14 +141,20 @@ public class BackgroundTerrain {
                 for (int j=0; j<this.terrainMatrix[i].length; j++) {
                 }
             }
+
+            return true;
         }
+
+        return false;
     }
 
 
     /**
      * Calculate the moving average from the list of heights generated in setTerrainMatrix().
+     * 
+     * @return true if executed, false if otherwise
      */
-    public void calculateMovingAverage() { // what the method says
+    public boolean calculateMovingAverage() { // what the method says
 
         // add heights
         for (int i=0; i<28; i++) {
@@ -191,6 +210,12 @@ public class BackgroundTerrain {
 
             float averagePoint = sum/increase;
             this.movingAveragePoints[i] = averagePoint;
+        }
+
+        if (this.movingAveragePoints != null) {
+            return true;
+        } else {
+            return false;
         }
     }
         
