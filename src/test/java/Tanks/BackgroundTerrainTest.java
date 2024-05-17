@@ -11,28 +11,28 @@ public class BackgroundTerrainTest {
 
     @BeforeEach
     public void beforeEach() {
-        PApplet.runSketch(new String[] { "App" }, app);
-        app.delay(1000); // to give time to initialise stuff before drawing begins
+        PApplet.runSketch(new String[] { "App" }, this.app);
+        this.app.delay(1000);
     }
 
     @Test 
     public void setBackgroundTest() {
-        assertTrue(backgroundTerrain.setBackground() == true);
+        assertTrue(this.backgroundTerrain.setBackground() == true);
     }
 
     @Test 
     public void setForegroundColourTest() {
-        assertTrue(backgroundTerrain.setForegroundColour() == true);
+        assertTrue(this.backgroundTerrain.setForegroundColour() == true);
     }
 
     @Test 
     public void setTerrainMatrixTest() {
-        assertTrue(backgroundTerrain.setTerrainMatrix() == true);
+        assertTrue(this.backgroundTerrain.setTerrainMatrix() == true);
     }
 
     @Test
     public void calculateMovingAverageTest() {
-        assertTrue(backgroundTerrain.calculateMovingAverage() == true);
+        assertTrue(this.backgroundTerrain.calculateMovingAverage() == true);
     }
 
 }
