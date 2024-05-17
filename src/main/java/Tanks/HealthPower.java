@@ -66,6 +66,10 @@ public class HealthPower {
         this.loseHealth = value;
     }
 
+    public boolean getLoseHealth() {
+        return this.loseHealth;
+    }
+
     /**
      * Draw health bar at the top of the screen.
      * 
