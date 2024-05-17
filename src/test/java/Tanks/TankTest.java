@@ -13,76 +13,76 @@ public class TankTest {
 
     @BeforeEach
     public void beforeEach() {
-        PApplet.runSketch(new String[] { "App" }, app);
-        app.delay(1000); // to give time to initialise stuff before drawing begins
+        PApplet.runSketch(new String[] { "App" }, this.app);
+        this.app.delay(1000); 
     }
 
     @Test 
     public void setProjectileExplosion() {
-        player.setHealthPower();
-        tank.setProjectile();
-        assertTrue(tank.drawExplosion()==false);
+        this.player.setHealthPower();
+        this.tank.setProjectile();
+        assertTrue(this.tank.drawExplosion()==false);
 
-        tank.setExplosionOut(true);
-        assertTrue(tank.drawExplosion()==true);
+        this.tank.setExplosionOut(true);
+        assertTrue(this.tank.drawExplosion()==true);
 
-        tank.rotateTurretLeft();
-        tank.setProjectile();
-        assertTrue(tank.getProjectile()!=null);
+        this.tank.rotateTurretLeft();
+        this.tank.setProjectile();
+        assertTrue(this.tank.getProjectile()!=null);
 
-        tank.rotateTurretRight();
-        tank.rotateTurretRight();
-        tank.setProjectile();
-        assertTrue(tank.getProjectile()!=null);
+        this.tank.rotateTurretRight();
+        this.tank.rotateTurretRight();
+        this.tank.setProjectile();
+        assertTrue(this.tank.getProjectile()!=null);
 
-        tank.setAngle((float)Math.PI/2);
-        tank.setProjectile();
-        assertTrue(tank.getProjectile()!=null);
+        this.tank.setAngle((float)Math.PI/2);
+        this.tank.setProjectile();
+        assertTrue(this.tank.getProjectile()!=null);
     }
 
     @Test 
     public void moveTank() {
-        tank.moveTankLeft();
-        assertTrue(tank.getXCoordinate()<20);
+        this.tank.moveTankLeft();
+        assertTrue(this.tank.getXCoordinate()<20);
 
-        tank.moveTankRight();
-        tank.moveTankRight();
-        assertTrue(tank.getXCoordinate()>20);
+        this.tank.moveTankRight();
+        this.tank.moveTankRight();
+        assertTrue(this.tank.getXCoordinate()>20);
 
-        tank.setXCoordinate(0);
-        tank.moveTankLeft();
-        assertTrue(tank.getXCoordinate()==0);
+        this.tank.setXCoordinate(0);
+        this.tank.moveTankLeft();
+        assertTrue(this.tank.getXCoordinate()==0);
 
-        tank.setXCoordinate(864);
-        tank.moveTankRight();
-        assertTrue(tank.getXCoordinate()==864);
+        this.tank.setXCoordinate(864);
+        this.tank.moveTankRight();
+        assertTrue(this.tank.getXCoordinate()==864);
 
-        player.setFuel(0);
-        tank.moveTankLeft();
-        assertTrue(tank.getXCoordinate()==864);
+        this.player.setFuel(0);
+        this.tank.moveTankLeft();
+        assertTrue(this.tank.getXCoordinate()==864);
 
-        player.setFuel(1);
-        tank.moveTankRight();
-        assertTrue(tank.getXCoordinate()==864);
+        this.player.setFuel(1);
+        this.tank.moveTankRight();
+        assertTrue(this.tank.getXCoordinate()==864);
     }
 
     @Test 
     public void explosion() {
-        assertTrue(tank.insideExplosion(20,20,40,40)==true);
-        assertTrue(tank.damage(20,20,40,40)==
+        assertTrue(this.tank.insideExplosion(20,20,40,40)==true);
+        assertTrue(this.tank.damage(20,20,40,40)==
         ((30-(float)Math.sqrt(((20-40)*(20-40)) + ((20-40)*(20-40))))/30) * 60);
 
-        assertFalse(tank.insideExplosion(20,20,800,800)==true);
+        assertFalse(this.tank.insideExplosion(20,20,800,800)==true);
     }
 
     @Test 
     public void increaseYCoordinate() {
-        player.setParachuteOn(true);
-        tank.increaseYCoordinate(1);
-        assertEquals(tank.getYCoordinate(), 21);
+        this.player.setParachuteOn(true);
+        this.tank.increaseYCoordinate(1);
+        assertEquals(this.tank.getYCoordinate(), 21);
 
-        player.setParachuteOn(false);
-        tank.increaseYCoordinate(1);
-        assertEquals(tank.getYCoordinate(), 21);
+        this.player.setParachuteOn(false);
+        this.tank.increaseYCoordinate(1);
+        assertEquals(this.tank.getYCoordinate(), 21);
     }
 }
