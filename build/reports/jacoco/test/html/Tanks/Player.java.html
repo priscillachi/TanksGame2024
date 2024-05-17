@@ -81,8 +81,8 @@ public class Player { // handles players and logic
 <span class="fc" id="L81">    }</span>
 
     public void setScore(int score) {
-<span class="nc" id="L84">        this.score = score;</span>
-<span class="nc" id="L85">    }</span>
+<span class="fc" id="L84">        this.score = score;</span>
+<span class="fc" id="L85">    }</span>
 
     public Tank getTank() {
 <span class="fc" id="L88">        return this.tank;</span>
@@ -105,11 +105,11 @@ public class Player { // handles players and logic
     }
 
     public void setShield(int num) { // extension
-<span class="nc" id="L108">        this.shield = num;</span>
-<span class="nc" id="L109">    }</span>
+<span class="fc" id="L108">        this.shield = num;</span>
+<span class="fc" id="L109">    }</span>
 
     public int getShield() { // extension
-<span class="nc" id="L112">        return this.shield;</span>
+<span class="fc" id="L112">        return this.shield;</span>
     }
 
     public int getScore() {
@@ -121,7 +121,7 @@ public class Player { // handles players and logic
     }
 
     public int getParachute() {
-<span class="nc" id="L124">        return this.parachute;</span>
+<span class="fc" id="L124">        return this.parachute;</span>
     }
 
     public void setFuel(int fuel) {
@@ -134,8 +134,8 @@ public class Player { // handles players and logic
      * @param parachute is the number of parachutes that we want our parachute number to set or update to.
      */
     public void setParachute(int parachute) {
-<span class="nc" id="L137">        this.parachute = parachute;</span>
-<span class="nc" id="L138">    }</span>
+<span class="fc" id="L137">        this.parachute = parachute;</span>
+<span class="fc" id="L138">    }</span>
 
     public void setParachuteOn(boolean value) { // if true: call when drawing parachute
 <span class="fc" id="L141">        this.parachuteOn = value;</span>
@@ -150,8 +150,8 @@ public class Player { // handles players and logic
     }
 
     public void setBelowMap(boolean value) {
-<span class="nc" id="L153">        this.belowMap = value;</span>
-<span class="nc" id="L154">    }</span>
+<span class="fc" id="L153">        this.belowMap = value;</span>
+<span class="fc" id="L154">    }</span>
 
     public void setShieldOn(boolean value) { // call when tanks are being hit and they still have shields left
 <span class="fc" id="L157">        this.shieldOn = value;</span>
@@ -169,30 +169,34 @@ public class Player { // handles players and logic
 <span class="fc" id="L169">        this.healthPower.updatePower(power);</span>
 <span class="fc" id="L170">    }</span>
 
-    public void setShieldCount(int value) {
+    public void setShieldCount(float value) {
 <span class="fc" id="L173">        this.shieldCount = value;</span>
 <span class="fc" id="L174">    }</span>
+
+    public float getShieldCount() {
+<span class="fc" id="L177">        return this.shieldCount;</span>
+    }
 
     /**
      * Creates a Tank object at the positions of the player.
      */
     public void setTank() { // create Tank object
-<span class="fc" id="L180">        this.tank = new Tank((float)this.xCoordinate, (float)this.yCoordinate, this.colourScheme, this.app, this.levelObj, this); </span>
-<span class="fc" id="L181">    }</span>
+<span class="fc" id="L184">        this.tank = new Tank((float)this.xCoordinate, (float)this.yCoordinate, this.colourScheme, this.app, this.levelObj, this); </span>
+<span class="fc" id="L185">    }</span>
 
     /**
      * Displays the text which states which player the turn belongs to.
      */
     public void displayPlayerText() { // what the method says
-<span class="fc" id="L187">        int xCoordinate = 15;</span>
-<span class="fc" id="L188">        int yCoordinate = 30;</span>
+<span class="fc" id="L191">        int xCoordinate = 15;</span>
+<span class="fc" id="L192">        int yCoordinate = 30;</span>
 
-<span class="fc" id="L190">        app.strokeWeight(1);</span>
-<span class="fc" id="L191">        app.textSize(18);</span>
-<span class="fc" id="L192">        app.fill(0);</span>
-<span class="fc" id="L193">        String printOut = String.format(&quot;Player %s's turn&quot;, this.player);</span>
-<span class="fc" id="L194">        app.text(printOut, xCoordinate, yCoordinate);</span>
-<span class="fc" id="L195">    }</span>
+<span class="fc" id="L194">        app.strokeWeight(1);</span>
+<span class="fc" id="L195">        app.textSize(18);</span>
+<span class="fc" id="L196">        app.fill(0);</span>
+<span class="fc" id="L197">        String printOut = String.format(&quot;Player %s's turn&quot;, this.player);</span>
+<span class="fc" id="L198">        app.text(printOut, xCoordinate, yCoordinate);</span>
+<span class="fc" id="L199">    }</span>
 
     /**
      * Increases the player's score. Call when the player has hit another tank.
@@ -200,57 +204,57 @@ public class Player { // handles players and logic
      * @param increase is the number we want our score to increase by.
      */
     public void increaseScore(int increase) {
-<span class="fc" id="L203">        int newScore = increase + this.score;</span>
-<span class="fc bfc" id="L204" title="All 2 branches covered.">        if (this.gainScore == true) {</span>
-<span class="fc" id="L205">            this.score = newScore;</span>
+<span class="fc" id="L207">        int newScore = increase + this.score;</span>
+<span class="fc bfc" id="L208" title="All 2 branches covered.">        if (this.gainScore == true) {</span>
+<span class="fc" id="L209">            this.score = newScore;</span>
 
-<span class="pc bpc" id="L207" title="1 of 2 branches missed.">            if (this.score == newScore) {</span>
-<span class="fc" id="L208">                this.gainScore = false;</span>
+<span class="pc bpc" id="L211" title="1 of 2 branches missed.">            if (this.score == newScore) {</span>
+<span class="fc" id="L212">                this.gainScore = false;</span>
             }
         }
-<span class="fc" id="L211">    }</span>
+<span class="fc" id="L215">    }</span>
 
     /**
      * Displays the amount of fuel left in the top left corner.
      */
     public void displayFuel() { // display fuel amount in top left corner
-<span class="fc" id="L217">        int xCoordinate = 210;</span>
-<span class="fc" id="L218">        int yCoordinate = 30;</span>
+<span class="fc" id="L221">        int xCoordinate = 210;</span>
+<span class="fc" id="L222">        int yCoordinate = 30;</span>
 
-<span class="fc" id="L220">        app.strokeWeight(1);</span>
-<span class="fc" id="L221">        app.textSize(18);</span>
-<span class="fc" id="L222">        app.fill(0);</span>
-<span class="fc" id="L223">        String fuelNum = String.format(&quot;%d&quot;, this.fuel);</span>
-<span class="fc" id="L224">        app.text(fuelNum, xCoordinate, yCoordinate);</span>
-<span class="fc" id="L225">    }</span>
+<span class="fc" id="L224">        app.strokeWeight(1);</span>
+<span class="fc" id="L225">        app.textSize(18);</span>
+<span class="fc" id="L226">        app.fill(0);</span>
+<span class="fc" id="L227">        String fuelNum = String.format(&quot;%d&quot;, this.fuel);</span>
+<span class="fc" id="L228">        app.text(fuelNum, xCoordinate, yCoordinate);</span>
+<span class="fc" id="L229">    }</span>
 
     /**
      * Displays the number of parachutes left in the top left corner.
      */
     public void displayParachute() { // display parachute number in top left corner
-<span class="fc" id="L231">        int xCoordinate = 210;</span>
-<span class="fc" id="L232">        int yCoordinate = 58;</span>
+<span class="fc" id="L235">        int xCoordinate = 210;</span>
+<span class="fc" id="L236">        int yCoordinate = 58;</span>
 
-<span class="fc" id="L234">        app.strokeWeight(1);</span>
-<span class="fc" id="L235">        app.textSize(18);</span>
-<span class="fc" id="L236">        app.fill(0);</span>
-<span class="fc" id="L237">        String parachuteNum = String.format(&quot;%d&quot;, this.parachute);</span>
-<span class="fc" id="L238">        app.text(parachuteNum, xCoordinate, yCoordinate);</span>
-<span class="fc" id="L239">    }</span>
+<span class="fc" id="L238">        app.strokeWeight(1);</span>
+<span class="fc" id="L239">        app.textSize(18);</span>
+<span class="fc" id="L240">        app.fill(0);</span>
+<span class="fc" id="L241">        String parachuteNum = String.format(&quot;%d&quot;, this.parachute);</span>
+<span class="fc" id="L242">        app.text(parachuteNum, xCoordinate, yCoordinate);</span>
+<span class="fc" id="L243">    }</span>
 
     /**
      * Displays the number of shields left in the top left corner. This is an extension feature of my program.
      */
     public void displayShield() { // display shield number in top left corner - extension
-<span class="fc" id="L245">        int xCoordinate = 210;</span>
-<span class="fc" id="L246">        int yCoordinate = 86;</span>
+<span class="fc" id="L249">        int xCoordinate = 210;</span>
+<span class="fc" id="L250">        int yCoordinate = 86;</span>
 
-<span class="fc" id="L248">        app.strokeWeight(1);</span>
-<span class="fc" id="L249">        app.textSize(18);</span>
-<span class="fc" id="L250">        app.fill(0);</span>
-<span class="fc" id="L251">        String parachuteNum = String.format(&quot;%d&quot;, this.shield);</span>
-<span class="fc" id="L252">        app.text(parachuteNum, xCoordinate, yCoordinate);</span>
-<span class="fc" id="L253">    }</span>
+<span class="fc" id="L252">        app.strokeWeight(1);</span>
+<span class="fc" id="L253">        app.textSize(18);</span>
+<span class="fc" id="L254">        app.fill(0);</span>
+<span class="fc" id="L255">        String parachuteNum = String.format(&quot;%d&quot;, this.shield);</span>
+<span class="fc" id="L256">        app.text(parachuteNum, xCoordinate, yCoordinate);</span>
+<span class="fc" id="L257">    }</span>
 
     /**
      * Draws the shield, which disappears after 25 frames. This is an extension feature of my program.
@@ -258,22 +262,22 @@ public class Player { // handles players and logic
      * @return true if executed, false if otherwise.
      */
     public boolean drawShield() { // draw shield on tank - extension; disappears after 25 frames (use counter to keep track)
-<span class="fc bfc" id="L261" title="All 2 branches covered.">        if (this.shieldOn == true) {</span>
-<span class="fc" id="L262">            app.stroke(0);</span>
-<span class="fc" id="L263">            app.fill(this.colourScheme[0], this.colourScheme[1], this.colourScheme[2], 50);</span>
-<span class="fc" id="L264">            app.ellipse(this.tank.getTankCentreX(), this.tank.getTankCentreY(), 45, 45);</span>
-<span class="fc" id="L265">            this.shieldCount += 1;</span>
+<span class="fc bfc" id="L265" title="All 2 branches covered.">        if (this.shieldOn == true) {</span>
+<span class="fc" id="L266">            app.stroke(0);</span>
+<span class="fc" id="L267">            app.fill(this.colourScheme[0], this.colourScheme[1], this.colourScheme[2], 50);</span>
+<span class="fc" id="L268">            app.ellipse(this.tank.getTankCentreX(), this.tank.getTankCentreY(), 45, 45);</span>
+<span class="fc" id="L269">            this.shieldCount += 1;</span>
 
-<span class="pc bpc" id="L267" title="1 of 2 branches missed.">            if (this.shieldCount == 25) {</span>
-<span class="fc" id="L268">                this.shield -= 1;</span>
-<span class="fc" id="L269">                this.shieldCount = 0;</span>
-<span class="fc" id="L270">                this.shieldOn = false;</span>
+<span class="fc bfc" id="L271" title="All 2 branches covered.">            if (this.shieldCount == 25) {</span>
+<span class="fc" id="L272">                this.shield -= 1;</span>
+<span class="fc" id="L273">                this.shieldCount = 0;</span>
+<span class="fc" id="L274">                this.shieldOn = false;</span>
             }
 
-<span class="fc" id="L273">            return true;</span>
+<span class="fc" id="L277">            return true;</span>
         }
 
-<span class="fc" id="L276">        return false;</span>
+<span class="fc" id="L280">        return false;</span>
     }
 
     /**
@@ -282,14 +286,14 @@ public class Player { // handles players and logic
      * @return true if executed, false if otherwise.
      */
     public boolean drawParachute() { //draw parachute on tank
-<span class="fc bfc" id="L285" title="All 2 branches covered.">        if (this.parachuteOn==true) {</span>
-<span class="fc" id="L286">            PImage parachute = this.levelObj.getParachutImage();</span>
-<span class="fc" id="L287">            app.image(parachute, this.tank.getXCoordinate()-10, this.tank.getYCoordinate()-(3*this.tank.getTankHeight()), this.tank.getTankWidth()+20, 3*this.tank.getTankHeight());</span>
+<span class="fc bfc" id="L289" title="All 2 branches covered.">        if (this.parachuteOn==true) {</span>
+<span class="fc" id="L290">            PImage parachute = this.levelObj.getParachutImage();</span>
+<span class="fc" id="L291">            app.image(parachute, this.tank.getXCoordinate()-10, this.tank.getYCoordinate()-(3*this.tank.getTankHeight()), this.tank.getTankWidth()+20, 3*this.tank.getTankHeight());</span>
 
-<span class="fc" id="L289">            return true;</span>
+<span class="fc" id="L293">            return true;</span>
         }
 
-<span class="fc" id="L292">        return false;</span>
+<span class="fc" id="L296">        return false;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

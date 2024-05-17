@@ -66,6 +66,10 @@ public class HealthPower {
 <span class="fc" id="L66">        this.loseHealth = value;</span>
 <span class="fc" id="L67">    }</span>
 
+    public boolean getLoseHealth() {
+<span class="nc" id="L70">        return this.loseHealth;</span>
+    }
+
     /**
      * Draw health bar at the top of the screen.
      * 
@@ -73,31 +77,31 @@ public class HealthPower {
      */
     public boolean drawHealthBar() { // what the method says
         try{
-<span class="fc" id="L76">            int xCoordinate = ((864*3)/5) - (this.barWidth/2);</span>
-<span class="fc" id="L77">            int yCoordinate = 10;</span>
+<span class="fc" id="L80">            int xCoordinate = ((864*3)/5) - (this.barWidth/2);</span>
+<span class="fc" id="L81">            int yCoordinate = 10;</span>
     
             // fill in
-<span class="fc" id="L80">            app.fill(this.colourScheme[0], this.colourScheme[1], this.colourScheme[2]);</span>
-<span class="fc" id="L81">            app.rect(xCoordinate, yCoordinate, this.healthLength, this.barHeight);</span>
+<span class="fc" id="L84">            app.fill(this.colourScheme[0], this.colourScheme[1], this.colourScheme[2]);</span>
+<span class="fc" id="L85">            app.rect(xCoordinate, yCoordinate, this.healthLength, this.barHeight);</span>
     
-<span class="fc" id="L83">            app.strokeWeight(5);</span>
-<span class="fc" id="L84">            app.stroke(0); // black box</span>
-<span class="fc" id="L85">            app.line(xCoordinate + this.powerLength, yCoordinate, xCoordinate + this.barWidth, yCoordinate);</span>
-<span class="fc" id="L86">            app.line(xCoordinate + this.powerLength, yCoordinate + this.barHeight, xCoordinate + this.barWidth, yCoordinate + this.barHeight);</span>
-<span class="fc" id="L87">            app.line(xCoordinate + this.powerLength, yCoordinate, xCoordinate + this.powerLength, yCoordinate + this.barHeight);</span>
-<span class="fc" id="L88">            app.line(xCoordinate + this.barWidth, yCoordinate, xCoordinate + this.barWidth, yCoordinate + this.barHeight);</span>
+<span class="fc" id="L87">            app.strokeWeight(5);</span>
+<span class="fc" id="L88">            app.stroke(0); // black box</span>
+<span class="fc" id="L89">            app.line(xCoordinate + this.powerLength, yCoordinate, xCoordinate + this.barWidth, yCoordinate);</span>
+<span class="fc" id="L90">            app.line(xCoordinate + this.powerLength, yCoordinate + this.barHeight, xCoordinate + this.barWidth, yCoordinate + this.barHeight);</span>
+<span class="fc" id="L91">            app.line(xCoordinate + this.powerLength, yCoordinate, xCoordinate + this.powerLength, yCoordinate + this.barHeight);</span>
+<span class="fc" id="L92">            app.line(xCoordinate + this.barWidth, yCoordinate, xCoordinate + this.barWidth, yCoordinate + this.barHeight);</span>
     
-<span class="fc" id="L90">            app.strokeWeight(5);</span>
-<span class="fc" id="L91">            app.stroke(87); // grey box</span>
-<span class="fc" id="L92">            app.line(xCoordinate, yCoordinate, xCoordinate + this.powerLength, yCoordinate);</span>
-<span class="fc" id="L93">            app.line(xCoordinate, yCoordinate + this.barHeight, xCoordinate + this.powerLength, yCoordinate + this.barHeight);</span>
-<span class="fc" id="L94">            app.line(xCoordinate, yCoordinate, xCoordinate, yCoordinate + this.barHeight);</span>
-<span class="fc" id="L95">            app.line(xCoordinate + this.powerLength, yCoordinate, xCoordinate + this.powerLength, yCoordinate + this.barHeight);</span>
+<span class="fc" id="L94">            app.strokeWeight(5);</span>
+<span class="fc" id="L95">            app.stroke(87); // grey box</span>
+<span class="fc" id="L96">            app.line(xCoordinate, yCoordinate, xCoordinate + this.powerLength, yCoordinate);</span>
+<span class="fc" id="L97">            app.line(xCoordinate, yCoordinate + this.barHeight, xCoordinate + this.powerLength, yCoordinate + this.barHeight);</span>
+<span class="fc" id="L98">            app.line(xCoordinate, yCoordinate, xCoordinate, yCoordinate + this.barHeight);</span>
+<span class="fc" id="L99">            app.line(xCoordinate + this.powerLength, yCoordinate, xCoordinate + this.powerLength, yCoordinate + this.barHeight);</span>
 
-<span class="fc" id="L97">            return true;</span>
+<span class="fc" id="L101">            return true;</span>
 
-<span class="nc" id="L99">        } catch (Exception e) {</span>
-<span class="nc" id="L100">            return false;</span>
+<span class="nc" id="L103">        } catch (Exception e) {</span>
+<span class="nc" id="L104">            return false;</span>
         }
 
     }
@@ -109,20 +113,20 @@ public class HealthPower {
      */
     public boolean displayHealthPowerText() { // what the method says
         try {
-<span class="fc" id="L112">            int xCoordinate = ((864*3)/5) - (this.barWidth/2);</span>
-<span class="fc" id="L113">            int yCoordinate = 10;</span>
+<span class="fc" id="L116">            int xCoordinate = ((864*3)/5) - (this.barWidth/2);</span>
+<span class="fc" id="L117">            int yCoordinate = 10;</span>
             
-<span class="fc" id="L115">            app.strokeWeight(1);</span>
-<span class="fc" id="L116">            app.textSize(18);</span>
-<span class="fc" id="L117">            app.fill(0);</span>
-<span class="fc" id="L118">            app.text(&quot;Health:&quot;, xCoordinate-(this.barWidth/2)+14, yCoordinate+this.barHeight-5); // word health next to bar</span>
-<span class="fc" id="L119">            app.text(&quot;Power:&quot;, xCoordinate-(this.barWidth/2)+14, yCoordinate+this.barHeight+22); // word power next to bar</span>
-<span class="fc" id="L120">            app.text((int)this.power, xCoordinate, yCoordinate+this.barHeight+22); // power number next to bar</span>
-<span class="fc" id="L121">            app.text(this.health, xCoordinate + this.barWidth + 10, yCoordinate+this.barHeight-5);</span>
+<span class="fc" id="L119">            app.strokeWeight(1);</span>
+<span class="fc" id="L120">            app.textSize(18);</span>
+<span class="fc" id="L121">            app.fill(0);</span>
+<span class="fc" id="L122">            app.text(&quot;Health:&quot;, xCoordinate-(this.barWidth/2)+14, yCoordinate+this.barHeight-5); // word health next to bar</span>
+<span class="fc" id="L123">            app.text(&quot;Power:&quot;, xCoordinate-(this.barWidth/2)+14, yCoordinate+this.barHeight+22); // word power next to bar</span>
+<span class="fc" id="L124">            app.text((int)this.power, xCoordinate, yCoordinate+this.barHeight+22); // power number next to bar</span>
+<span class="fc" id="L125">            app.text(this.health, xCoordinate + this.barWidth + 10, yCoordinate+this.barHeight-5);</span>
 
-<span class="fc" id="L123">            return true;</span>
-<span class="nc" id="L124">        } catch (Exception e) {</span>
-<span class="nc" id="L125">            return false;</span>
+<span class="fc" id="L127">            return true;</span>
+<span class="nc" id="L128">        } catch (Exception e) {</span>
+<span class="nc" id="L129">            return false;</span>
         }
     }
 
@@ -134,18 +138,18 @@ public class HealthPower {
      */
     public boolean updateHealth(int health) { 
         try {
-<span class="fc" id="L137">            this.health = health;</span>
-<span class="fc" id="L138">            this.healthLength = ((float)this.health/(float)100) * (float)this.barWidth;</span>
+<span class="fc" id="L141">            this.health = health;</span>
+<span class="fc" id="L142">            this.healthLength = ((float)this.health/(float)100) * (float)this.barWidth;</span>
     
-<span class="fc bfc" id="L140" title="All 2 branches covered.">            if (this.health &lt;= this.power) {</span>
-<span class="fc" id="L141">                this.power = this.health;</span>
-<span class="fc" id="L142">                this.powerLength = ((float)this.power/(float)100) * (float)this.barWidth;</span>
+<span class="fc bfc" id="L144" title="All 2 branches covered.">            if (this.health &lt;= this.power) {</span>
+<span class="fc" id="L145">                this.power = this.health;</span>
+<span class="fc" id="L146">                this.powerLength = ((float)this.power/(float)100) * (float)this.barWidth;</span>
             }
 
-<span class="fc" id="L145">            return true;</span>
+<span class="fc" id="L149">            return true;</span>
 
-<span class="nc" id="L147">        } catch (Exception e) {</span>
-<span class="nc" id="L148">            return false;</span>
+<span class="nc" id="L151">        } catch (Exception e) {</span>
+<span class="nc" id="L152">            return false;</span>
         }
     }
 
@@ -156,18 +160,18 @@ public class HealthPower {
      * @return true if executed, false if otherwise.
      */
     public boolean decreaseHealth(int decrease) {
-<span class="fc" id="L159">            int newHealth = this.health - (int)decrease;</span>
-<span class="fc bfc" id="L160" title="All 2 branches covered.">            if (this.loseHealth==true) {</span>
-<span class="fc" id="L161">                this.updateHealth(newHealth);</span>
+<span class="fc" id="L163">            int newHealth = this.health - (int)decrease;</span>
+<span class="fc bfc" id="L164" title="All 2 branches covered.">            if (this.loseHealth==true) {</span>
+<span class="fc" id="L165">                this.updateHealth(newHealth);</span>
     
-<span class="pc bpc" id="L163" title="1 of 2 branches missed.">                if (this.health==newHealth) {</span>
-<span class="fc" id="L164">                    this.loseHealth = false;</span>
+<span class="pc bpc" id="L167" title="1 of 2 branches missed.">                if (this.health==newHealth) {</span>
+<span class="fc" id="L168">                    this.loseHealth = false;</span>
                 }
 
-<span class="fc" id="L167">                return true;</span>
+<span class="fc" id="L171">                return true;</span>
             }
 
-<span class="fc" id="L170">            return false;</span>
+<span class="fc" id="L174">            return false;</span>
     }
 
     /**
@@ -177,14 +181,14 @@ public class HealthPower {
      * @return true if excecuted, false if otherwise.
      */
     public boolean updatePower(float power) {
-<span class="fc bfc" id="L180" title="All 2 branches covered.">        if (power &lt;= this.health) {</span>
-<span class="fc" id="L181">            this.power = power;</span>
-<span class="fc" id="L182">            this.powerLength = ((float)this.power/(float)100) * (float)this.barWidth;</span>
+<span class="fc bfc" id="L184" title="All 2 branches covered.">        if (power &lt;= this.health) {</span>
+<span class="fc" id="L185">            this.power = power;</span>
+<span class="fc" id="L186">            this.powerLength = ((float)this.power/(float)100) * (float)this.barWidth;</span>
 
-<span class="fc" id="L184">            return true;</span>
+<span class="fc" id="L188">            return true;</span>
         }
 
-<span class="fc" id="L187">        return false;</span>
+<span class="fc" id="L191">        return false;</span>
     }
 
     /**
@@ -193,13 +197,13 @@ public class HealthPower {
      * @return true if excecuted, false if otherwise.
      */
     public boolean powerIncrease() { // for keyPressed
-<span class="pc bpc" id="L196" title="1 of 2 branches missed.">        if (this.power &lt;= this.health) {</span>
-<span class="fc" id="L197">            this.updatePower(this.power+(float)1.2);</span>
+<span class="pc bpc" id="L200" title="1 of 2 branches missed.">        if (this.power &lt;= this.health) {</span>
+<span class="fc" id="L201">            this.updatePower(this.power+(float)1.2);</span>
 
-<span class="fc" id="L199">            return true;</span>
+<span class="fc" id="L203">            return true;</span>
         }
 
-<span class="nc" id="L202">        return false;</span>
+<span class="nc" id="L206">        return false;</span>
     }
 
     /**
@@ -208,13 +212,13 @@ public class HealthPower {
      * @return true if excecuted, false if otherwise.
      */
     public boolean powerDecrease() { // for keyPressed
-<span class="fc bfc" id="L211" title="All 2 branches covered.">        if (this.power &gt;= 0) {</span>
-<span class="fc" id="L212">            this.updatePower(this.power-(float)1.2);</span>
+<span class="fc bfc" id="L215" title="All 2 branches covered.">        if (this.power &gt;= 0) {</span>
+<span class="fc" id="L216">            this.updatePower(this.power-(float)1.2);</span>
 
-<span class="fc" id="L214">            return true;</span>
+<span class="fc" id="L218">            return true;</span>
         }
 
-<span class="fc" id="L217">        return false;</span>
+<span class="fc" id="L221">        return false;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

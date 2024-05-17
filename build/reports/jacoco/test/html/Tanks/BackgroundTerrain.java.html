@@ -237,8 +237,8 @@ public class BackgroundTerrain {
      * @param newYCoordinate is the new y-coordinate of the terrain that will correspond to the x-coordinate.
      */
     public void updateTerrain(int x, float newYCoordinate) { // call when there is a projectile explosion
-<span class="nc" id="L240">        this.movingAveragePoints[x] = newYCoordinate;</span>
-<span class="nc" id="L241">    }</span>
+<span class="fc" id="L240">        this.movingAveragePoints[x] = newYCoordinate;</span>
+<span class="fc" id="L241">    }</span>
 
     /**
      * Returns true when the terrain height at a certain x value is inside the explosion circle.
@@ -249,7 +249,7 @@ public class BackgroundTerrain {
      * @return true if terrain height is inside the circle, false if otherwise.
      */
     public boolean insideExplosion(int x, float explosionCentreX, float explosionCentreY) { // check to see if terrain points are inside explosion
-<span class="nc bnc" id="L252" title="All 2 branches missed.">        return ((((float)x-explosionCentreX)*((float)x-explosionCentreX))+</span>
+<span class="fc bfc" id="L252" title="All 2 branches covered.">        return ((((float)x-explosionCentreX)*((float)x-explosionCentreX))+</span>
         ((this.movingAveragePoints[x]-explosionCentreY)*(this.movingAveragePoints[x]-explosionCentreY)) &lt;= 30 * 30);
     }
 
@@ -262,7 +262,7 @@ public class BackgroundTerrain {
      * @return true if terrain height is above the circle, false if otherwise.
      */
     public boolean aboveExplosion(int x, float explosionCentreX, float explosionCentreY) { // check to see if terrain is above explosion - if true, call calculateNewY2 for when terrain falls down
-<span class="nc bnc" id="L265" title="All 2 branches missed.">        return (this.movingAveragePoints[x] &lt; explosionCentreY-(float)Math.sqrt((30*30)-((explosionCentreX-(float)x)*(explosionCentreX-(float)x))));</span>
+<span class="fc bfc" id="L265" title="All 2 branches covered.">        return (this.movingAveragePoints[x] &lt; explosionCentreY-(float)Math.sqrt((30*30)-((explosionCentreX-(float)x)*(explosionCentreX-(float)x))));</span>
     }
 
     /**
@@ -274,9 +274,9 @@ public class BackgroundTerrain {
      * @return new y-coordinate for when the terrain does not fall down, and just creates a crater.
      */
     public float calculateNewY1(int x, float explosionCentreX, float explosionCentreY) { // use function of circle to update new y coordinate when terrain doesn't fall
-<span class="nc" id="L277">        float circleY = (float)Math.sqrt((30*30)-((explosionCentreX-(float)x)*(explosionCentreX-(float)x)));</span>
-<span class="nc" id="L278">        float newY = this.movingAveragePoints[x]+(circleY-(this.movingAveragePoints[x]-explosionCentreY));</span>
-<span class="nc" id="L279">        return newY;</span>
+<span class="fc" id="L277">        float circleY = (float)Math.sqrt((30*30)-((explosionCentreX-(float)x)*(explosionCentreX-(float)x)));</span>
+<span class="fc" id="L278">        float newY = this.movingAveragePoints[x]+(circleY-(this.movingAveragePoints[x]-explosionCentreY));</span>
+<span class="fc" id="L279">        return newY;</span>
     }
 
     /**
@@ -288,9 +288,9 @@ public class BackgroundTerrain {
      * @return new y-coordinate for when the terrain falls down.
      */
     public float calculateNewY2(int x, float explosionCentreX, float explosionCentreY) { // use when there is terrain on top of explosion
-<span class="nc" id="L291">        float circleY = (float)Math.sqrt((30*30)-((explosionCentreX-(float)x)*(explosionCentreX-(float)x)));</span>
-<span class="nc" id="L292">        float newY = this.movingAveragePoints[x]+(2*circleY);</span>
-<span class="nc" id="L293">        return newY;</span>
+<span class="fc" id="L291">        float circleY = (float)Math.sqrt((30*30)-((explosionCentreX-(float)x)*(explosionCentreX-(float)x)));</span>
+<span class="fc" id="L292">        float newY = this.movingAveragePoints[x]+(2*circleY);</span>
+<span class="fc" id="L293">        return newY;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

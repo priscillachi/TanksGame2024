@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="Tanks.AppTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2024-05-16T15:05:43" hostname="chis-mbp.lan" time="2.877">
+<testsuite name="Tanks.AppTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2024-05-17T12:49:37" hostname="chis-mbp.lan" time="29.215">
   <properties/>
-  <testcase name="checkAppExists()" classname="Tanks.AppTest" time="1.675"/>
-  <testcase name="appTest()" classname="Tanks.AppTest" time="1.201"/>
+  <testcase name="checkAppExists()" classname="Tanks.AppTest" time="1.587"/>
+  <testcase name="keyTest()" classname="Tanks.AppTest" time="11.097"/>
+  <testcase name="appTest()" classname="Tanks.AppTest" time="3.102"/>
+  <testcase name="shieldNoParachuteTest()" classname="Tanks.AppTest" time="2.299"/>
+  <testcase name="switchLevels()" classname="Tanks.AppTest" time="5.043"/>
+  <testcase name="belowMap()" classname="Tanks.AppTest" time="3.432"/>
+  <testcase name="noShieldParachuteTest()" classname="Tanks.AppTest" time="2.65"/>
   <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
+  <system-err><![CDATA[java.lang.NullPointerException
+	at Tanks.App.draw(App.java:271)
+	at processing.core.PApplet.handleDraw(PApplet.java:2426)
+	at processing.awt.PSurfaceAWT$12.callDraw(PSurfaceAWT.java:1557)
+	at processing.core.PSurfaceNone$AnimationThread.run(PSurfaceNone.java:316)
+]]></system-err>
 </testsuite>

@@ -90,8 +90,8 @@ public class Tank {
 <span class="fc" id="L90">    }</span>
 
     public void setYCoordinate(float num) {
-<span class="nc" id="L93">        this.yCoordinate = num;</span>
-<span class="nc" id="L94">    }</span>
+<span class="fc" id="L93">        this.yCoordinate = num;</span>
+<span class="fc" id="L94">    }</span>
 
     public float getXCoordinate() {
 <span class="fc" id="L97">        return this.xCoordinate;</span>
@@ -106,8 +106,8 @@ public class Tank {
 <span class="fc" id="L106">    }</span>
 
     public void setArrowCount(int num) {
-<span class="nc" id="L109">        this.arrowCount = num;</span>
-<span class="nc" id="L110">    }</span>
+<span class="fc" id="L109">        this.arrowCount = num;</span>
+<span class="fc" id="L110">    }</span>
 
 
     public PShape getTank() {
@@ -162,159 +162,163 @@ public class Tank {
 <span class="fc" id="L162">        return this.explosionRadius;</span>
     }
 
+    public void setExplosionRadius(float value) {
+<span class="fc" id="L166">        this.explosionRadius = 0;</span>
+<span class="fc" id="L167">    }</span>
+
     /**
      * Increases the y-coordinate when the tank is descending, either on a parachute or without a parachute.
      * 
      * @param increase is the number of pixels we want our y-coordinate to increase by.
      */
     public void increaseYCoordinate(float increase) { // use for descending
-<span class="fc bfc" id="L171" title="All 2 branches covered.">        if (this.player.getParachuteOn() == true) {</span>
-<span class="fc" id="L172">            this.yCoordinate += increase;</span>
+<span class="fc bfc" id="L175" title="All 2 branches covered.">        if (this.player.getParachuteOn() == true) {</span>
+<span class="fc" id="L176">            this.yCoordinate += increase;</span>
         }
-<span class="fc" id="L174">    }</span>
+<span class="fc" id="L178">    }</span>
     
     /**
      * Keeps the tank on the terrain.
      */
     public void groundTank() { // handling the logic for where to ground the tanks
-<span class="fc" id="L180">        this.movingAverages = this.levelObj.getBackgroundTerrain().getMovingAveragePoints();</span>
-<span class="fc" id="L181">        this.yCoordinate = this.movingAverages[(int)this.xCoordinate+(this.tankWidth/2)]-(this.tankHeight);</span>
-<span class="fc" id="L182">        this.tankCentreY = this.yCoordinate + (this.tankHeight/2);</span>
-<span class="fc" id="L183">    }</span>
+<span class="fc" id="L184">        this.movingAverages = this.levelObj.getBackgroundTerrain().getMovingAveragePoints();</span>
+<span class="fc" id="L185">        this.yCoordinate = this.movingAverages[(int)this.xCoordinate+(this.tankWidth/2)]-(this.tankHeight);</span>
+<span class="fc" id="L186">        this.tankCentreY = this.yCoordinate + (this.tankHeight/2);</span>
+<span class="fc" id="L187">    }</span>
 
     /**
      * Draws the tank. Will draw the shield if it is being hit and has shields left to use.
      */
     public void drawTank() { // draw tank
-<span class="fc bfc" id="L189" title="All 2 branches covered.">        if (this.player.getPlayerAlive() == true) {</span>
-<span class="fc" id="L190">            app.fill(this.colourScheme[0], this.colourScheme[1], this.colourScheme[2]);</span>
-<span class="fc" id="L191">            app.strokeWeight(4);</span>
-<span class="fc" id="L192">            app.stroke(0);</span>
-<span class="fc" id="L193">            app.rotate(0);</span>
-<span class="fc" id="L194">            this.tank = app.createShape(app.RECT, this.xCoordinate, this.yCoordinate, this.tankWidth, this.tankHeight);</span>
-<span class="fc" id="L195">            app.shape(this.tank);</span>
-<span class="fc" id="L196">            this.player.drawShield();</span>
+<span class="fc bfc" id="L193" title="All 2 branches covered.">        if (this.player.getPlayerAlive() == true) {</span>
+<span class="fc" id="L194">            app.fill(this.colourScheme[0], this.colourScheme[1], this.colourScheme[2]);</span>
+<span class="fc" id="L195">            app.strokeWeight(4);</span>
+<span class="fc" id="L196">            app.stroke(0);</span>
+<span class="fc" id="L197">            app.rotate(0);</span>
+<span class="fc" id="L198">            this.tank = app.createShape(app.RECT, this.xCoordinate, this.yCoordinate, this.tankWidth, this.tankHeight);</span>
+<span class="fc" id="L199">            app.shape(this.tank);</span>
+<span class="fc" id="L200">            this.player.drawShield();</span>
         }
-<span class="fc" id="L198">    }</span>
+<span class="fc" id="L202">    }</span>
 
     /**
      * Draws the turret and handles its rotation when the UP and DOWN keys are pressed.
      */
     public void drawTurret() { // draw turret
-<span class="fc bfc" id="L204" title="All 2 branches covered.">        if (this.player.getPlayerAlive() == true) {</span>
-<span class="fc" id="L205">            app.fill(0);</span>
-<span class="fc" id="L206">            app.stroke(0);</span>
-<span class="fc" id="L207">            app.strokeWeight(1);</span>
-<span class="fc" id="L208">            app.pushMatrix();</span>
-<span class="fc" id="L209">            this.turretXCoordinate = this.xCoordinate+(this.tankWidth/2);</span>
-<span class="fc" id="L210">            this.turretYCoordinate = this.yCoordinate;</span>
-<span class="fc" id="L211">            app.translate(this.turretXCoordinate, this.turretYCoordinate);</span>
-<span class="fc" id="L212">            app.rotate(this.angle);</span>
-<span class="fc" id="L213">            app.rectMode(app.CENTER);</span>
-<span class="fc" id="L214">            app.rect(0, 0, this.turretWidth, this.tankHeight*2);</span>
-<span class="fc" id="L215">            app.popMatrix();</span>
-<span class="fc" id="L216">            app.rectMode(app.CORNER);</span>
+<span class="fc bfc" id="L208" title="All 2 branches covered.">        if (this.player.getPlayerAlive() == true) {</span>
+<span class="fc" id="L209">            app.fill(0);</span>
+<span class="fc" id="L210">            app.stroke(0);</span>
+<span class="fc" id="L211">            app.strokeWeight(1);</span>
+<span class="fc" id="L212">            app.pushMatrix();</span>
+<span class="fc" id="L213">            this.turretXCoordinate = this.xCoordinate+(this.tankWidth/2);</span>
+<span class="fc" id="L214">            this.turretYCoordinate = this.yCoordinate;</span>
+<span class="fc" id="L215">            app.translate(this.turretXCoordinate, this.turretYCoordinate);</span>
+<span class="fc" id="L216">            app.rotate(this.angle);</span>
+<span class="fc" id="L217">            app.rectMode(app.CENTER);</span>
+<span class="fc" id="L218">            app.rect(0, 0, this.turretWidth, this.tankHeight*2);</span>
+<span class="fc" id="L219">            app.popMatrix();</span>
+<span class="fc" id="L220">            app.rectMode(app.CORNER);</span>
         }
-<span class="fc" id="L218">    }</span>
+<span class="fc" id="L222">    }</span>
 
     /**
      * Draws the arrow indicating the player's turn. Disappears after 2 seconds.
      */
     public void drawArrow() {
-<span class="fc bfc" id="L224" title="All 2 branches covered.">        if (this.arrowOn == true) {</span>
-<span class="fc" id="L225">            app.fill(0);</span>
-<span class="fc" id="L226">            app.stroke(0);</span>
-<span class="fc" id="L227">            app.strokeWeight(1);</span>
-<span class="fc" id="L228">            app.rectMode(app.CENTER);</span>
-<span class="fc" id="L229">            app.rect(this.turretXCoordinate, this.turretYCoordinate-(this.tankHeight*6), this.turretWidth, this.tankHeight*4);</span>
-<span class="fc" id="L230">            app.rectMode(app.CORNER);</span>
-<span class="fc" id="L231">            app.strokeWeight(this.turretWidth);</span>
-<span class="fc" id="L232">            app.line(this.turretXCoordinate-this.tankHeight, this.turretYCoordinate-(this.tankHeight*5), this.turretXCoordinate, this.turretYCoordinate-(this.tankHeight*4));</span>
-<span class="fc" id="L233">            app.line(this.turretXCoordinate+this.tankHeight, this.turretYCoordinate-(this.tankHeight*5), this.turretXCoordinate, this.turretYCoordinate-(this.tankHeight*4));</span>
-<span class="fc" id="L234">            this.arrowCount += 1;</span>
+<span class="fc bfc" id="L228" title="All 2 branches covered.">        if (this.arrowOn == true) {</span>
+<span class="fc" id="L229">            app.fill(0);</span>
+<span class="fc" id="L230">            app.stroke(0);</span>
+<span class="fc" id="L231">            app.strokeWeight(1);</span>
+<span class="fc" id="L232">            app.rectMode(app.CENTER);</span>
+<span class="fc" id="L233">            app.rect(this.turretXCoordinate, this.turretYCoordinate-(this.tankHeight*6), this.turretWidth, this.tankHeight*4);</span>
+<span class="fc" id="L234">            app.rectMode(app.CORNER);</span>
+<span class="fc" id="L235">            app.strokeWeight(this.turretWidth);</span>
+<span class="fc" id="L236">            app.line(this.turretXCoordinate-this.tankHeight, this.turretYCoordinate-(this.tankHeight*5), this.turretXCoordinate, this.turretYCoordinate-(this.tankHeight*4));</span>
+<span class="fc" id="L237">            app.line(this.turretXCoordinate+this.tankHeight, this.turretYCoordinate-(this.tankHeight*5), this.turretXCoordinate, this.turretYCoordinate-(this.tankHeight*4));</span>
+<span class="fc" id="L238">            this.arrowCount += 1;</span>
         }
 
-<span class="fc bfc" id="L237" title="All 2 branches covered.">        if (this.arrowCount == 60) { // remove after two seconds</span>
-<span class="fc" id="L238">            this.arrowOn = false;</span>
+<span class="fc bfc" id="L241" title="All 2 branches covered.">        if (this.arrowCount == 60) { // remove after two seconds</span>
+<span class="fc" id="L242">            this.arrowOn = false;</span>
         }
-<span class="fc" id="L240">    }</span>
+<span class="fc" id="L244">    }</span>
 
     /**
      * Rotates the turret left when the UP arrow is pressed. Call in the keyPressed() function of the App class.
      */
     public void rotateTurretLeft() { // up arrow
-<span class="pc bpc" id="L246" title="1 of 2 branches missed.">        if (this.angle-(float)0.2&gt;=(float)(-Math.PI/2)) {</span>
-<span class="fc" id="L247">            this.angle -= (float)0.2;</span>
+<span class="pc bpc" id="L250" title="1 of 2 branches missed.">        if (this.angle-(float)0.2&gt;=(float)(-Math.PI/2)) {</span>
+<span class="fc" id="L251">            this.angle -= (float)0.2;</span>
         }
-<span class="fc" id="L249">    }</span>
+<span class="fc" id="L253">    }</span>
 
     /**
      * Rotates the turret right when the DOWN arrow is pressed. Call in the keyPressed() function of the App class.
      */
     public void rotateTurretRight() { // down arrow
-<span class="pc bpc" id="L255" title="1 of 2 branches missed.">        if (this.angle&lt;=(float)Math.PI/2-(float)0.2) {</span>
-<span class="fc" id="L256">            this.angle += (float)0.2;</span>
+<span class="pc bpc" id="L259" title="1 of 2 branches missed.">        if (this.angle&lt;=(float)Math.PI/2-(float)0.2) {</span>
+<span class="fc" id="L260">            this.angle += (float)0.2;</span>
         }
-<span class="fc" id="L258">    }</span>
+<span class="fc" id="L262">    }</span>
 
     /**
      * Moves the tank left when the LEFT arrow is pressed by updating the x-coordinate and fuel. Call in the keyPressed() function of the App class.
      */
     public void moveTankLeft() { // left arrow
-<span class="fc bfc" id="L264" title="All 4 branches covered.">        if (this.xCoordinate-this.speed &gt;= 0 &amp;&amp; this.player.getFuel()&gt;=this.speed) {</span>
-<span class="fc" id="L265">            this.xCoordinate -= this.speed;</span>
-<span class="fc" id="L266">            this.tankCentreX = this.xCoordinate + (this.tankWidth/2);</span>
+<span class="fc bfc" id="L268" title="All 4 branches covered.">        if (this.xCoordinate-this.speed &gt;= 0 &amp;&amp; this.player.getFuel()&gt;=this.speed) {</span>
+<span class="fc" id="L269">            this.xCoordinate -= this.speed;</span>
+<span class="fc" id="L270">            this.tankCentreX = this.xCoordinate + (this.tankWidth/2);</span>
 
-<span class="fc" id="L268">            int currentFuel = this.player.getFuel();</span>
-<span class="fc" id="L269">            this.player.setFuel(currentFuel-this.speed);</span>
+<span class="fc" id="L272">            int currentFuel = this.player.getFuel();</span>
+<span class="fc" id="L273">            this.player.setFuel(currentFuel-this.speed);</span>
         }
-<span class="fc" id="L271">    }</span>
+<span class="fc" id="L275">    }</span>
 
     /**
      * Moves the tank right when the RIGHT arrow is pressed by updating the x-coordinate and fuel. Call in the keyPressed() function of the App class.
      */
     public void moveTankRight() { // right arrow
-<span class="pc bpc" id="L277" title="1 of 4 branches missed.">        if (this.xCoordinate &lt;= 864-30-this.speed &amp;&amp; this.player.getFuel()&gt;=this.speed) {</span>
-<span class="fc" id="L278">            this.xCoordinate += this.speed;</span>
-<span class="fc" id="L279">            this.tankCentreX = this.xCoordinate + (this.tankWidth/2);</span>
+<span class="pc bpc" id="L281" title="1 of 4 branches missed.">        if (this.xCoordinate &lt;= 864-30-this.speed &amp;&amp; this.player.getFuel()&gt;=this.speed) {</span>
+<span class="fc" id="L282">            this.xCoordinate += this.speed;</span>
+<span class="fc" id="L283">            this.tankCentreX = this.xCoordinate + (this.tankWidth/2);</span>
 
-<span class="fc" id="L281">            int currentFuel = this.player.getFuel();</span>
-<span class="fc" id="L282">            this.player.setFuel(currentFuel-this.speed);</span>
+<span class="fc" id="L285">            int currentFuel = this.player.getFuel();</span>
+<span class="fc" id="L286">            this.player.setFuel(currentFuel-this.speed);</span>
         }
-<span class="fc" id="L284">    }</span>
+<span class="fc" id="L288">    }</span>
 
     /**
      * Creates a new Projectile object each time the spacebar is pressed.
      */
     public void setProjectile() {
-<span class="fc" id="L290">        float projectileAngle = 0;</span>
-<span class="fc" id="L291">        float projectileXCoordinate = 0;</span>
-<span class="fc" id="L292">        float projectileYCoordinate = 0;</span>
-<span class="fc" id="L293">        float power = this.player.getPower();</span>
-<span class="fc" id="L294">        float diameter = this.turretWidth * 2;</span>
+<span class="fc" id="L294">        float projectileAngle = 0;</span>
+<span class="fc" id="L295">        float projectileXCoordinate = 0;</span>
+<span class="fc" id="L296">        float projectileYCoordinate = 0;</span>
+<span class="fc" id="L297">        float power = this.player.getPower();</span>
+<span class="fc" id="L298">        float diameter = this.turretWidth * 2;</span>
 
-<span class="fc bfc" id="L296" title="All 2 branches covered.">        if (this.angle &lt; 0) {</span>
-<span class="fc" id="L297">            projectileAngle = -this.angle - (float)Math.PI/2;</span>
+<span class="fc bfc" id="L300" title="All 2 branches covered.">        if (this.angle &lt; 0) {</span>
+<span class="fc" id="L301">            projectileAngle = -this.angle - (float)Math.PI/2;</span>
         } else {
-<span class="fc" id="L299">            projectileAngle = (float)Math.PI/2 - this.angle;</span>
+<span class="fc" id="L303">            projectileAngle = (float)Math.PI/2 - this.angle;</span>
         }
 
-<span class="fc bfc" id="L302" title="All 2 branches covered.">        if (projectileAngle &lt; 0) {</span>
-<span class="fc" id="L303">            projectileXCoordinate = this.turretXCoordinate - (this.tankHeight * (float)Math.cos(Math.abs(projectileAngle)));</span>
-<span class="fc bfc" id="L304" title="All 2 branches covered.">        } else if (projectileAngle &gt; 0){</span>
-<span class="fc" id="L305">            projectileXCoordinate = this.turretXCoordinate + (this.tankHeight * (float)Math.cos(Math.abs(projectileAngle)));</span>
+<span class="fc bfc" id="L306" title="All 2 branches covered.">        if (projectileAngle &lt; 0) {</span>
+<span class="fc" id="L307">            projectileXCoordinate = this.turretXCoordinate - (this.tankHeight * (float)Math.cos(Math.abs(projectileAngle)));</span>
+<span class="fc bfc" id="L308" title="All 2 branches covered.">        } else if (projectileAngle &gt; 0){</span>
+<span class="fc" id="L309">            projectileXCoordinate = this.turretXCoordinate + (this.tankHeight * (float)Math.cos(Math.abs(projectileAngle)));</span>
         } else {
-<span class="pc bpc" id="L307" title="1 of 2 branches missed.">            if (this.angle &lt; 0) {</span>
-<span class="nc" id="L308">                projectileXCoordinate = this.turretXCoordinate - this.tankHeight;</span>
-<span class="pc bpc" id="L309" title="1 of 2 branches missed.">            } else if (this.angle &gt; 0) {</span>
-<span class="fc" id="L310">                projectileXCoordinate = this.turretXCoordinate + this.tankHeight;</span>
+<span class="pc bpc" id="L311" title="1 of 2 branches missed.">            if (this.angle &lt; 0) {</span>
+<span class="nc" id="L312">                projectileXCoordinate = this.turretXCoordinate - this.tankHeight;</span>
+<span class="pc bpc" id="L313" title="1 of 2 branches missed.">            } else if (this.angle &gt; 0) {</span>
+<span class="fc" id="L314">                projectileXCoordinate = this.turretXCoordinate + this.tankHeight;</span>
             }
         }
 
-<span class="fc" id="L314">        projectileYCoordinate = this.turretYCoordinate - (this.tankHeight * (float)Math.sin(Math.abs(projectileAngle)));</span>
+<span class="fc" id="L318">        projectileYCoordinate = this.turretYCoordinate - (this.tankHeight * (float)Math.sin(Math.abs(projectileAngle)));</span>
 
-<span class="fc" id="L316">        this.projectile = new Projectile(this.app, this, projectileXCoordinate, projectileYCoordinate, projectileAngle, power, diameter, this.colourScheme);</span>
-<span class="fc" id="L317">    }</span>
+<span class="fc" id="L320">        this.projectile = new Projectile(this.app, this, projectileXCoordinate, projectileYCoordinate, projectileAngle, power, diameter, this.colourScheme);</span>
+<span class="fc" id="L321">    }</span>
 
     /**
      * Returns true if another tank is inside the projectile's explosion.
@@ -326,7 +330,7 @@ public class Tank {
      * @return true if another tank is inside the explosion circle, false if otherwise.
      */
     public boolean insideExplosion(float tankCentreX, float tankCentreY, float explosionCentreX, float explosionCentreY) { // check if another tank is inside explosion
-<span class="fc bfc" id="L329" title="All 2 branches covered.">        return (((tankCentreX-explosionCentreX)*(tankCentreX-explosionCentreX))+((tankCentreY-explosionCentreY)*(tankCentreY-explosionCentreY)) &lt;= 30 * 30);</span>
+<span class="fc bfc" id="L333" title="All 2 branches covered.">        return (((tankCentreX-explosionCentreX)*(tankCentreX-explosionCentreX))+((tankCentreY-explosionCentreY)*(tankCentreY-explosionCentreY)) &lt;= 30 * 30);</span>
     }
 
     /**
@@ -339,7 +343,7 @@ public class Tank {
      * @return 30-distance from centre of explosion divided by 30, then multipled by 60; i.e. fraction of damage * 60
      */
     public float damage(float tankCentreX, float tankCentreY, float explosionCentreX, float explosionCentreY) { // calculate damage from explosion proportional to distance from explosion
-<span class="fc" id="L342">        return ((30-(float)Math.sqrt(((tankCentreX-explosionCentreX)*(tankCentreX-explosionCentreX)) + ((tankCentreY-explosionCentreY)*(tankCentreY-explosionCentreY))))/30) * 60;</span>
+<span class="fc" id="L346">        return ((30-(float)Math.sqrt(((tankCentreX-explosionCentreX)*(tankCentreX-explosionCentreX)) + ((tankCentreY-explosionCentreY)*(tankCentreY-explosionCentreY))))/30) * 60;</span>
         // 30-distance from centre of explosion divided by 30, then multipled by 60; i.e. fraction of damage * 60
     }
 
@@ -349,29 +353,29 @@ public class Tank {
      * @return true if executed, false if otherwise.
      */
     public boolean drawExplosion() { // when health is 0
-<span class="fc bfc" id="L352" title="All 2 branches covered.">        if (this.explosionOut == true) {</span>
-<span class="fc" id="L353">            app.stroke(255, 0, 0);</span>
-<span class="fc" id="L354">            app.fill (255, 0, 0);</span>
-<span class="fc" id="L355">            app.ellipse(this.tankCentreX, this.tankCentreY, this.explosionRadius*2, this.explosionRadius*2);</span>
-<span class="fc" id="L356">            app.stroke(255, 102, 0);</span>
-<span class="fc" id="L357">            app.fill(255, 102, 0);</span>
-<span class="fc" id="L358">            app.ellipse(this.tankCentreX, this.tankCentreY, this.explosionRadius, this.explosionRadius);</span>
-<span class="fc" id="L359">            app.stroke(255, 255, 0);</span>
-<span class="fc" id="L360">            app.fill(255, 255, 0);</span>
-<span class="fc" id="L361">            app.ellipse(this.tankCentreX, this.tankCentreY, this.explosionRadius*2/5, this.explosionRadius*2/5);</span>
-<span class="fc" id="L362">            this.expandExplosion();</span>
+<span class="fc bfc" id="L356" title="All 2 branches covered.">        if (this.explosionOut == true) {</span>
+<span class="fc" id="L357">            app.stroke(255, 0, 0);</span>
+<span class="fc" id="L358">            app.fill (255, 0, 0);</span>
+<span class="fc" id="L359">            app.ellipse(this.tankCentreX, this.tankCentreY, this.explosionRadius*2, this.explosionRadius*2);</span>
+<span class="fc" id="L360">            app.stroke(255, 102, 0);</span>
+<span class="fc" id="L361">            app.fill(255, 102, 0);</span>
+<span class="fc" id="L362">            app.ellipse(this.tankCentreX, this.tankCentreY, this.explosionRadius, this.explosionRadius);</span>
+<span class="fc" id="L363">            app.stroke(255, 255, 0);</span>
+<span class="fc" id="L364">            app.fill(255, 255, 0);</span>
+<span class="fc" id="L365">            app.ellipse(this.tankCentreX, this.tankCentreY, this.explosionRadius*2/5, this.explosionRadius*2/5);</span>
+<span class="fc" id="L366">            this.expandExplosion();</span>
 
-<span class="fc" id="L364">            return true;</span>
+<span class="fc" id="L368">            return true;</span>
         }
 
-<span class="fc" id="L367">        return false;</span>
+<span class="fc" id="L371">        return false;</span>
     }
 
     /**
      * Expands the explosion of the tank as it dies.
      */
     public void expandExplosion() {
-<span class="fc" id="L374">        this.explosionRadius += 5; </span>
-<span class="fc" id="L375">    }</span>
+<span class="fc" id="L378">        this.explosionRadius += 5; </span>
+<span class="fc" id="L379">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
