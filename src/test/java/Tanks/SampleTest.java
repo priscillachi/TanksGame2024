@@ -12,5 +12,3 @@ public class SampleTest {
         
     }
 }
-
-//gradle test jacocoTestReport
