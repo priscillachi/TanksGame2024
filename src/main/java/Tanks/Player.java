@@ -169,8 +169,12 @@ public class Player { // handles players and logic
         this.healthPower.updatePower(power);
     }
 
-    public void setShieldCount(int value) {
+    public void setShieldCount(float value) {
         this.shieldCount = value;
+    }
+
+    public float getShieldCount() {
+        return this.shieldCount;
     }
 
     /**
