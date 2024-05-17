@@ -162,6 +162,10 @@ public class Tank {
         return this.explosionRadius;
     }
 
+    public void setExplosionRadius(float value) {
+        this.explosionRadius = 0;
+    }
+
     /**
      * Increases the y-coordinate when the tank is descending, either on a parachute or without a parachute.
      * 
