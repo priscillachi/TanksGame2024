@@ -410,7 +410,7 @@ public class App extends PApplet {
                     if (this.currentLevel.getAlivePlayers().get(i).getTank().getExplosionRadius() == 30) { // radius of tank explosion is 30 if player falls below map
                         this.currentLevel.getAlivePlayers().get(i).getTank().setExplosionOut(false);
                         this.currentLevel.removeAlivePlayer(this.currentLevel.getAlivePlayers().get(i)); // remove player from alivePlayers if not alive
-                        if (this.playerTurn!= i && this.playerTurn > 0) {
+                        if (this.playerTurn!= i && this.playerTurn > 0 && this.playerTurn != i-1) {
                             this.playerTurn -= 1; // update index of current turn as the size of alive players has now changed
                         }
                     }
@@ -418,7 +418,7 @@ public class App extends PApplet {
                     if (this.currentLevel.getAlivePlayers().get(i).getTank().getExplosionRadius() == 15) { // normal radius of explosion is 15 if they die normally
                         this.currentLevel.getAlivePlayers().get(i).getTank().setExplosionOut(false);
                         this.currentLevel.removeAlivePlayer(this.currentLevel.getAlivePlayers().get(i)); // remove player from alivePlayers if not alive
-                        if (this.playerTurn!= i && this.playerTurn > 0) {
+                        if (this.playerTurn!= i && this.playerTurn > 0 && this.playerTurn != i-1) {
                             this.playerTurn -= 1; // update index of current turn as the size of alive players has now changed
                         }
                     }
