@@ -12,54 +12,54 @@ public class PlayerTest {
 
     @BeforeEach
     public void beforeEach() {
-        PApplet.runSketch(new String[] { "App" }, app);
-        app.delay(1000); // to give time to initialise stuff before drawing begins
+        PApplet.runSketch(new String[] { "App" }, this.app);
+        this.app.delay(1000); 
     }
 
     @Test 
     public void drawShield() {
-        player.setTank();
+        this.player.setTank();
 
-        player.setShieldOn(true);
-        player.setShieldCount(24);
-        assertTrue(player.drawShield()==true);
+        this.player.setShieldOn(true);
+        this.player.setShieldCount(24);
+        assertTrue(this.player.drawShield()==true);
 
-        player.setShieldOn(false);
-        assertFalse(player.drawShield()==true);
+        this.player.setShieldOn(false);
+        assertFalse(this.player.drawShield()==true);
     }
 
     @Test 
     public void drawParachute() {
-        player.setTank();
+        this.player.setTank();
         app.level1.displayFuelParachute();
 
-        player.setParachuteOn(true);
-        assertTrue(player.drawParachute()==true);
+        this.player.setParachuteOn(true);
+        assertTrue(this.player.drawParachute()==true);
 
-        player.setParachuteOn(false);
-        assertFalse(player.drawParachute()==true);
+        this.player.setParachuteOn(false);
+        assertFalse(this.player.drawParachute()==true);
     }
 
     @Test 
     public void increaseScore() {
-        player.setGainScore(true);
-        player.increaseScore(20);
-        assertEquals(player.getScore(),20);
+        this.player.setGainScore(true);
+        this.player.increaseScore(20);
+        assertEquals(this.player.getScore(),20);
 
-        player.setGainScore(false);
-        player.increaseScore(20);
-        assertEquals(player.getScore(),20);
+        this.player.setGainScore(false);
+        this.player.increaseScore(20);
+        assertEquals(this.player.getScore(),20);
     }
 
     @Test
     public void updateHealthPower() {
-        player.setHealthPower();
+        this.player.setHealthPower();
 
-        player.updateHealth(80);
-        assertEquals(player.getHealth(), 80);
+        this.player.updateHealth(80);
+        assertEquals(this.player.getHealth(), 80);
 
-        player.updatePower(40);
-        assertEquals(player.getPower(), 40);
+        this.player.updatePower(40);
+        assertEquals(this.player.getPower(), 40);
 
     }
 }
