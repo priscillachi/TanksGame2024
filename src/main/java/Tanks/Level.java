@@ -199,10 +199,8 @@ public class Level {
 
     /**
      * Initialise players according to the matrix read from the corresponding level txt file. Call this in the setup() function of the App class.
-     * 
-     * @return true if executed, false if otherwise.
      */
-    public boolean setPlayers() { // setup players coordinates, objects, tanks,etc.
+    public void setPlayers() { // setup players coordinates, objects, tanks,etc.
         setTerrainMatrix();
 
         for (int i=0; i<28; i++) {
@@ -241,13 +239,6 @@ public class Level {
             playerObj.setTank();
             playerObj.setHealthPower();
         }
-
-        if (this.playersCoordinates.size() > 0 && this.colourSchemes.size() > 0 && this.playersObj.size() > 0) {
-            return true;
-        } else {
-            return false;
-        }
-
     }
 
     
@@ -321,110 +312,74 @@ public class Level {
 
     /**
      * Display the scoreboard at the top right corner of the game.
-     * 
-     * @return true if executed, false if otherwise.
      */
-    public boolean displayScoreboard() { // what the method says
+    public void displayScoreboard() { // what the method says
+        app.strokeWeight(5);
+        app.stroke(0);
+        app.noFill();
+        app.rect(700, 50, 150, 28*(1+this.players.size()));
+        app.line(700, 50+28, 850, 50+28);
+        app.strokeWeight(1);
+        app.textSize(18);
+        app.fill(0);
+        app.text("Scores", 710, 50+20);
+        for (int i=0; i<this.playersObj.size(); i++) {
+            String playerPrint = String.format("Player %s", this.playersObj.get(i).getPlayerString());
+            String playerScore = String.format("%d", this.playersObj.get(i).getScore());
+            int[] colourScheme = this.colourSchemes.get(i);
+            app.fill(colourScheme[0], colourScheme[1], colourScheme[2]);
+            app.text(playerPrint, 710, 50+(26*(i+2)));
 
-        try {
-            app.strokeWeight(5);
-            app.stroke(0);
-            app.noFill();
-            app.rect(700, 50, 150, 28*(1+this.players.size()));
-            app.line(700, 50+28, 850, 50+28);
-            app.strokeWeight(1);
-            app.textSize(18);
             app.fill(0);
-            app.text("Scores", 710, 50+20);
-            for (int i=0; i<this.playersObj.size(); i++) {
-                String playerPrint = String.format("Player %s", this.playersObj.get(i).getPlayerString());
-                String playerScore = String.format("%d", this.playersObj.get(i).getScore());
-                int[] colourScheme = this.colourSchemes.get(i);
-                app.fill(colourScheme[0], colourScheme[1], colourScheme[2]);
-                app.text(playerPrint, 710, 50+(26*(i+2)));
-    
-                app.fill(0);
-                app.text(playerScore, 810, 50+(26*(i+2)));
-            }
-
-            return true;
-        } catch (Exception e) {
-            return false;
+            app.text(playerScore, 810, 50+(26*(i+2)));
         }
     }
 
     /**
      * Display wind at the top right corner of the game.
-     * 
-     * @return true if executed, false if otherwise.
      */
-    public boolean displayWind() { // what the method says
-        try {
-            this.windPositiveImage = app.loadImage(app.getClass().getResource("wind.png").getPath().toLowerCase(Locale.ROOT).replace("%20", " ")); // get image
-            this.windNegativeImage = app.loadImage(app.getClass().getResource("wind-1.png").getPath().toLowerCase(Locale.ROOT).replace("%20", " ")); // get image
-    
-            if (this.windLevel >= 0) {
-                app.image(this.windPositiveImage, 750, 2, 50, 50);
-                String wind = String.format("%d", this.windLevel);
-                app.strokeWeight(1);
-                app.textSize(18);
-                app.fill(0);
-                app.text(wind, 810, 30);
-            } else if (this.windLevel < 0) {
-                app.image(this.windNegativeImage, 750, 2, 50, 50);
-                String wind = String.format("%d", Math.abs(this.windLevel));
-                app.strokeWeight(1);
-                app.textSize(18);
-                app.fill(0);
-                app.text(wind, 810, 30);
-            }
+    public void displayWind() { // what the method says
+        this.windPositiveImage = app.loadImage(app.getClass().getResource("wind.png").getPath().toLowerCase(Locale.ROOT).replace("%20", " ")); // get image
+        this.windNegativeImage = app.loadImage(app.getClass().getResource("wind-1.png").getPath().toLowerCase(Locale.ROOT).replace("%20", " ")); // get image
 
-            return true;
-        } catch (Exception e) {
-            return false;
+        if (this.windLevel >= 0) {
+            app.image(this.windPositiveImage, 750, 2, 50, 50);
+            String wind = String.format("%d", this.windLevel);
+            app.strokeWeight(1);
+            app.textSize(18);
+            app.fill(0);
+            app.text(wind, 810, 30);
+        } else if (this.windLevel < 0) {
+            app.image(this.windNegativeImage, 750, 2, 50, 50);
+            String wind = String.format("%d", Math.abs(this.windLevel));
+            app.strokeWeight(1);
+            app.textSize(18);
+            app.fill(0);
+            app.text(wind, 810, 30);
         }
-
     }
 
     /**
      * Display fuel and parachute images at the top left corner of the game.
-     * 
-     * @return true if executed, false if otherwise.
      */
-    public boolean displayFuelParachute() { // what the method says
-        try {
-            fuelImage = app.loadImage(app.getClass().getResource("fuel.png").getPath().toLowerCase(Locale.ROOT).replace("%20", " "));
-            app.image(fuelImage, 180, 5, 28, 28);
-            this.turn.displayFuel();
-    
-            parachuteImage = app.loadImage(app.getClass().getResource("parachute.png").getPath().toLowerCase(Locale.ROOT).replace("%20", " "));
-            app.image(parachuteImage, 180, 35, 28, 28);
-            this.turn.displayParachute();
+    public void displayFuelParachute() { // what the method says
+        fuelImage = app.loadImage(app.getClass().getResource("fuel.png").getPath().toLowerCase(Locale.ROOT).replace("%20", " "));
+        app.image(fuelImage, 180, 5, 28, 28);
+        this.turn.displayFuel();
 
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-
+        parachuteImage = app.loadImage(app.getClass().getResource("parachute.png").getPath().toLowerCase(Locale.ROOT).replace("%20", " "));
+        app.image(parachuteImage, 180, 35, 28, 28);
+        this.turn.displayParachute();
     }
 
     /**
      * Display shield symbol at the top left corner of the game.
-     * 
-     * @return true if executed, false if otherwise.
      */
-    public boolean displayShield() {
-        try {
-            int[] shieldColour = this.turn.getColourScheme();
-            app.fill(shieldColour[0], shieldColour[1], shieldColour[2], 50);
-            app.ellipse(194,78,26,26);
-            this.turn.displayShield();
-
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-
+    public void displayShield() {
+        int[] shieldColour = this.turn.getColourScheme();
+        app.fill(shieldColour[0], shieldColour[1], shieldColour[2], 50);
+        app.ellipse(194,78,26,26);
+        this.turn.displayShield();
     }
 
     /**
