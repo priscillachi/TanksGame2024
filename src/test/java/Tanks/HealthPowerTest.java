@@ -13,37 +13,37 @@ public class HealthPowerTest {
 
     @BeforeEach
     public void beforeEach() {
-        PApplet.runSketch(new String[] { "App" }, app);
-        app.delay(1000); // to give time to initialise stuff before drawing begins
+        PApplet.runSketch(new String[] { "App" }, this.app);
+        this.app.delay(1000); 
     }
     
     @Test 
     public void decreaseHealthTrue() {
-        healthPower.setLoseHealth(true);
-        healthPower.decreaseHealth(60);
-        assertTrue(healthPower.getHealth() == 40);
+        this.healthPower.setLoseHealth(true);
+        this.healthPower.decreaseHealth(60);
+        assertTrue(this.healthPower.getHealth() == 40);
     }
 
     @Test 
     public void decreaseHealthFalse() {
-        healthPower.setLoseHealth(false);
-        assertTrue(healthPower.decreaseHealth(60)==false);
+        this.healthPower.setLoseHealth(false);
+        assertTrue(this.healthPower.decreaseHealth(60)==false);
     }
 
     @Test 
     public void updatePower() {
-        assertTrue(healthPower.updatePower(130)==false);
-        assertTrue(healthPower.updatePower(20)==true);
-        assertTrue(healthPower.getPower() == 20);
+        assertTrue(this.healthPower.updatePower(130)==false);
+        assertTrue(this.healthPower.updatePower(20)==true);
+        assertTrue(this.healthPower.getPower() == 20);
     }
 
     @Test 
     public void powerIncreaseDecrease() {
-        healthPower.updateHealth(90);
-        assertTrue(healthPower.powerIncrease()==true);
-        assertTrue(healthPower.powerDecrease()==true);
+        this.healthPower.updateHealth(90);
+        assertTrue(this.healthPower.powerIncrease()==true);
+        assertTrue(this.healthPower.powerDecrease()==true);
 
-        healthPower.updatePower(-20);
-        assertTrue(healthPower.powerDecrease()==false);
+        this.healthPower.updatePower(-20);
+        assertTrue(this.healthPower.powerDecrease()==false);
     }
 }
