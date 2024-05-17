@@ -11,18 +11,18 @@ public class TreeTest {
 
     @BeforeEach
     public void beforeEach() {
-        PApplet.runSketch(new String[] { "App" }, app);
-        app.delay(1000); // to give time to initialise stuff before drawing begins
+        PApplet.runSketch(new String[] { "App" }, this.app);
+        this.app.delay(1000);
     }
 
     @Test 
     public void testGroundTree() {
-        assertTrue(tree.groundTree() == true);
+        assertTrue(this.tree.groundTree() == true);
     }
 
     @Test 
     public void testDrawTree() {
-        assertTrue(tree.drawTree() == false);
+        assertTrue(this.tree.drawTree() == false);
     }
     
 }
