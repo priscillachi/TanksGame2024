@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="Tanks.ProjectileTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2024-05-17T12:50:28" hostname="chis-mbp.lan" time="3.443">
-  <properties/>
-  <testcase name="drawProjectile()" classname="Tanks.ProjectileTest" time="1.275"/>
-  <testcase name="drawExplosion()" classname="Tanks.ProjectileTest" time="1.094"/>
-  <testcase name="updateVelocityCoordinates()" classname="Tanks.ProjectileTest" time="1.072"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>
